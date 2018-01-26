@@ -120,7 +120,8 @@ not disappear by sticking out of the display."
 (cl-defun posframe--create-frame (posframe-name
                                   &key
                                   parent-frame
-                                  face
+                                  foreground-color
+                                  background-color
                                   margin-left
                                   margin-right
                                   extra-parameters)
@@ -148,7 +149,10 @@ Arguments: PARENT-FRAME BACKGROUND EXTRA-PARAMETERS."
                     (make-frame
                      `(,@extra-parameters
                        (name . ,posframe-name)
-                       (background-color . ,face)
+                       ,(when foreground
+                          (cons 'foreground foreground))
+                       ,(when background-color
+                          (cons 'background-color background-color))
                        (parent-frame . ,(or parent-frame (window-frame)))
                        (posframe-name . ,posframe-name)
                        (no-accept-focus . t)
@@ -190,7 +194,9 @@ Arguments: PARENT-FRAME BACKGROUND EXTRA-PARAMETERS."
                                        min-height
                                        margin-left
                                        margin-right
-                                       face)
+                                       foreground-color
+                                       background-color
+                                       extra-parameters)
   "Pop a frame and show STRING at point."
   (let* ((position (or position (point)))
          (buffer (posframe--return-buffer posframe-name))
@@ -200,10 +206,12 @@ Arguments: PARENT-FRAME BACKGROUND EXTRA-PARAMETERS."
 
     (posframe--create-frame
      posframe-name
+     :parent-frame frame
      :margin-left margin-left
      :margin-right margin-right
-     :face face
-     :parent-frame frame)
+     :foreground-color foreground-color
+     :background-color background-color
+     :extra-parameters extra-parameters)
 
     ;; FIXME: This is a hacky fix for the mouse focus problem for child-frame
     ;; https://github.com/tumashu/posframe/issues/4#issuecomment-357514918
