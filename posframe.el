@@ -149,8 +149,8 @@ Arguments: PARENT-FRAME BACKGROUND EXTRA-PARAMETERS."
                     (make-frame
                      `(,@extra-parameters
                        (name . ,posframe-name)
-                       ,(when foreground
-                          (cons 'foreground foreground))
+                       ,(when foreground-color
+                          (cons 'foreground-color foreground-color))
                        ,(when background-color
                           (cons 'background-color background-color))
                        (parent-frame . ,(or parent-frame (window-frame)))
