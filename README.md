@@ -1,38 +1,48 @@
 
 # &#30446;&#24405;
 
-1.  [Posframe README](#orgd22e802)
-    1.  [What is posframe](#org185a560)
-    2.  [Installation](#org5a65e0d)
-    3.  [Usage](#org7d0da43)
+1.  [Posframe README](#org7441153)
+    1.  [What is posframe](#orgdac4234)
+    2.  [Installation](#orgd8e377e)
+    3.  [Usage](#orgf3c3baa)
 
 
-<a id="orgd22e802"></a>
+<a id="org7441153"></a>
 
 # Posframe README
 
 
-<a id="org185a560"></a>
+<a id="orgdac4234"></a>
 
 ## What is posframe
 
-Posframe can pop a child-frame at the point
+Posframe can pop a child-frame at the point.
+
+![img](./snapshots/posframe-1.png)
 
 
-<a id="org5a65e0d"></a>
+<a id="orgd8e377e"></a>
 
 ## Installation
 
     (require 'posframe)
 
 
-<a id="org7d0da43"></a>
+<a id="orgf3c3baa"></a>
 
 ## Usage
 
-    (posframe-show "my-posframe"
-                   "This is a test"
-                   :position (point))
+1.  Create a posframe named "my-posframe".
+
+        (posframe-show "my-posframe"
+                       "This is a test"
+                       :position (point))
+2.  Hide posframe named  "my-posframe".
+
+        (posframe-hide "my-posframe")
+3.  Delete posframe named "my-posframe".
+
+        (posframe-delete "my-posframe")
 
 
 

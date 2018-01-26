@@ -29,7 +29,9 @@
 
 ;; * Posframe README                                :README:
 ;; ** What is posframe
-;; Posframe can pop a child-frame at the point
+;; Posframe can pop a child-frame at the point.
+
+;; [[./snapshots/posframe-1.png]]
 
 ;; ** Installation
 
@@ -39,11 +41,20 @@
 
 ;; ** Usage
 
-;; #+BEGIN_EXAMPLE
-;; (posframe-show "my-posframe"
-;;                "This is a test"
-;;                :position (point))
-;; #+END_EXAMPLE
+;; 1. Create a posframe named "my-posframe".
+;;    #+BEGIN_EXAMPLE
+;;    (posframe-show "my-posframe"
+;;                   "This is a test"
+;;                   :position (point))
+;;    #+END_EXAMPLE
+;; 2. Hide posframe named  "my-posframe".
+;;    #+BEGIN_EXAMPLE
+;;    (posframe-hide "my-posframe")
+;;    #+END_EXAMPLE
+;; 3. Delete posframe named "my-posframe".
+;;    #+BEGIN_EXAMPLE
+;;    (posframe-delete "my-posframe")
+;;    #+END_EXAMPLE
 
 ;;; Code:
 ;; * posframe's code                         :CODE:
