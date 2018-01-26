@@ -228,7 +228,8 @@ Arguments: PARENT-FRAME BACKGROUND EXTRA-PARAMETERS."
           (setq-local posframe--last-position x-and-y)))
       (if (and width height)
           (set-frame-size child-frame width height)
-        (fit-frame-to-buffer child-frame nil min-width nil min-height))
+        (fit-frame-to-buffer
+         child-frame nil (or min-width 1) nil (or min-height 1)))
       (unless (frame-visible-p child-frame)
         (make-frame-visible child-frame)))))
 
