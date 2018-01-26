@@ -166,7 +166,6 @@ This posframe's buffer is POSFRAME-BUFFER."
         (setq-local posframe--frame
                     (make-frame
                      `(,@extra-parameters
-                       (name . ,posframe-buffer)
                        ,(when foreground-color
                           (cons 'foreground-color foreground-color))
                        ,(when background-color
