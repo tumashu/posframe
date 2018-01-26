@@ -1,18 +1,21 @@
 
 # &#30446;&#24405;
 
-1.  [Posframe README](#org7441153)
-    1.  [What is posframe](#orgdac4234)
-    2.  [Installation](#orgd8e377e)
-    3.  [Usage](#orgf3c3baa)
+1.  [Posframe README](#org1d72d21)
+    1.  [What is posframe](#orgf708d12)
+    2.  [Installation](#org2927886)
+    3.  [Usage](#orgdd4adb1)
+        1.  [Create a posframe named "my-posframe".](#orgc496587)
+        2.  [Hide posframe named  "my-posframe".](#org4f73b3c)
+        3.  [Delete posframe named "my-posframe".](#org450fd4b)
 
 
-<a id="org7441153"></a>
+<a id="org1d72d21"></a>
 
 # Posframe README
 
 
-<a id="orgdac4234"></a>
+<a id="orgf708d12"></a>
 
 ## What is posframe
 
@@ -21,28 +24,50 @@ Posframe can pop a child-frame at the point.
 ![img](./snapshots/posframe-1.png)
 
 
-<a id="orgd8e377e"></a>
+<a id="org2927886"></a>
 
 ## Installation
 
     (require 'posframe)
 
 
-<a id="orgf3c3baa"></a>
+<a id="orgdd4adb1"></a>
 
 ## Usage
 
-1.  Create a posframe named "my-posframe".
 
-        (posframe-show "my-posframe"
-                       "This is a test"
-                       :position (point))
-2.  Hide posframe named  "my-posframe".
+<a id="orgc496587"></a>
 
-        (posframe-hide "my-posframe")
-3.  Delete posframe named "my-posframe".
+### Create a posframe named "my-posframe".
 
-        (posframe-delete "my-posframe")
+    (posframe-show "my-posframe"
+                   "This is a test"
+                   :position (point))
+
+Addition arguments:
+
+1.  :position, set the position when posframe is poped up.
+2.  :background-color, set posframe's background color.
+3.  :foreground-color, set posframe's foreground color.
+4.  :margin-left, set posframe's left margin width.
+5.  :margin-right, set posframe's right margin width.
+6.  :extra-parameters, User can use this argument to override
+    default frame parameters used by posframe's child-frame,
+    by the way, the above arguments can be override too.
+
+
+<a id="org4f73b3c"></a>
+
+### Hide posframe named  "my-posframe".
+
+    (posframe-hide "my-posframe")
+
+
+<a id="org450fd4b"></a>
+
+### Delete posframe named "my-posframe".
+
+    (posframe-delete "my-posframe")
 
 
 

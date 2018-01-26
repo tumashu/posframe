@@ -41,20 +41,34 @@
 
 ;; ** Usage
 
-;; 1. Create a posframe named "my-posframe".
-;;    #+BEGIN_EXAMPLE
-;;    (posframe-show "my-posframe"
-;;                   "This is a test"
-;;                   :position (point))
-;;    #+END_EXAMPLE
-;; 2. Hide posframe named  "my-posframe".
-;;    #+BEGIN_EXAMPLE
-;;    (posframe-hide "my-posframe")
-;;    #+END_EXAMPLE
-;; 3. Delete posframe named "my-posframe".
-;;    #+BEGIN_EXAMPLE
-;;    (posframe-delete "my-posframe")
-;;    #+END_EXAMPLE
+;; *** Create a posframe named "my-posframe".
+
+;; #+BEGIN_EXAMPLE
+;; (posframe-show "my-posframe"
+;;                "This is a test"
+;;                :position (point))
+;; #+END_EXAMPLE
+
+;; Addition arguments:
+;; 1. :position, set the position when posframe is poped up.
+;; 2. :background-color, set posframe's background color.
+;; 3. :foreground-color, set posframe's foreground color.
+;; 4. :margin-left, set posframe's left margin width.
+;; 5. :margin-right, set posframe's right margin width.
+;; 6. :extra-parameters, User can use this argument to override
+;;    default frame parameters used by posframe's child-frame,
+;;    by the way, the above arguments can be override too.
+
+;; *** Hide posframe named  "my-posframe".
+
+;; #+BEGIN_EXAMPLE
+;; (posframe-hide "my-posframe")
+;; #+END_EXAMPLE
+
+;; *** Delete posframe named "my-posframe".
+;; #+BEGIN_EXAMPLE
+;; (posframe-delete "my-posframe")
+;; #+END_EXAMPLE
 
 ;;; Code:
 ;; * posframe's code                         :CODE:
