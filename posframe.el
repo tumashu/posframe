@@ -154,9 +154,7 @@ not disappear by sticking out of the display."
                                   margin-left
                                   margin-right
                                   extra-parameters)
-  "Create a child-frame for posframe named POSFRAME-NAME.
-
-Arguments: PARENT-FRAME BACKGROUND EXTRA-PARAMETERS."
+  "Create a child-frame for posframe named POSFRAME-NAME."
   (let ((buffer (posframe--return-buffer posframe-name))
         (after-make-frame-functions nil))
     (with-current-buffer buffer
