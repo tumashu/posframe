@@ -7,7 +7,7 @@
 ;; URL: https://github.com/company-mode/company-mode
 ;; Version: 0.1.0
 ;; Keywords: abbrev, convenience, matching
-;; Package-Requires: ((emacs "25.0"))
+;; Package-Requires: ((emacs "26.0"))
 
 ;; This file is part of GNU Emacs.
 
@@ -31,12 +31,19 @@
 ;; ** What is posframe
 ;; Posframe can pop a child-frame at the point
 
-;; ** How to use
+;; ** Installation
 
 ;; #+BEGIN_EXAMPLE
 ;; (require 'posframe)
 ;; #+END_EXAMPLE
 
+;; ** Usage
+
+;; #+BEGIN_EXAMPLE
+;; (posframe-show "my-posframe"
+;;                "This is a test"
+;;                :position (point))
+;; #+END_EXAMPLE
 
 ;;; Code:
 ;; * posframe's code                         :CODE:
@@ -52,7 +59,7 @@
 (defvar posframe-mouse-banish t
   "Mouse will be moved to (0 , 0) when it is non-nil.")
 
-(defvar posframe--child-frame nil
+(defvar posframe--frame nil
   "Child-frame created by posframe.")
 
 (defvar posframe--buffer nil
@@ -61,7 +68,7 @@
 (defvar posframe--last-position nil
   "Record the last pixel position of posframe.")
 
-(dolist (var '(posframe--child-frame
+(dolist (var '(posframe--frame
                posframe--buffer
                posframe--last-position))
   (make-variable-buffer-local var)
@@ -72,7 +79,7 @@
   (if (and posframe-name (stringp posframe-name))
       (let ((buffer-name (format " *posframe-buffer-%s*" posframe-name)))
         (get-buffer-create buffer-name))
-    (error "Posframe: wrong posframe name.")))
+    (error "Posframe: posframe's name is invaild")))
 
 (defun posframe--compute-pixel-position (position tooltip-width tooltip-height)
   "Return bottom-left-corner pixel POSITION in WINDOW.
@@ -113,17 +120,19 @@ not disappear by sticking out of the display."
 (cl-defun posframe--create-frame (posframe-name
                                   &key
                                   parent-frame
-                                  background
+                                  face
+                                  margin-left
+                                  margin-right
                                   extra-parameters)
-  "Create a child frame as posframe's candidate menu.
-Its parent-frame will be PARENT-FRAME and its frame-root-window's
-buffer will be BUFFER."
+  "Create a child-frame for posframe named POSFRAME-NAME.
+
+Arguments: PARENT-FRAME BACKGROUND EXTRA-PARAMETERS."
   (let ((buffer (posframe--return-buffer posframe-name))
         (after-make-frame-functions nil))
     (with-current-buffer buffer
       ;; Many variables take effect after call `set-window-buffer'
-      (setq-local left-fringe-width 0)
-      (setq-local right-fringe-width 0)
+      (setq-local left-fringe-width (or margin-left 0))
+      (setq-local right-fringe-width (or margin-right 0))
       (setq-local fringes-outside-margins 0)
       (setq-local truncate-lines t)
       (setq-local mode-line-format nil)
@@ -133,12 +142,13 @@ buffer will be BUFFER."
       (setq-local show-trailing-whitespace nil)
 
       ;; Create child-frame
-      (unless (frame-live-p posframe--child-frame)
+      (unless (frame-live-p posframe--frame)
         (posframe--delete-frame posframe-name)
-        (setq-local posframe--child-frame
+        (setq-local posframe--frame
                     (make-frame
                      `(,@extra-parameters
-                       (background-color . ,background)
+                       (name . ,posframe-name)
+                       (background-color . ,face)
                        (parent-frame . ,(or parent-frame (window-frame)))
                        (posframe-name . ,posframe-name)
                        (no-accept-focus . t)
@@ -148,8 +158,8 @@ buffer will be BUFFER."
                        (internal-border-width . 0)
                        (vertical-scroll-bars . nil)
                        (horizontal-scroll-bars . nil)
-                       (left-fringe . 0)
-                       (right-fringe . 0)
+                       (left-fringe . ,margin-left)
+                       (right-fringe . ,margin-right)
                        (menu-bar-lines . 0)
                        (tool-bar-lines . 0)
                        (line-spacing . 0)
@@ -159,64 +169,74 @@ buffer will be BUFFER."
                        (visibility . nil)
                        (cursor-type . nil)
                        (minibuffer . nil)
-                       (width . 50)
+                       (width . 1)
                        (height . 1)
                        (no-special-glyphs . t)
                        (inhibit-double-buffering . nil)
                        ;; Do not save child-frame when use desktop.el
-                       (desktop-dont-save . t)
-                       ;; This is used to delete company's child-frame when these frames can
-                       ;; not be accessed by `posframe--child-frame'
-                       (posframe . t))))
-        (let ((window (frame-root-window posframe--child-frame)))
+                       (desktop-dont-save . t))))
+        (let ((window (frame-root-window posframe--frame)))
           ;; This method is more stable than 'setq mode/header-line-format nil'
           (set-window-parameter window 'mode-line-format 'none)
           (set-window-parameter window 'header-line-format 'none)
           (set-window-buffer window buffer))))))
 
-(defun posframe-show (posframe-name string
-                                    &key
-                                    position
-                                    min-height
-                                    min-width)
+(cl-defun posframe-show (posframe-name string
+                                       &key
+                                       position
+                                       width
+                                       height
+                                       min-width
+                                       min-height
+                                       margin-left
+                                       margin-right
+                                       face)
   "Pop a frame and show STRING at point."
-  (let* ((buffer (posframe--return-buffer posframe-name))
-         (window-min-height (or min-height 1))
-         (window-min-width (or min-width 1))
+  (let* ((position (or position (point)))
+         (buffer (posframe--return-buffer posframe-name))
          (frame-resize-pixelwise t)
          (frame (window-frame))
          x-and-y)
 
-    (posframe--create-frame posframe-name :parent-frame frame)
+    (posframe--create-frame
+     posframe-name
+     :margin-left margin-left
+     :margin-right margin-right
+     :face face
+     :parent-frame frame)
 
-    (with-current-buffer buffer
-      (erase-buffer)
-      (insert string)
+    ;; FIXME: This is a hacky fix for the mouse focus problem for child-frame
+    ;; https://github.com/tumashu/posframe/issues/4#issuecomment-357514918
+    (when (and posframe-mouse-banish
+               (not (equal (cdr (mouse-position)) '(0 . 0))))
+      (set-mouse-position frame 0 0))
 
-      ;; FIXME: This is a hacky fix for the mouse focus problem for child-frame
-      ;; https://github.com/tumashu/posframe/issues/4#issuecomment-357514918
-      (when (and posframe-mouse-banish
-                 (not (equal (cdr (mouse-position)) '(0 . 0))))
-        (set-mouse-position frame 0 0))
+    (when (and string (stringp string))
+      (with-current-buffer buffer
+        (erase-buffer)
+        (insert string)))
 
-      (let ((child-frame posframe--child-frame))
-        (set-frame-parameter child-frame 'parent-frame (window-frame))
-        (setq x-and-y (posframe--compute-pixel-position
-                       position
-                       (frame-pixel-width child-frame)
-                       (frame-pixel-height child-frame)))
-        (unless (equal x-and-y posframe--last-position)
-          (set-frame-position child-frame (car x-and-y) (+ (cdr x-and-y) 1))
-          (setq-local posframe--last-position x-and-y))
-        (fit-frame-to-buffer child-frame nil 1 nil 1)
-        (unless (frame-visible-p child-frame)
-          (make-frame-visible child-frame))))))
+    (let ((child-frame (buffer-local-value 'posframe--frame buffer)))
+      (set-frame-parameter child-frame 'parent-frame (window-frame))
+      (setq x-and-y (posframe--compute-pixel-position
+                     position
+                     (frame-pixel-width child-frame)
+                     (frame-pixel-height child-frame)))
+      (unless (equal x-and-y posframe--last-position)
+        (set-frame-position child-frame (car x-and-y) (+ (cdr x-and-y) 1))
+        (with-current-buffer buffer
+          (setq-local posframe--last-position x-and-y)))
+      (if (and width height)
+          (set-frame-size child-frame width height)
+        (fit-frame-to-buffer child-frame nil min-width nil min-height))
+      (unless (frame-visible-p child-frame)
+        (make-frame-visible child-frame)))))
 
 (defun posframe-hide (posframe-name)
   "Hide posframe named POSFRAME-NAME."
   (with-current-buffer (posframe--return-buffer posframe-name)
-    (when (frame-live-p posframe--child-frame)
-      (make-frame-invisible posframe--child-frame))))
+    (when (frame-live-p posframe--frame)
+      (make-frame-invisible posframe--frame))))
 
 (defun posframe-delete (posframe-name)
   "Delete posframe named POSFRAME-NAME."
@@ -226,9 +246,9 @@ buffer will be BUFFER."
 (defun posframe--delete-frame (posframe-name)
   "Kill child-frame of posframe named POSFRAME-NAME."
   (dolist (frame (frame-list))
-    (let ((value (frame-parameter frame 'posframe-name))))
-    (when (equal posframe-name value)
-      (delete-frame frame))))
+    (let ((value (frame-parameter frame 'posframe-name)))
+      (when (equal posframe-name value)
+        (delete-frame frame)))))
 
 (defun posframe--kill-buffer (posframe-name)
   "Kill buffer of posframe named POSFRAME-NAME."
