@@ -4,9 +4,9 @@
 
 ;; Author: Feng Shu <tumashu@163.com>
 ;; Maintainer: Feng Shu <tumashu@163.com>
-;; URL: https://github.com/company-mode/company-mode
+;; URL: https://github.com/tumashu/posframe
 ;; Version: 0.1.0
-;; Keywords: abbrev, convenience, matching
+;; Keywords: tooltip
 ;; Package-Requires: ((emacs "26.0"))
 
 ;; This file is part of GNU Emacs.
