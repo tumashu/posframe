@@ -79,9 +79,13 @@
 (defvar posframe--last-position nil
   "Record the last pixel position of posframe.")
 
+(defvar posframe--last-size nil
+  "Record the last size of posframe.")
+
 (dolist (var '(posframe--frame
                posframe--buffer
-               posframe--last-position))
+               posframe--last-position
+               posframe--last-size))
   (make-variable-buffer-local var)
   (put var 'permanent-local t))
 
@@ -246,7 +250,10 @@ Arguments: PARENT-FRAME BACKGROUND EXTRA-PARAMETERS."
         (with-current-buffer buffer
           (setq-local posframe--last-position x-and-y)))
       (if (and width height)
-          (set-frame-size child-frame width height)
+          (unless (equal (cons width height) posframe--last-size)
+            (set-frame-size child-frame width height)
+            (with-current-buffer buffer
+              (setq-local posframe--last-size (cons width height))))
         (fit-frame-to-buffer
          child-frame nil (or min-width 1) nil (or min-height 1)))
       (unless (frame-visible-p child-frame)
