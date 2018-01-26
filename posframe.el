@@ -103,11 +103,16 @@
   (make-variable-buffer-local var)
   (put var 'permanent-local t))
 
-(defun posframe--return-buffer (posframe-name)
-  "Return posframe-instance named POSFRAME-NAME's buffer."
+(defun posframe--return-buffer (posframe-name &optional indirected-buffer)
+  "Return posframe-instance named POSFRAME-NAME's buffer.
+If INDIRECTED-BUFFER is a live buffer, the returned buffer
+will be its indirect buffer."
   (if (and posframe-name (stringp posframe-name))
       (let ((buffer-name (format " *posframe-buffer-%s*" posframe-name)))
-        (get-buffer-create buffer-name))
+        (if (buffer-live-p indirected-buffer)
+            (or (get-buffer buffer-name)
+                (make-indirect-buffer indirected-buffer buffer-name t))
+          (get-buffer-create buffer-name)))
     (error "Posframe: posframe's name is invaild")))
 
 (defun posframe--compute-pixel-position (position tooltip-width tooltip-height)
@@ -212,7 +217,7 @@ not disappear by sticking out of the display."
           (set-window-parameter window 'header-line-format 'none)
           (set-window-buffer window buffer))))))
 
-(cl-defun posframe-show (posframe-name string
+(cl-defun posframe-show (posframe-name content
                                        &key
                                        position
                                        width
@@ -224,9 +229,11 @@ not disappear by sticking out of the display."
                                        foreground-color
                                        background-color
                                        extra-parameters)
-  "Pop a frame and show STRING at point."
+  "Pop a frame and show CONTENT at point.
+CONTENT can be a string or a live buffer."
   (let* ((position (or position (point)))
-         (buffer (posframe--return-buffer posframe-name))
+         (indirected-buffer (buffer-live-p content))
+         (buffer (posframe--return-buffer posframe-name indirected-buffer))
          (frame-resize-pixelwise t)
          (frame (window-frame))
          x-and-y)
@@ -246,10 +253,10 @@ not disappear by sticking out of the display."
                (not (equal (cdr (mouse-position)) '(0 . 0))))
       (set-mouse-position frame 0 0))
 
-    (when (and string (stringp string))
+    (when (and context (stringp content))
       (with-current-buffer buffer
         (erase-buffer)
-        (insert string)))
+        (insert content)))
 
     (let ((child-frame (buffer-local-value 'posframe--frame buffer)))
       (set-frame-parameter child-frame 'parent-frame (window-frame))
