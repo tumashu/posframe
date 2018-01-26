@@ -1,4 +1,4 @@
-;;; posframe.el --- Pop a (child) frame at point
+;;; posframe.el --- Pop a posframe (just a frame) at point
 
 ;; Copyright (C) 2018 Free Software Foundation, Inc.
 
@@ -29,7 +29,8 @@
 
 ;; * Posframe README                                :README:
 ;; ** What is posframe
-;; Posframe can pop a child-frame at the point.
+;; Posframe can pop a posframe at point, this *posframe* is a
+;; child-frame with its root window's buffer.
 
 ;; [[./snapshots/posframe-1.png]]
 
@@ -41,10 +42,10 @@
 
 ;; ** Usage
 
-;; *** Create a posframe named "my-posframe".
+;; *** Create a posframe
 
 ;; #+BEGIN_EXAMPLE
-;; (posframe-show "my-posframe"
+;; (posframe-show " *my-posframe-buffer*"
 ;;                "This is a test"
 ;;                :position (point))
 ;; #+END_EXAMPLE
@@ -59,15 +60,15 @@
 ;;    default frame parameters used by posframe's child-frame,
 ;;    by the way, the above arguments can be override too.
 
-;; *** Hide posframe named  "my-posframe".
+;; *** Hide a posframe
 
 ;; #+BEGIN_EXAMPLE
-;; (posframe-hide "my-posframe")
+;; (posframe-hide " *my-posframe-buffer*")
 ;; #+END_EXAMPLE
 
-;; *** Delete posframe named "my-posframe".
+;; *** Delete a posframe
 ;; #+BEGIN_EXAMPLE
-;; (posframe-delete "my-posframe")
+;; (posframe-delete " *my-posframe-buffer*")
 ;; #+END_EXAMPLE
 
 ;;; Code:
@@ -77,7 +78,7 @@
 (defconst posframe-version "0.1.0")
 
 (defgroup posframe nil
-  "Pop a (child) frame at point"
+  "Pop a posframe (just a frame) at point"
   :group 'lisp
   :prefix "posframe-")
 
@@ -85,35 +86,19 @@
   "Mouse will be moved to (0 , 0) when it is non-nil.")
 
 (defvar posframe--frame nil
-  "Child-frame created by posframe.")
-
-(defvar posframe--buffer nil
-  "Buffer attached to the the frame of posframe.")
+  "Record posframe's frame.")
 
 (defvar posframe--last-position nil
-  "Record the last pixel position of posframe.")
+  "Record the last pixel position of posframe's frame.")
 
 (defvar posframe--last-size nil
-  "Record the last size of posframe.")
+  "Record the last size of posframe's frame.")
 
 (dolist (var '(posframe--frame
-               posframe--buffer
                posframe--last-position
                posframe--last-size))
   (make-variable-buffer-local var)
   (put var 'permanent-local t))
-
-(defun posframe--return-buffer (posframe-name &optional indirected-buffer)
-  "Return posframe-instance named POSFRAME-NAME's buffer.
-If INDIRECTED-BUFFER is a live buffer, the returned buffer
-will be its indirect buffer."
-  (if (and posframe-name (stringp posframe-name))
-      (let ((buffer-name (format " *posframe-buffer-%s*" posframe-name)))
-        (if (buffer-live-p indirected-buffer)
-            (or (get-buffer buffer-name)
-                (make-indirect-buffer indirected-buffer buffer-name t))
-          (get-buffer-create buffer-name)))
-    (error "Posframe: posframe's name is invaild")))
 
 (defun posframe--compute-pixel-position (position tooltip-width tooltip-height)
   "Return bottom-left-corner pixel POSITION in WINDOW.
@@ -151,7 +136,7 @@ not disappear by sticking out of the display."
                      (- y-top (or tooltip-height 0))
                    y-buttom)))))
 
-(cl-defun posframe--create-frame (posframe-name
+(cl-defun posframe--create-frame (posframe-buffer
                                   &key
                                   parent-frame
                                   foreground-color
@@ -159,8 +144,9 @@ not disappear by sticking out of the display."
                                   margin-left
                                   margin-right
                                   extra-parameters)
-  "Create a child-frame for posframe named POSFRAME-NAME."
-  (let ((buffer (posframe--return-buffer posframe-name))
+  "Create a child-frame for posframe.
+This posframe's buffer is POSFRAME-BUFFER."
+  (let ((buffer (get-buffer-create posframe-buffer))
         (after-make-frame-functions nil))
     (with-current-buffer buffer
       ;; Many variables take effect after call `set-window-buffer'
@@ -176,17 +162,17 @@ not disappear by sticking out of the display."
 
       ;; Create child-frame
       (unless (frame-live-p posframe--frame)
-        (posframe--delete-frame posframe-name)
+        (posframe--delete-frame posframe-buffer)
         (setq-local posframe--frame
                     (make-frame
                      `(,@extra-parameters
-                       (name . ,posframe-name)
+                       (name . ,posframe-buffer)
                        ,(when foreground-color
                           (cons 'foreground-color foreground-color))
                        ,(when background-color
                           (cons 'background-color background-color))
                        (parent-frame . ,(or parent-frame (window-frame)))
-                       (posframe-name . ,posframe-name)
+                       (posframe-buffer . ,posframe-buffer)
                        (no-accept-focus . t)
                        (min-width  . 0)
                        (min-height . 0)
@@ -217,29 +203,29 @@ not disappear by sticking out of the display."
           (set-window-parameter window 'header-line-format 'none)
           (set-window-buffer window buffer))))))
 
-(cl-defun posframe-show (posframe-name content
-                                       &key
-                                       position
-                                       width
-                                       height
-                                       min-width
-                                       min-height
-                                       margin-left
-                                       margin-right
-                                       foreground-color
-                                       background-color
-                                       extra-parameters)
-  "Pop a frame and show CONTENT at point.
-CONTENT can be a string or a live buffer."
+(cl-defun posframe-show (posframe-buffer string
+                                         &key
+                                         position
+                                         width
+                                         height
+                                         min-width
+                                         min-height
+                                         margin-left
+                                         margin-right
+                                         foreground-color
+                                         background-color
+                                         extra-parameters)
+  "Pop a posframe at point and show STRING.
+This posframe's buffer is POSFRAME-BUFFER."
   (let* ((position (or position (point)))
-         (indirected-buffer (buffer-live-p content))
-         (buffer (posframe--return-buffer posframe-name indirected-buffer))
+         (indirected-buffer (buffer-live-p string))
+         (buffer (get-buffer-create posframe-buffer))
          (frame-resize-pixelwise t)
          (frame (window-frame))
          x-and-y)
 
     (posframe--create-frame
-     posframe-name
+     posframe-buffer
      :parent-frame frame
      :margin-left margin-left
      :margin-right margin-right
@@ -253,10 +239,10 @@ CONTENT can be a string or a live buffer."
                (not (equal (cdr (mouse-position)) '(0 . 0))))
       (set-mouse-position frame 0 0))
 
-    (when (and context (stringp content))
+    (when (and string (stringp string))
       (with-current-buffer buffer
         (erase-buffer)
-        (insert content)))
+        (insert string)))
 
     (let ((child-frame (buffer-local-value 'posframe--frame buffer)))
       (set-frame-parameter child-frame 'parent-frame (window-frame))
@@ -278,29 +264,29 @@ CONTENT can be a string or a live buffer."
       (unless (frame-visible-p child-frame)
         (make-frame-visible child-frame)))))
 
-(defun posframe-hide (posframe-name)
-  "Hide posframe named POSFRAME-NAME."
-  (with-current-buffer (posframe--return-buffer posframe-name)
+(defun posframe-hide (posframe-buffer)
+  "Hide posframe which buffer is POSFRAME-BUFFER."
+  (with-current-buffer (get-buffer-create posframe-buffer)
     (when (frame-live-p posframe--frame)
       (make-frame-invisible posframe--frame))))
 
-(defun posframe-delete (posframe-name)
-  "Delete posframe named POSFRAME-NAME."
-  (posframe--delete-frame posframe-name)
-  (posframe--kill-buffer posframe-name))
+(defun posframe-delete (posframe-buffer)
+  "Delete posframe which buffer POSFRAME-BUFFER."
+  (posframe--delete-frame posframe-buffer)
+  (posframe--kill-buffer posframe-buffer))
 
-(defun posframe--delete-frame (posframe-name)
-  "Kill child-frame of posframe named POSFRAME-NAME."
+(defun posframe--delete-frame (posframe-buffer)
+  "Kill child-frame of posframe.
+This posframe's buffer is POSFRAME-BUFFER."
   (dolist (frame (frame-list))
-    (let ((value (frame-parameter frame 'posframe-name)))
-      (when (equal posframe-name value)
+    (let ((buffer (frame-parameter frame 'posframe-buffer)))
+      (when (equal posframe-buffer buffer)
         (delete-frame frame)))))
 
-(defun posframe--kill-buffer (posframe-name)
-  "Kill buffer of posframe named POSFRAME-NAME."
-  (let ((buffer (posframe--return-buffer posframe-name)))
-    (when (buffer-live-p buffer)
-      (kill-buffer buffer))))
+(defun posframe--kill-buffer (posframe-buffer)
+  "Kill posframe's buffer: POSFRAME-BUFFER."
+  (when (buffer-live-p posframe-buffer)
+    (kill-buffer buffer)))
 
 (provide 'posframe)
 
