@@ -1,43 +1,49 @@
 
 # &#30446;&#24405;
 
-1.  [Posframe README](#orga0dbc56)
-    1.  [What is posframe](#orga325819)
-    2.  [Installation](#orgb9c1912)
-    3.  [Usage](#org0428193)
-        1.  [Create a posframe](#org581b74f)
-        2.  [Hide a posframe](#org446ea4a)
-        3.  [Delete a posframe](#org057e671)
+1.  [Posframe README](#orgbfa24f1)
+    1.  [What is posframe](#orgd944174)
+    2.  [Installation](#org433d3be)
+    3.  [Usage](#org6dd34de)
+        1.  [Create a posframe](#org984573c)
+        2.  [Hide a posframe](#org67129fd)
+        3.  [Delete a posframe](#org3c4f78b)
 
 
-<a id="orga0dbc56"></a>
+<a id="orgbfa24f1"></a>
 
 # Posframe README
 
 
-<a id="orga325819"></a>
+<a id="orgd944174"></a>
 
 ## What is posframe
 
 Posframe can pop a posframe at point, this **posframe** is a
 child-frame with its root window's buffer.
 
+The main advantages are:
+
+1.  It is very fast, \`posframe-show' is faster than \`popup-tip'
+    of popup.el.
+2.  It works well with CJK language.
+
 ![img](./snapshots/posframe-1.png)
 
 
-<a id="orgb9c1912"></a>
+<a id="org433d3be"></a>
 
 ## Installation
 
     (require 'posframe)
 
 
-<a id="org0428193"></a>
+<a id="org6dd34de"></a>
 
 ## Usage
 
 
-<a id="org581b74f"></a>
+<a id="org984573c"></a>
 
 ### Create a posframe
 
@@ -56,14 +62,14 @@ Addition arguments:
     **all** the frame parameters of posframe's child-frame.
 
 
-<a id="org446ea4a"></a>
+<a id="org67129fd"></a>
 
 ### Hide a posframe
 
     (posframe-hide " *my-posframe-buffer*")
 
 
-<a id="org057e671"></a>
+<a id="org3c4f78b"></a>
 
 ### Delete a posframe
 

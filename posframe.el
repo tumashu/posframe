@@ -32,6 +32,11 @@
 ;; Posframe can pop a posframe at point, this *posframe* is a
 ;; child-frame with its root window's buffer.
 
+;; The main advantages are:
+;; 1. It is very fast, `posframe-show' is faster than `popup-tip'
+;;    of popup.el.
+;; 2. It works well with CJK language.
+
 ;; [[./snapshots/posframe-1.png]]
 
 ;; ** Installation
