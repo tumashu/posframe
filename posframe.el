@@ -86,6 +86,11 @@
   :group 'posframe
   :type 'boolean)
 
+(defcustom posframe-inhibit-double-buffering nil
+  "Set the posframe's frame-parameter: inhibit-double-buffering."
+  :group 'posframe
+  :type 'boolean)
+
 (defvar posframe--frame nil
   "Record posframe's frame.")
 
@@ -194,7 +199,7 @@ This posframe's buffer is POSFRAME-BUFFER."
                        (width . 1)
                        (height . 1)
                        (no-special-glyphs . t)
-                       (inhibit-double-buffering . nil)
+                       (inhibit-double-buffering . ,posframe-inhibit-double-buffering)
                        ;; Do not save child-frame when use desktop.el
                        (desktop-dont-save . t))))
         (let ((window (frame-root-window posframe--frame)))
