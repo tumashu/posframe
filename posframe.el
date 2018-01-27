@@ -101,6 +101,9 @@
 (defvar posframe--frame nil
   "Record posframe's frame.")
 
+(defvar posframe--timer nil
+  "Record posframe's hide timer.")
+
 (defvar posframe--last-position nil
   "Record the last pixel position of posframe's frame.")
 
@@ -108,6 +111,7 @@
   "Record the last size of posframe's frame.")
 
 (dolist (var '(posframe--frame
+               posframe--timer
                posframe--last-position
                posframe--last-size))
   (make-variable-buffer-local var)
@@ -227,7 +231,8 @@ This posframe's buffer is POSFRAME-BUFFER."
                                          foreground-color
                                          background-color
                                          no-properties
-                                         override-parameters)
+                                         override-parameters
+                                         timeout)
   "Pop a posframe at point and show STRING.
 This posframe's buffer is POSFRAME-BUFFER.
 
@@ -248,6 +253,9 @@ of FOREGROUND-COLOR and BACKGROUND-COLOR.
 
 OVERRIDE-PARAMETERS is very powful, *all* the frame parameters
 used by posframe's frame can be overrided by it.
+
+If TIMEOUT is a number, a delay of number seconds, the posframe
+will auto hide.
 
 NOTE: posframe will reuse the existing frame, for speed
 reason, deleting the existing frame with `posframe-delete'
@@ -302,7 +310,20 @@ is required if you want to change the below existing arguments:
         (fit-frame-to-buffer
          child-frame nil (or min-width 1) nil (or min-height 1)))
       (unless (frame-visible-p child-frame)
-        (make-frame-visible child-frame)))))
+        (make-frame-visible child-frame))
+      (posframe--run-hide-timer posframe-buffer timeout)
+      nil)))
+
+(defun posframe--run-hide-timer (posframe-buffer secs)
+  "After a delay of SECS seconds, hide posframe which buffer is
+POSFRAME-BUFFER."
+  (when (and (numberp secs) (> secs 0))
+    (with-current-buffer posframe-buffer
+      (when (timerp posframe--timer)
+        (cancel-timer posframe--timer))
+      (setq-local posframe--timer
+                  (run-with-timer
+                   secs nil #'posframe-hide posframe-buffer)))))
 
 (defun posframe-hide (posframe-buffer)
   "Hide posframe which buffer is POSFRAME-BUFFER."
