@@ -56,9 +56,8 @@
 ;; 3. :foreground-color, set posframe's foreground color.
 ;; 4. :margin-left, set posframe's left margin width.
 ;; 5. :margin-right, set posframe's right margin width.
-;; 6. :extra-parameters, User can use this argument to override
-;;    default frame parameters used by posframe's child-frame,
-;;    by the way, the above arguments can be override too.
+;; 6. :override-parameters, User can use it to override
+;;    *all* the frame parameters of posframe's child-frame.
 
 ;; *** Hide a posframe
 
@@ -143,7 +142,7 @@ not disappear by sticking out of the display."
                                   background-color
                                   margin-left
                                   margin-right
-                                  extra-parameters)
+                                  override-parameters)
   "Create a child-frame for posframe.
 This posframe's buffer is POSFRAME-BUFFER."
   (let ((buffer (get-buffer-create posframe-buffer))
@@ -165,7 +164,7 @@ This posframe's buffer is POSFRAME-BUFFER."
         (posframe--delete-frame posframe-buffer)
         (setq-local posframe--frame
                     (make-frame
-                     `(,@extra-parameters
+                     `(,@override-parameters
                        ,(when foreground-color
                           (cons 'foreground-color foreground-color))
                        ,(when background-color
@@ -213,7 +212,7 @@ This posframe's buffer is POSFRAME-BUFFER."
                                          margin-right
                                          foreground-color
                                          background-color
-                                         extra-parameters)
+                                         override-parameters)
   "Pop a posframe at point and show STRING.
 This posframe's buffer is POSFRAME-BUFFER."
   (let* ((position (or position (point)))
@@ -230,7 +229,7 @@ This posframe's buffer is POSFRAME-BUFFER."
      :margin-right margin-right
      :foreground-color foreground-color
      :background-color background-color
-     :extra-parameters extra-parameters)
+     :override-parameters override-parameters)
 
     ;; FIXME: This is a hacky fix for the mouse focus problem for child-frame
     ;; https://github.com/tumashu/posframe/issues/4#issuecomment-357514918
