@@ -229,7 +229,32 @@ This posframe's buffer is POSFRAME-BUFFER."
                                          no-properties
                                          override-parameters)
   "Pop a posframe at point and show STRING.
-This posframe's buffer is POSFRAME-BUFFER."
+This posframe's buffer is POSFRAME-BUFFER.
+
+If NO-PROPERTIES is non-nil, The STRING's properties will
+be removed before showed in posframe.
+
+posframe's frame-size can be set by WIDTH and HEIGHT,
+If one of them is nil, posframe's frame-size will fit the
+content of buffer, if you don't want to posframe's
+size too small, MIN-WIDTH and MIN-HEIGTH will be useful.
+
+If MARGIN-LEFT or MARGIN-RIGHT is a number, Left fringe or
+right fringe with be showed with number width.
+
+By default, posframe's foreground and background color are
+deriverd from current frame, user can set them with the help
+of FOREGROUND-COLOR and BACKGROUND-COLOR.
+
+OVERRIDE-PARAMETERS is very powful, *all* the frame parameters
+used by posframe's frame can be overrided by it.
+
+NOTE: posframe will reuse the existing frame, for speed
+reason, deleting the existing frame with `posframe-delete'
+is required if you want to change the below existing arguments:
+1. MARGIN-*,
+2. *-COLOR
+3. OVERRIDE-PARAMETERS."
   (let* ((position (or position (point)))
          (indirected-buffer (buffer-live-p string))
          (buffer (get-buffer-create posframe-buffer))
