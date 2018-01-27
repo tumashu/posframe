@@ -37,6 +37,8 @@
 ;;    of popup.el.
 ;; 2. It works well with CJK language.
 
+;; NOTE: posframe requires emacs (version >= 26.0.91).
+
 ;; [[./snapshots/posframe-1.png]]
 
 ;; ** Installation
