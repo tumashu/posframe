@@ -226,6 +226,7 @@ This posframe's buffer is POSFRAME-BUFFER."
                                          margin-right
                                          foreground-color
                                          background-color
+                                         no-properties
                                          override-parameters)
   "Pop a posframe at point and show STRING.
 This posframe's buffer is POSFRAME-BUFFER."
@@ -254,7 +255,9 @@ This posframe's buffer is POSFRAME-BUFFER."
     (when (and string (stringp string))
       (with-current-buffer buffer
         (erase-buffer)
-        (insert string)))
+        (if no-properties
+            (insert (substring-no-properties string))
+          (insert string))))
 
     (let ((child-frame (buffer-local-value 'posframe--frame buffer)))
       (set-frame-parameter child-frame 'parent-frame (window-frame))
