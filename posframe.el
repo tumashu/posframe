@@ -145,7 +145,9 @@ not disappear by sticking out of the display."
               (default-line-height)
             (aref (font-info
                    (font-at
-                    (if (and (= position (point-max))) (- position 1) position)))
+                    (if (and (= position (point-max)))
+                        (- position 1)
+                      position)))
                   3)))
          (y-buttom (+ y-top font-height)))
     (cons (max 0 (min x (- xmax (or tooltip-width 0))))
