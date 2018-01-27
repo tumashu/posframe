@@ -81,8 +81,10 @@
   :group 'lisp
   :prefix "posframe-")
 
-(defvar posframe-mouse-banish t
-  "Mouse will be moved to (0 , 0) when it is non-nil.")
+(defcustom posframe-mouse-banish t
+  "Mouse will be moved to (0 , 0) when it is non-nil."
+  :group 'posframe
+  :type 'boolean)
 
 (defvar posframe--frame nil
   "Record posframe's frame.")
