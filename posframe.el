@@ -132,19 +132,10 @@
 
 (cl-defun posframe--compute-pixel-position (position
                                             &key
-                                            posframe-width
-                                            posframe-height
-                                            posframe-adjust
                                             (x-offset 0)
                                             (y-offset 0))
   "Return bottom-left-corner pixel POSITION in WINDOW.
-its returned value is like (X . Y)
-
-If POSFRAME-WIDTH and POSFRAME-HEIGHT are given
-and POSFRAME-ADJUST is non-nil, this function will
-use two values to adjust its output position,
-make sure the *tooltip* at position not disappear
-by sticking out of the display."
+its returned value is like (X . Y)"
   (let* ((window (selected-window))
          (frame (window-frame window))
          (xmax (frame-pixel-width frame))
@@ -172,12 +163,7 @@ by sticking out of the display."
                       position)))
                   3)))
          (y-buttom (+ y-top font-height)))
-    (if posframe-adjust
-        (cons (max 0 (min x (- xmax (or posframe-width 0))))
-              (max 0 (if (> (+ y-buttom (or posframe-height 0)) ymax)
-                         (- y-top (or posframe-height 0))
-                       y-buttom)))
-      (cons x y-buttom))))
+    (cons x y-buttom)))
 
 (cl-defun posframe--create-frame (posframe-buffer
                                   &key
@@ -255,7 +241,6 @@ This posframe's buffer is POSFRAME-BUFFER."
                                          (min-height 1)
                                          (x-offset 0)
                                          (y-offset 0)
-                                         (posframe-adjust t)
                                          margin-left
                                          margin-right
                                          foreground-color
@@ -330,9 +315,6 @@ you can use `posframe-delete-all' to delete all posframes."
       (set-frame-parameter child-frame 'parent-frame (window-frame))
       (setq x-and-y (posframe--compute-pixel-position
                      position
-                     :posframe-width (frame-pixel-width child-frame)
-                     :posframe-height (frame-pixel-height child-frame)
-                     :posframe-adjust posframe-adjust
                      :x-offset x-offset
                      :y-offset y-offset))
       (unless (equal x-and-y posframe--last-position)
