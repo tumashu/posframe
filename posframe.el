@@ -1,4 +1,4 @@
-;;; posframe.el --- Pop a posframe (just a frame) at point
+;;; posframe.el --- Pop a posframe (just a frame) at point    -*- lexical-binding:t -*-
 
 ;; Copyright (C) 2018 Free Software Foundation, Inc.
 
@@ -297,7 +297,6 @@ is required if you want to change the below existing arguments:
 
 you can use `posframe-delete-all' to delete all posframes."
   (let* ((position (or position (point)))
-         (indirected-buffer (buffer-live-p string))
          (buffer (get-buffer-create posframe-buffer))
          (frame-resize-pixelwise t)
          (frame (window-frame))
@@ -422,7 +421,6 @@ This posframe's buffer is POSFRAME-BUFFER."
 
 ;; Local Variables:
 ;; coding: utf-8-unix
-;; lexical-binding: t
 ;; End:
 
 ;;; posframe.el ends here
