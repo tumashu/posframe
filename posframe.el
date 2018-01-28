@@ -226,8 +226,8 @@ This posframe's buffer is POSFRAME-BUFFER."
                                          position
                                          width
                                          height
-                                         min-width
-                                         min-height
+                                         (min-width 1)
+                                         (min-height 1)
                                          margin-left
                                          margin-right
                                          foreground-color
@@ -309,8 +309,7 @@ is required if you want to change the below existing arguments:
             (set-frame-size child-frame width height)
             (with-current-buffer buffer
               (setq-local posframe--last-size (cons width height))))
-        (fit-frame-to-buffer
-         child-frame nil (or min-width 1) nil (or min-height 1)))
+        (fit-frame-to-buffer child-frame nil min-width nil min-height))
       (unless (frame-visible-p child-frame)
         (make-frame-visible child-frame))
       (posframe--run-hide-timer posframe-buffer timeout)
