@@ -246,6 +246,7 @@ This posframe's buffer is POSFRAME-BUFFER."
                                          position
                                          width
                                          height
+                                         pixelwise
                                          (min-width 1)
                                          (min-height 1)
                                          (x-offset 0)
@@ -266,7 +267,9 @@ be removed before showed in posframe.
 posframe's frame-size can be set by WIDTH and HEIGHT,
 If one of them is nil, posframe's frame-size will fit the
 content of buffer, if you don't want to posframe's
-size too small, MIN-WIDTH and MIN-HEIGTH will be useful.
+size too small, MIN-WIDTH and MIN-HEIGTH will be useful
+When PIXELWISE is non-nil, the above WIDTH and HEIGHT
+are regard as pixel width and pixel height.
 
 If MARGIN-LEFT or MARGIN-RIGHT is a number, Left fringe or
 right fringe with be showed with number width.
@@ -332,14 +335,17 @@ you can use `posframe-delete-all' to delete all posframes."
           (setq-local posframe--last-position x-and-y)))
       (if (and width height)
           (unless (equal (cons width height) posframe--last-size)
-            (set-frame-size child-frame width height)
+            (set-frame-size child-frame width height pixelwise)
             (with-current-buffer buffer
               (setq-local posframe--last-size (cons width height))))
         (fit-frame-to-buffer child-frame nil min-width nil min-height)
         (with-current-buffer buffer
           (setq-local posframe--last-size
-                      (cons (frame-width child-frame)
-                            (frame-height child-frame)))))
+                      (if pixelwise
+                          (cons (frame-pixel-width child-frame)
+                                (frame-pixel-height child-frame))
+                        (cons (frame-width child-frame)
+                              (frame-height child-frame))))))
       (unless (frame-visible-p child-frame)
         (make-frame-visible child-frame))
       (posframe--run-hide-timer posframe-buffer timeout)
