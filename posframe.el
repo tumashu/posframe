@@ -362,6 +362,13 @@ POSFRAME-BUFFER."
                   (run-with-timer
                    secs nil #'posframe-hide posframe-buffer)))))
 
+(defun posframe-get-last-size (posframe-buffer)
+  "Return the posframe's last framesize.
+This posframe's buffer is POSFRAME-BUFFER."
+  (with-current-buffer (get-buffer-create posframe-buffer)
+    (when (local-variable-p 'posframe--last-size)
+      posframe--last-size)))
+
 (defun posframe-hide (posframe-buffer)
   "Hide posframe which buffer is POSFRAME-BUFFER."
   (with-current-buffer (get-buffer-create posframe-buffer)
