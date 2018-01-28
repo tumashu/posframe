@@ -355,6 +355,7 @@ This posframe's buffer is POSFRAME-BUFFER."
 
 ;; Local Variables:
 ;; coding: utf-8-unix
+;; lexical-binding: t
 ;; End:
 
 ;;; posframe.el ends here
