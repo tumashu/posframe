@@ -255,7 +255,6 @@ This posframe's buffer is POSFRAME-BUFFER."
                                          (min-height 1)
                                          (x-offset 0)
                                          (y-offset 0)
-                                         (posframe-adjust t)
                                          margin-left
                                          margin-right
                                          foreground-color
@@ -332,7 +331,6 @@ you can use `posframe-delete-all' to delete all posframes."
                      position
                      :posframe-width (frame-pixel-width child-frame)
                      :posframe-height (frame-pixel-height child-frame)
-                     :posframe-adjust posframe-adjust
                      :x-offset x-offset
                      :y-offset y-offset))
       (unless (equal x-and-y posframe--last-position)
