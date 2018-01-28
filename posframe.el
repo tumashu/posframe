@@ -134,7 +134,7 @@
                                             &key
                                             posframe-width
                                             posframe-height
-                                            posframe-adjust
+                                            (posframe-adjust t)
                                             (x-offset 0)
                                             (y-offset 0))
   "Return bottom-left-corner pixel POSITION in WINDOW.
