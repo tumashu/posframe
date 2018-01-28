@@ -1,21 +1,23 @@
 
 # &#30446;&#24405;
 
-1.  [Posframe README](#orgb926c32)
-    1.  [What is posframe](#orge831c4a)
-    2.  [Installation](#orgc0b324d)
-    3.  [Usage](#orgfabe960)
-        1.  [Create a posframe](#org024e710)
-        2.  [Hide a posframe](#org2764313)
-        3.  [Delete a posframe](#org705bb4f)
+1.  [Posframe README](#org36b5ef2)
+    1.  [What is posframe](#org7146a1d)
+    2.  [Installation](#orgf7207a7)
+    3.  [Usage](#orge9f36ba)
+        1.  [Create a posframe](#org398d423)
+        2.  [Hide a posframe](#org9067e19)
+        3.  [Hide all posframes](#org406784e)
+        4.  [Delete a posframe](#org8f485df)
+        5.  [Delete all posframes](#orge995c04)
 
 
-<a id="orgb926c32"></a>
+<a id="org36b5ef2"></a>
 
 # Posframe README
 
 
-<a id="orge831c4a"></a>
+<a id="org7146a1d"></a>
 
 ## What is posframe
 
@@ -33,19 +35,19 @@ NOTE: posframe requires emacs (version >= 26.0.91).
 ![img](./snapshots/posframe-1.png)
 
 
-<a id="orgc0b324d"></a>
+<a id="orgf7207a7"></a>
 
 ## Installation
 
     (require 'posframe)
 
 
-<a id="orgfabe960"></a>
+<a id="orge9f36ba"></a>
 
 ## Usage
 
 
-<a id="org024e710"></a>
+<a id="org398d423"></a>
 
 ### Create a posframe
 
@@ -64,18 +66,36 @@ Addition arguments:
     **all** the frame parameters of posframe's child-frame.
 
 
-<a id="org2764313"></a>
+<a id="org9067e19"></a>
 
 ### Hide a posframe
 
     (posframe-hide " *my-posframe-buffer*")
 
 
-<a id="org705bb4f"></a>
+<a id="org406784e"></a>
+
+### Hide all posframes
+
+    M-x posframe-hide-all
+
+
+<a id="org8f485df"></a>
 
 ### Delete a posframe
 
     (posframe-delete " *my-posframe-buffer*")
+
+
+<a id="orge995c04"></a>
+
+### Delete all posframes
+
+    M-x posframe-delete-all
+
+Note: this command will delete all posframe buffers,
+suggest not run this command if you are sharing a buffer
+between posframe and other packages.
 
 
 

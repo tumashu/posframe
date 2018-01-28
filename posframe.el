@@ -67,15 +67,28 @@
 ;;    *all* the frame parameters of posframe's child-frame.
 
 ;; *** Hide a posframe
-
 ;; #+BEGIN_EXAMPLE
 ;; (posframe-hide " *my-posframe-buffer*")
+;; #+END_EXAMPLE
+
+;; *** Hide all posframes
+;; #+BEGIN_EXAMPLE
+;; M-x posframe-hide-all
 ;; #+END_EXAMPLE
 
 ;; *** Delete a posframe
 ;; #+BEGIN_EXAMPLE
 ;; (posframe-delete " *my-posframe-buffer*")
 ;; #+END_EXAMPLE
+
+;; *** Delete all posframes
+;; #+BEGIN_EXAMPLE
+;; M-x posframe-delete-all
+;; #+END_EXAMPLE
+
+;; Note: this command will delete all posframe buffers,
+;; suggest not run this command if you are sharing a buffer
+;; between posframe and other packages.
 
 ;;; Code:
 ;; * posframe's code                         :CODE:
@@ -264,7 +277,9 @@ reason, deleting the existing frame with `posframe-delete'
 is required if you want to change the below existing arguments:
 1. MARGIN-*,
 2. *-COLOR
-3. OVERRIDE-PARAMETERS."
+3. OVERRIDE-PARAMETERS.
+
+you can use `posframe-delete-all' to delete all posframes."
   (let* ((position (or position (point)))
          (indirected-buffer (buffer-live-p string))
          (buffer (get-buffer-create posframe-buffer))
@@ -349,6 +364,27 @@ This posframe's buffer is POSFRAME-BUFFER."
   "Kill posframe's buffer: POSFRAME-BUFFER."
   (when (buffer-live-p posframe-buffer)
     (kill-buffer posframe-buffer)))
+
+;;;autoload
+(defun posframe-hide-all ()
+  "Hide all posframe's frames."
+  (interactive)
+  (dolist (buffer (buffer-list))
+    (with-current-buffer buffer
+      (when (frame-live-p posframe--frame)
+        (make-frame-invisible posframe--frame)))))
+
+;;;autoload
+(defun posframe-delete-all ()
+  "Delete all posframe's frames and buffers"
+  (interactive)
+  (dolist (frame (frame-list))
+    (let ((buffer (frame-parameter frame 'posframe-buffer)))
+      (when buffer (delete-frame frame))))
+  (dolist (buffer (buffer-list))
+    (with-current-buffer buffer
+      (when posframe--frame
+        (posframe--kill-buffer buffer)))))
 
 (provide 'posframe)
 
