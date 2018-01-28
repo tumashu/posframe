@@ -130,7 +130,12 @@
   (make-variable-buffer-local var)
   (put var 'permanent-local t))
 
-(defun posframe--compute-pixel-position (position tooltip-width tooltip-height)
+(cl-defun posframe--compute-pixel-position (position
+                                            &key
+                                            tooltip-width
+                                            tooltip-height
+                                            (x-offset 0)
+                                            (y-offset 0))
   "Return bottom-left-corner pixel POSITION in WINDOW.
 its returned value is like (X . Y)
 
@@ -146,13 +151,15 @@ not disappear by sticking out of the display."
          (posn-top-left (posn-at-point position window))
          (x (+ (car (window-inside-pixel-edges window))
                (- (or (car (posn-x-y posn-top-left)) 0)
-                  (or (car (posn-object-x-y posn-top-left)) 0))))
+                  (or (car (posn-object-x-y posn-top-left)) 0))
+               x-offset))
          (y-top (+ (cadr (window-pixel-edges window))
                    header-line-height
                    (- (or (cdr (posn-x-y posn-top-left)) 0)
                       ;; Fix the conflict with flycheck
                       ;; http://lists.gnu.org/archive/html/emacs-devel/2018-01/msg00537.html
-                      (or (cdr (posn-object-x-y posn-top-left)) 0))))
+                      (or (cdr (posn-object-x-y posn-top-left)) 0))
+                   y-offset))
          (font-height
           (if (= position 1)
               (default-line-height)
@@ -241,6 +248,8 @@ This posframe's buffer is POSFRAME-BUFFER."
                                          height
                                          (min-width 1)
                                          (min-height 1)
+                                         (x-offset 0)
+                                         (y-offset 0)
                                          margin-left
                                          margin-right
                                          foreground-color
@@ -313,8 +322,10 @@ you can use `posframe-delete-all' to delete all posframes."
       (set-frame-parameter child-frame 'parent-frame (window-frame))
       (setq x-and-y (posframe--compute-pixel-position
                      position
-                     (frame-pixel-width child-frame)
-                     (frame-pixel-height child-frame)))
+                     :tooltip-width (frame-pixel-width child-frame)
+                     :tooltip-height (frame-pixel-height child-frame)
+                     :x-offset x-offset
+                     :y-offset y-offset))
       (unless (equal x-and-y posframe--last-position)
         (set-frame-position child-frame (car x-and-y) (+ (cdr x-and-y) 1))
         (with-current-buffer buffer
