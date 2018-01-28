@@ -335,7 +335,11 @@ you can use `posframe-delete-all' to delete all posframes."
             (set-frame-size child-frame width height)
             (with-current-buffer buffer
               (setq-local posframe--last-size (cons width height))))
-        (fit-frame-to-buffer child-frame nil min-width nil min-height))
+        (fit-frame-to-buffer child-frame nil min-width nil min-height)
+        (with-current-buffer buffer
+          (setq-local posframe--last-size
+                      (cons (frame-width child-frame)
+                            (frame-height child-frame)))))
       (unless (frame-visible-p child-frame)
         (make-frame-visible child-frame))
       (posframe--run-hide-timer posframe-buffer timeout)
