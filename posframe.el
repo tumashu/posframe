@@ -132,14 +132,14 @@
 
 (cl-defun posframe--compute-pixel-position (position
                                             &key
-                                            tooltip-width
-                                            tooltip-height
+                                            posframe-width
+                                            posframe-height
                                             (x-offset 0)
                                             (y-offset 0))
   "Return bottom-left-corner pixel POSITION in WINDOW.
 its returned value is like (X . Y)
 
-If TOOLTIP-WIDTH and TOOLTIP-HEIGHT are given,
+If POSFRAME-WIDTH and POSFRAME-HEIGHT are given,
 this function will use two values to adjust its
 output position, make sure the *tooltip* at position
 not disappear by sticking out of the display."
@@ -170,9 +170,9 @@ not disappear by sticking out of the display."
                       position)))
                   3)))
          (y-buttom (+ y-top font-height)))
-    (cons (max 0 (min x (- xmax (or tooltip-width 0))))
-          (max 0 (if (> (+ y-buttom (or tooltip-height 0)) ymax)
-                     (- y-top (or tooltip-height 0))
+    (cons (max 0 (min x (- xmax (or posframe-width 0))))
+          (max 0 (if (> (+ y-buttom (or posframe-height 0)) ymax)
+                     (- y-top (or posframe-height 0))
                    y-buttom)))))
 
 (cl-defun posframe--create-frame (posframe-buffer
@@ -325,8 +325,8 @@ you can use `posframe-delete-all' to delete all posframes."
       (set-frame-parameter child-frame 'parent-frame (window-frame))
       (setq x-and-y (posframe--compute-pixel-position
                      position
-                     :tooltip-width (frame-pixel-width child-frame)
-                     :tooltip-height (frame-pixel-height child-frame)
+                     :posframe-width (frame-pixel-width child-frame)
+                     :posframe-height (frame-pixel-height child-frame)
                      :x-offset x-offset
                      :y-offset y-offset))
       (unless (equal x-and-y posframe--last-position)
