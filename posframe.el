@@ -189,6 +189,7 @@ by sticking out of the display."
                                   background-color
                                   margin-left
                                   margin-right
+                                  font
                                   override-parameters)
   "Create a child-frame for posframe.
 This posframe's buffer is POSFRAME-BUFFER."
@@ -216,6 +217,8 @@ This posframe's buffer is POSFRAME-BUFFER."
                           (cons 'foreground-color foreground-color))
                        ,(when background-color
                           (cons 'background-color background-color))
+                       ,(when font
+                          (cons 'font font))
                        (parent-frame . ,(or parent-frame (window-frame)))
                        (posframe-buffer . ,posframe-buffer)
                        (no-accept-focus . t)
@@ -260,6 +263,7 @@ This posframe's buffer is POSFRAME-BUFFER."
                                          (y-offset 0)
                                          margin-left
                                          margin-right
+                                         font
                                          foreground-color
                                          background-color
                                          no-properties
@@ -280,6 +284,9 @@ are regard as pixel width and pixel height.
 
 If MARGIN-LEFT or MARGIN-RIGHT is a number, Left fringe or
 right fringe with be showed with number width.
+
+By default, posframe's font is deriverd from current frame
+user can set posframe's font with FONT argument.
 
 By default, posframe's foreground and background color are
 deriverd from current frame, user can set them with the help
@@ -310,6 +317,7 @@ you can use `posframe-delete-all' to delete all posframes."
      :parent-frame frame
      :margin-left margin-left
      :margin-right margin-right
+     :font font
      :foreground-color foreground-color
      :background-color background-color
      :override-parameters override-parameters)
