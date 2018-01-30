@@ -7,7 +7,7 @@
 ;; URL: https://github.com/tumashu/posframe
 ;; Version: 0.1.0
 ;; Keywords: tooltip
-;; Package-Requires: ((cl-lib "0.5"))
+;; Package-Requires: ((emacs "24.4"))
 
 ;; This file is part of GNU Emacs.
 
@@ -38,8 +38,8 @@
 ;; 2. It works well with CJK language.
 
 ;; NOTE: posframe requires emacs (version >= 26.0.91), but for
-;; compatibility reasons, it not require emacs26 at package header,
-;; user should test emacs version before run `posframe-show'.
+;; compatibility reasons, it does not require emacs26 at package
+;; level, user should test emacs version before run `posframe-show'.
 
 ;; [[./snapshots/posframe-1.png]]
 
@@ -344,7 +344,7 @@ you can use `posframe-delete-all' to delete all posframes."
             (set-frame-size child-frame width height pixelwise)
             (with-current-buffer buffer
               (setq-local posframe--last-size (cons width height))))
-        (fit-frame-to-buffer child-frame nil min-width nil min-height)
+        (fit-frame-to-buffer child-frame nil min-height nil min-width)
         (with-current-buffer buffer
           (setq-local posframe--last-size
                       (if pixelwise
