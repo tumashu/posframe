@@ -357,6 +357,7 @@ you can use `posframe-delete-all' to delete all posframes."
 
     (let ((child-frame (buffer-local-value 'posframe--frame buffer)))
       (set-frame-parameter child-frame 'parent-frame (window-frame))
+      (fit-frame-to-buffer child-frame nil min-height nil min-width)
       (setq x-and-y
             (if (consp position)
                 position
@@ -366,30 +367,24 @@ you can use `posframe-delete-all' to delete all posframes."
                :posframe-height (frame-pixel-height child-frame)
                :x-offset x-offset
                :y-offset y-offset)))
-      (unless (with-current-buffer buffer
-                (equal x-and-y posframe--last-position))
-        (set-frame-position child-frame (car x-and-y) (+ (cdr x-and-y) 1))
-        (with-current-buffer buffer
-          (setq-local posframe--last-position x-and-y)))
-      (if (and width height)
-          (unless (with-current-buffer buffer
-                    (equal posframe--last-size
-                           (cons width height)))
-            (set-frame-size child-frame width height pixelwise)
-            (with-current-buffer buffer
-              (setq-local posframe--last-size (cons width height))))
-        (fit-frame-to-buffer child-frame nil min-height nil min-width)
-        (with-current-buffer buffer
+      (with-current-buffer buffer
+        (unless (equal x-and-y posframe--last-position)
+          (set-frame-position child-frame (car x-and-y) (cdr x-and-y))
+          (setq-local posframe--last-position x-and-y))
+        (if (and width height)
+            (unless (equal posframe--last-size (cons width height))
+              (set-frame-size child-frame width height pixelwise)
+              (setq-local posframe--last-size (cons width height)))
           (setq-local posframe--last-size
                       (if pixelwise
                           (cons (frame-pixel-width child-frame)
                                 (frame-pixel-height child-frame))
                         (cons (frame-width child-frame)
-                              (frame-height child-frame))))))
-      (unless (frame-visible-p child-frame)
-        (make-frame-visible child-frame))
-      (posframe--run-hide-timer posframe-buffer timeout)
-      nil)))
+                              (frame-height child-frame)))))
+        (unless (frame-visible-p child-frame)
+          (make-frame-visible child-frame))
+        (posframe--run-hide-timer posframe-buffer timeout)
+        nil))))
 
 (defun posframe--run-hide-timer (posframe-buffer secs)
   "After a delay of SECS seconds, hide posframe which buffer is
