@@ -197,6 +197,7 @@ by sticking out of the display."
                                   margin-left
                                   margin-right
                                   font
+                                  keep-ratio
                                   override-parameters)
   "Create a child-frame for posframe.
 This posframe's buffer is POSFRAME-BUFFER."
@@ -207,6 +208,7 @@ This posframe's buffer is POSFRAME-BUFFER."
                     margin-right
                     margin-left
                     font
+                    keep-ratio
                     override-parameters)))
     (with-current-buffer buffer
       ;; Many variables take effect after call `set-window-buffer'
@@ -239,6 +241,7 @@ This posframe's buffer is POSFRAME-BUFFER."
                        ,(when font
                           (cons 'font font))
                        (parent-frame . ,(or parent-frame (window-frame)))
+                       (keep-ratio ,keep-ratio)
                        (posframe-buffer . ,posframe-buffer)
                        (no-accept-focus . t)
                        (min-width  . 0)
@@ -286,6 +289,7 @@ This posframe's buffer is POSFRAME-BUFFER."
                                          foreground-color
                                          background-color
                                          no-properties
+                                         keep-ratio
                                          override-parameters
                                          timeout)
   "Pop posframe and show STRING at POSITION.
@@ -335,6 +339,7 @@ you can use `posframe-delete-all' to delete all posframes."
      :font font
      :foreground-color foreground-color
      :background-color background-color
+     :keep-ratio keep-ratio
      :override-parameters override-parameters)
 
     ;; FIXME: This is a hacky fix for the mouse focus problem for child-frame
