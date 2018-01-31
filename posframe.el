@@ -366,12 +366,15 @@ you can use `posframe-delete-all' to delete all posframes."
                :posframe-height (frame-pixel-height child-frame)
                :x-offset x-offset
                :y-offset y-offset)))
-      (unless (equal x-and-y posframe--last-position)
+      (unless (with-current-buffer buffer
+                (equal x-and-y posframe--last-position))
         (set-frame-position child-frame (car x-and-y) (+ (cdr x-and-y) 1))
         (with-current-buffer buffer
           (setq-local posframe--last-position x-and-y)))
       (if (and width height)
-          (unless (equal (cons width height) posframe--last-size)
+          (unless (with-current-buffer buffer
+                    (equal posframe--last-size
+                           (cons width height)))
             (set-frame-size child-frame width height pixelwise)
             (with-current-buffer buffer
               (setq-local posframe--last-size (cons width height))))
