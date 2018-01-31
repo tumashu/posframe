@@ -288,7 +288,10 @@ This posframe's buffer is POSFRAME-BUFFER."
                                          no-properties
                                          override-parameters
                                          timeout)
-  "Pop a posframe at point and show STRING.
+  "Pop posframe and show STRING at POSITION.
+The POSITION can be a point or a cons of pixel numbers,
+for example: (X . Y).
+
 This posframe's buffer is POSFRAME-BUFFER.
 
 If NO-PROPERTIES is non-nil, The STRING's properties will
@@ -349,12 +352,15 @@ you can use `posframe-delete-all' to delete all posframes."
 
     (let ((child-frame (buffer-local-value 'posframe--frame buffer)))
       (set-frame-parameter child-frame 'parent-frame (window-frame))
-      (setq x-and-y (posframe--compute-pixel-position
-                     position
-                     :posframe-width (frame-pixel-width child-frame)
-                     :posframe-height (frame-pixel-height child-frame)
-                     :x-offset x-offset
-                     :y-offset y-offset))
+      (setq x-and-y
+            (if (consp position)
+                position
+              (posframe--compute-pixel-position
+               position
+               :posframe-width (frame-pixel-width child-frame)
+               :posframe-height (frame-pixel-height child-frame)
+               :x-offset x-offset
+               :y-offset y-offset)))
       (unless (equal x-and-y posframe--last-position)
         (set-frame-position child-frame (car x-and-y) (+ (cdr x-and-y) 1))
         (with-current-buffer buffer
