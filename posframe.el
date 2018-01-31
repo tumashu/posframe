@@ -231,6 +231,8 @@ This posframe's buffer is POSFRAME-BUFFER."
                    (equal posframe--last-args args))
         (posframe--delete-frame posframe-buffer)
         (setq-local posframe--last-args args)
+        (setq-local posframe--last-position nil)
+        (setq-local posframe--last-size nil)
         (setq-local posframe--frame
                     (make-frame
                      `(,@override-parameters
@@ -329,7 +331,7 @@ you can use `posframe-delete-all' to delete all posframes."
          (buffer (get-buffer-create posframe-buffer))
          (frame-resize-pixelwise t)
          (frame (window-frame))
-         x-and-y)
+         child-frame x-and-y)
 
     (posframe--create-frame
      posframe-buffer
@@ -348,43 +350,52 @@ you can use `posframe-delete-all' to delete all posframes."
                (not (equal (cdr (mouse-position)) '(0 . 0))))
       (set-mouse-position frame 0 0))
 
-    (when (and string (stringp string))
-      (with-current-buffer buffer
+    (with-current-buffer buffer
+      (setq child-frame posframe--frame)
+      (set-frame-parameter child-frame 'parent-frame (window-frame))
+
+      ;; Insert string to posframe's buffer.
+      (when (and string (stringp string))
         (erase-buffer)
         (if no-properties
             (insert (substring-no-properties string))
-          (insert string))))
+          (insert string)))
 
-    (let ((child-frame (buffer-local-value 'posframe--frame buffer)))
-      (set-frame-parameter child-frame 'parent-frame (window-frame))
-      (fit-frame-to-buffer child-frame nil min-height nil min-width)
-      (setq x-and-y
-            (if (consp position)
-                position
-              (posframe--compute-pixel-position
-               position
-               :posframe-width (frame-pixel-width child-frame)
-               :posframe-height (frame-pixel-height child-frame)
-               :x-offset x-offset
-               :y-offset y-offset)))
-      (with-current-buffer buffer
-        (unless (equal x-and-y posframe--last-position)
-          (set-frame-position child-frame (car x-and-y) (cdr x-and-y))
-          (setq-local posframe--last-position x-and-y))
-        (if (and width height)
-            (unless (equal posframe--last-size (cons width height))
-              (set-frame-size child-frame width height pixelwise)
-              (setq-local posframe--last-size (cons width height)))
-          (setq-local posframe--last-size
-                      (if pixelwise
-                          (cons (frame-pixel-width child-frame)
-                                (frame-pixel-height child-frame))
-                        (cons (frame-width child-frame)
-                              (frame-height child-frame)))))
-        (unless (frame-visible-p child-frame)
-          (make-frame-visible child-frame))
-        (posframe--run-hide-timer posframe-buffer timeout)
-        nil))))
+      ;; Set posframe's size
+      (if (and width height)
+          (unless (equal posframe--last-size (cons width height))
+            (set-frame-size child-frame width height pixelwise)
+            (setq-local posframe--last-size (cons width height)))
+        (fit-frame-to-buffer child-frame nil min-height nil min-width)
+        (setq-local posframe--last-size
+                    (if pixelwise
+                        (cons (frame-pixel-width child-frame)
+                              (frame-pixel-height child-frame))
+                      (cons (frame-width child-frame)
+                            (frame-height child-frame))))))
+
+    ;; Get the posframe's position, this must run in user's working
+    ;; buffer instead of posframe's buffer.
+    (setq x-and-y
+          (if (consp position)
+              position
+            (posframe--compute-pixel-position
+             position
+             :posframe-width (frame-pixel-width child-frame)
+             :posframe-height (frame-pixel-height child-frame)
+             :x-offset x-offset
+             :y-offset y-offset)))
+
+    (with-current-buffer buffer
+      ;; Move posframe's child-frame.
+      (unless (equal x-and-y posframe--last-position)
+        (set-frame-position child-frame (car x-and-y) (cdr x-and-y))
+        (setq-local posframe--last-position x-and-y))
+      ;; Make posframe's child-frame visible
+      (unless (frame-visible-p child-frame)
+        (make-frame-visible child-frame))
+      (posframe--run-hide-timer posframe-buffer timeout)
+      nil)))
 
 (defun posframe--run-hide-timer (posframe-buffer secs)
   "After a delay of SECS seconds, hide posframe which buffer is
