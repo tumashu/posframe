@@ -126,10 +126,17 @@
 (defvar posframe--last-size nil
   "Record the last size of posframe's frame.")
 
+(defvar posframe--last-args nil
+  "Record the last arguments of `posframe--create-frame'.
+
+If these args have changed, posframe will recreate its
+frame.")
+
 (dolist (var '(posframe--frame
                posframe--timer
                posframe--last-position
-               posframe--last-size))
+               posframe--last-size
+               posframe--last-args))
   (make-variable-buffer-local var)
   (put var 'permanent-local t))
 
@@ -194,7 +201,13 @@ by sticking out of the display."
   "Create a child-frame for posframe.
 This posframe's buffer is POSFRAME-BUFFER."
   (let ((buffer (get-buffer-create posframe-buffer))
-        (after-make-frame-functions nil))
+        (after-make-frame-functions nil)
+        (args (list foreground-color
+                    background-color
+                    margin-right
+                    margin-left
+                    font
+                    override-parameters)))
     (with-current-buffer buffer
       ;; Many variables take effect after call `set-window-buffer'
       (setq-local left-fringe-width (or margin-left 0))
@@ -208,8 +221,14 @@ This posframe's buffer is POSFRAME-BUFFER."
       (setq-local show-trailing-whitespace nil)
 
       ;; Create child-frame
-      (unless (frame-live-p posframe--frame)
+      (unless (and (frame-live-p posframe--frame)
+                   ;; For speed reason, posframe will reuse
+                   ;; existing frame at possible, but when
+                   ;; user change args, recreating frame
+                   ;; is needed.
+                   (equal posframe--last-args args))
         (posframe--delete-frame posframe-buffer)
+        (setq-local posframe--last-args args)
         (setq-local posframe--frame
                     (make-frame
                      `(,@override-parameters
@@ -297,13 +316,6 @@ used by posframe's frame can be overrided by it.
 
 If TIMEOUT is a number, a delay of number seconds, the posframe
 will auto hide.
-
-NOTE: posframe will reuse the existing frame, for speed
-reason, deleting the existing frame with `posframe-delete'
-is required if you want to change the below existing arguments:
-1. MARGIN-*,
-2. *-COLOR
-3. OVERRIDE-PARAMETERS.
 
 you can use `posframe-delete-all' to delete all posframes."
   (let* ((position (or position (point)))
