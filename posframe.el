@@ -394,6 +394,7 @@ you can use `posframe-delete-all' to delete all posframes."
       ;; Make posframe's child-frame visible
       (unless (frame-visible-p child-frame)
         (make-frame-visible child-frame))
+      ;; Auto hide posframe when need.
       (posframe--run-hide-timer posframe-buffer timeout)
       nil)))
 
