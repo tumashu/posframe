@@ -1,23 +1,23 @@
 
 # &#30446;&#24405;
 
-1.  [Posframe README](#org36b5ef2)
-    1.  [What is posframe](#org7146a1d)
-    2.  [Installation](#orgf7207a7)
-    3.  [Usage](#orge9f36ba)
-        1.  [Create a posframe](#org398d423)
-        2.  [Hide a posframe](#org9067e19)
-        3.  [Hide all posframes](#org406784e)
-        4.  [Delete a posframe](#org8f485df)
-        5.  [Delete all posframes](#orge995c04)
+1.  [Posframe README](#org035f222)
+    1.  [What is posframe](#org4cfefc0)
+    2.  [Installation](#org860fe5c)
+    3.  [Usage](#orgd2cc6e4)
+        1.  [Create a posframe](#org9536a5a)
+        2.  [Hide a posframe](#org4441abd)
+        3.  [Hide all posframes](#org08545c6)
+        4.  [Delete a posframe](#orgf8b48eb)
+        5.  [Delete all posframes](#org4ea3642)
 
 
-<a id="org36b5ef2"></a>
+<a id="org035f222"></a>
 
 # Posframe README
 
 
-<a id="org7146a1d"></a>
+<a id="org4cfefc0"></a>
 
 ## What is posframe
 
@@ -30,30 +30,33 @@ The main advantages are:
     of popup.el.
 2.  It works well with CJK language.
 
-NOTE: posframe requires emacs (version >= 26.0.91).
+NOTE: posframe requires emacs (version >= 26.0.91), but for
+compatibility reasons, it does not require emacs26 at package
+level, user should test emacs version before run \`posframe-show'.
 
 ![img](./snapshots/posframe-1.png)
 
 
-<a id="orgf7207a7"></a>
+<a id="org860fe5c"></a>
 
 ## Installation
 
     (require 'posframe)
 
 
-<a id="orge9f36ba"></a>
+<a id="orgd2cc6e4"></a>
 
 ## Usage
 
 
-<a id="org398d423"></a>
+<a id="org9536a5a"></a>
 
 ### Create a posframe
 
-    (posframe-show " *my-posframe-buffer*"
-                   "This is a test"
-                   :position (point))
+    (when (>= emacs-major-version 26)
+      (posframe-show " *my-posframe-buffer*"
+                     "This is a test"
+                     :position (point)))
 
 Addition arguments:
 
@@ -66,28 +69,28 @@ Addition arguments:
     **all** the frame parameters of posframe's child-frame.
 
 
-<a id="org9067e19"></a>
+<a id="org4441abd"></a>
 
 ### Hide a posframe
 
     (posframe-hide " *my-posframe-buffer*")
 
 
-<a id="org406784e"></a>
+<a id="org08545c6"></a>
 
 ### Hide all posframes
 
     M-x posframe-hide-all
 
 
-<a id="org8f485df"></a>
+<a id="orgf8b48eb"></a>
 
 ### Delete a posframe
 
     (posframe-delete " *my-posframe-buffer*")
 
 
-<a id="orge995c04"></a>
+<a id="org4ea3642"></a>
 
 ### Delete all posframes
 
