@@ -407,12 +407,16 @@ POSFRAME-BUFFER."
                   (run-with-timer
                    secs nil #'posframe-hide posframe-buffer)))))
 
-(defun posframe-get-last-size (posframe-buffer)
-  "Return the posframe's last framesize.
+(defun posframe-get-frame-size (posframe-buffer &optional pixelwise)
+  "Return the posframe's current frame text or PIXELWISE size.
 This posframe's buffer is POSFRAME-BUFFER."
   (with-current-buffer (get-buffer-create posframe-buffer)
-    (when (local-variable-p 'posframe--last-size)
-      posframe--last-size)))
+    (when (frame-live-p posframe--frame)
+      (if pixelwise
+          (cons (frame-pixel-width posframe--frame)
+                (frame-pixel-height posframe--frame))
+        (cons (frame-width posframe--frame)
+              (frame-height posframe--frame))))))
 
 (defun posframe-hide (posframe-buffer)
   "Hide posframe which buffer is POSFRAME-BUFFER."
