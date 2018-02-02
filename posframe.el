@@ -440,7 +440,7 @@ This posframe's buffer is POSFRAME-BUFFER."
   (when (buffer-live-p posframe-buffer)
     (kill-buffer posframe-buffer)))
 
-;;;autoload
+;;;###autoload
 (defun posframe-hide-all ()
   "Hide all posframe's frames."
   (interactive)
@@ -449,7 +449,7 @@ This posframe's buffer is POSFRAME-BUFFER."
       (when (frame-live-p posframe--frame)
         (make-frame-invisible posframe--frame)))))
 
-;;;autoload
+;;;###autoload
 (defun posframe-delete-all ()
   "Delete all posframe's frames and buffers"
   (interactive)
