@@ -281,7 +281,6 @@ This posframe's buffer is POSFRAME-BUFFER."
                          position
                          width
                          height
-                         pixelwise
                          (min-width 1)
                          (min-height 1)
                          (x-offset 0)
@@ -308,8 +307,6 @@ posframe's frame-size can be set by WIDTH and HEIGHT,
 If one of them is nil, posframe's frame-size will fit the
 content of buffer, if you don't want to posframe's
 size too small, MIN-WIDTH and MIN-HEIGTH will be useful
-When PIXELWISE is non-nil, the above WIDTH and HEIGHT
-are regard as pixel width and pixel height.
 
 If MARGIN-LEFT or MARGIN-RIGHT is a number, Left fringe or
 right fringe with be showed with number width.
@@ -368,7 +365,7 @@ you can use `posframe-delete-all' to delete all posframes."
       ;; Set posframe's size
       (if (and width height)
           (unless (equal posframe--last-size (cons width height))
-            (set-frame-size child-frame width height pixelwise)
+            (set-frame-size child-frame width height)
             (setq-local posframe--last-size (cons width height)))
         (fit-frame-to-buffer child-frame height min-height width min-width)))
 
