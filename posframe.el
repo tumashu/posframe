@@ -145,8 +145,8 @@ frame.")
                                             posframe-width
                                             posframe-height
                                             (posframe-adjust t)
-                                            (x-offset 0)
-                                            (y-offset 0))
+                                            (x-pixel-offset 0)
+                                            (y-pixel-offset 0))
   "Return bottom-left-corner pixel POSITION in WINDOW.
 its returned value is like (X . Y)
 
@@ -164,14 +164,14 @@ by sticking out of the display."
          (x (+ (car (window-inside-pixel-edges window))
                (- (or (car (posn-x-y posn-top-left)) 0)
                   (or (car (posn-object-x-y posn-top-left)) 0))
-               x-offset))
+               x-pixel-offset))
          (y-top (+ (cadr (window-pixel-edges window))
                    header-line-height
                    (- (or (cdr (posn-x-y posn-top-left)) 0)
                       ;; Fix the conflict with flycheck
                       ;; http://lists.gnu.org/archive/html/emacs-devel/2018-01/msg00537.html
                       (or (cdr (posn-object-x-y posn-top-left)) 0))
-                   y-offset))
+                   y-pixel-offset))
          (font-height
           (if (= position 1)
               (default-line-height)
@@ -284,8 +284,8 @@ This posframe's buffer is POSFRAME-BUFFER."
                          height
                          (min-width 1)
                          (min-height 1)
-                         (x-offset 0)
-                         (y-offset 0)
+                         (x-pixel-offset 0)
+                         (y-pixel-offset 0)
                          margin-left
                          margin-right
                          font
@@ -378,8 +378,8 @@ you can use `posframe-delete-all' to delete all posframes."
              position
              :posframe-width (frame-pixel-width child-frame)
              :posframe-height (frame-pixel-height child-frame)
-             :x-offset x-offset
-             :y-offset y-offset)))
+             :x-pixel-offset x-pixel-offset
+             :y-pixel-offset y-pixel-offset)))
 
     (with-current-buffer buffer
       ;; Move posframe's child-frame.
