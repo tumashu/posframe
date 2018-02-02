@@ -56,7 +56,7 @@
 ;; #+BEGIN_EXAMPLE
 ;; (when (>= emacs-major-version 26)
 ;;   (posframe-show " *my-posframe-buffer*"
-;;                  "This is a test"
+;;                  :string "This is a test"
 ;;                  :position (point)))
 ;; #+END_EXAMPLE
 
@@ -357,10 +357,13 @@ you can use `posframe-delete-all' to delete all posframes."
 
       ;; Insert string to posframe's buffer.
       (when (and string (stringp string))
-        (erase-buffer)
+        ;; Does inserting string then deleting the before
+        ;; contents reduce flicking? Maybe :-)
+        (goto-char (point-min))
         (if no-properties
             (insert (substring-no-properties string))
-          (insert string)))
+          (insert string))
+        (delete-region (point) (point-max)))
 
       ;; Set posframe's size
       (if (and width height)
