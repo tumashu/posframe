@@ -370,13 +370,7 @@ you can use `posframe-delete-all' to delete all posframes."
           (unless (equal posframe--last-size (cons width height))
             (set-frame-size child-frame width height pixelwise)
             (setq-local posframe--last-size (cons width height)))
-        (fit-frame-to-buffer child-frame nil min-height nil min-width)
-        (setq-local posframe--last-size
-                    (if pixelwise
-                        (cons (frame-pixel-width child-frame)
-                              (frame-pixel-height child-frame))
-                      (cons (frame-width child-frame)
-                            (frame-height child-frame))))))
+        (fit-frame-to-buffer child-frame height min-height width min-width)))
 
     ;; Get the posframe's position, this must run in user's working
     ;; buffer instead of posframe's buffer.
