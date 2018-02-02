@@ -203,7 +203,8 @@ by sticking out of the display."
 This posframe's buffer is POSFRAME-BUFFER."
   (let ((buffer (get-buffer-create posframe-buffer))
         (after-make-frame-functions nil)
-        (args (list foreground-color
+        (args (list parent-frame
+                    foreground-color
                     background-color
                     margin-right
                     margin-left
@@ -350,7 +351,6 @@ you can use `posframe-delete-all' to delete all posframes."
 
     (with-current-buffer buffer
       (setq child-frame posframe--frame)
-      (set-frame-parameter child-frame 'parent-frame (window-frame))
 
       ;; Insert string to posframe's buffer.
       (when (and string (stringp string))
