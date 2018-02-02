@@ -373,7 +373,8 @@ you can use `posframe-delete-all' to delete all posframes."
     ;; buffer instead of posframe's buffer.
     (setq x-and-y
           (if (consp position)
-              position
+              (cons (+ (car position) x-pixel-offset)
+                    (+ (cdr position) y-pixel-offset))
             (posframe--compute-pixel-position
              position
              :posframe-width (frame-pixel-width child-frame)
