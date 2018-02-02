@@ -1,23 +1,23 @@
 
 # &#30446;&#24405;
 
-1.  [Posframe README](#org035f222)
-    1.  [What is posframe](#org4cfefc0)
-    2.  [Installation](#org860fe5c)
-    3.  [Usage](#orgd2cc6e4)
-        1.  [Create a posframe](#org9536a5a)
-        2.  [Hide a posframe](#org4441abd)
-        3.  [Hide all posframes](#org08545c6)
-        4.  [Delete a posframe](#orgf8b48eb)
-        5.  [Delete all posframes](#org4ea3642)
+1.  [Posframe README](#org868836c)
+    1.  [What is posframe](#org4059e00)
+    2.  [Installation](#org793f684)
+    3.  [Usage](#org4f80187)
+        1.  [Create a posframe](#org8dc61d6)
+        2.  [Hide a posframe](#org7d26675)
+        3.  [Hide all posframes](#orgae3b75a)
+        4.  [Delete a posframe](#org1ce137f)
+        5.  [Delete all posframes](#org5e5ed57)
 
 
-<a id="org035f222"></a>
+<a id="org868836c"></a>
 
 # Posframe README
 
 
-<a id="org4cfefc0"></a>
+<a id="org4059e00"></a>
 
 ## What is posframe
 
@@ -37,25 +37,25 @@ level, user should test emacs version before run \`posframe-show'.
 ![img](./snapshots/posframe-1.png)
 
 
-<a id="org860fe5c"></a>
+<a id="org793f684"></a>
 
 ## Installation
 
     (require 'posframe)
 
 
-<a id="orgd2cc6e4"></a>
+<a id="org4f80187"></a>
 
 ## Usage
 
 
-<a id="org9536a5a"></a>
+<a id="org8dc61d6"></a>
 
 ### Create a posframe
 
     (when (>= emacs-major-version 26)
       (posframe-show " *my-posframe-buffer*"
-                     "This is a test"
+                     :string "This is a test"
                      :position (point)))
 
 Addition arguments:
@@ -69,28 +69,28 @@ Addition arguments:
     **all** the frame parameters of posframe's child-frame.
 
 
-<a id="org4441abd"></a>
+<a id="org7d26675"></a>
 
 ### Hide a posframe
 
     (posframe-hide " *my-posframe-buffer*")
 
 
-<a id="org08545c6"></a>
+<a id="orgae3b75a"></a>
 
 ### Hide all posframes
 
     M-x posframe-hide-all
 
 
-<a id="orgf8b48eb"></a>
+<a id="org1ce137f"></a>
 
 ### Delete a posframe
 
     (posframe-delete " *my-posframe-buffer*")
 
 
-<a id="org4ea3642"></a>
+<a id="org5e5ed57"></a>
 
 ### Delete all posframes
 

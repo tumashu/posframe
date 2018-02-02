@@ -275,25 +275,26 @@ This posframe's buffer is POSFRAME-BUFFER."
           (set-window-parameter window 'header-line-format 'none)
           (set-window-buffer window buffer))))))
 
-(cl-defun posframe-show (posframe-buffer string
-                                         &key
-                                         position
-                                         width
-                                         height
-                                         pixelwise
-                                         (min-width 1)
-                                         (min-height 1)
-                                         (x-offset 0)
-                                         (y-offset 0)
-                                         margin-left
-                                         margin-right
-                                         font
-                                         foreground-color
-                                         background-color
-                                         no-properties
-                                         keep-ratio
-                                         override-parameters
-                                         timeout)
+(cl-defun posframe-show (posframe-buffer
+                         &key
+                         string
+                         position
+                         width
+                         height
+                         pixelwise
+                         (min-width 1)
+                         (min-height 1)
+                         (x-offset 0)
+                         (y-offset 0)
+                         margin-left
+                         margin-right
+                         font
+                         foreground-color
+                         background-color
+                         no-properties
+                         keep-ratio
+                         override-parameters
+                         timeout)
   "Pop posframe and show STRING at POSITION.
 The POSITION can be a point or a cons of pixel numbers,
 for example: (X . Y).
