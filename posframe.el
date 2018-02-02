@@ -350,6 +350,8 @@ you can use `posframe-delete-all' to delete all posframes."
       (set-mouse-position frame 0 0))
 
     (with-current-buffer buffer
+      ;; posframe--frame is a buffer variable which
+      ;; used to store posframe's frame.
       (setq child-frame posframe--frame)
 
       ;; Insert string to posframe's buffer.
