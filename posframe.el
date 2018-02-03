@@ -132,11 +132,16 @@
 If these args have changed, posframe will recreate its
 frame.")
 
+(defvar posframe--timeout-timer nil
+  "Record the timer to deal with timeout argument
+of `posframe-show'.")
+
 (dolist (var '(posframe--frame
                posframe--timer
                posframe--last-position
                posframe--last-size
-               posframe--last-args))
+               posframe--last-args
+               posframe--timeout-timer))
   (make-variable-buffer-local var)
   (put var 'permanent-local t))
 
@@ -393,19 +398,13 @@ you can use `posframe-delete-all' to delete all posframes."
       (unless (frame-visible-p child-frame)
         (make-frame-visible child-frame))
       ;; Delay hide posframe when timeout is a number.
-      (posframe--run-hide-timer posframe-buffer timeout)
+      (when (and (numberp timeout) (> timeout 0))
+        (when (timerp posframe--timeout-timer)
+          (cancel-timer posframe--timeout-timer))
+        (setq-local posframe--timeout-timer
+                    (run-with-timer
+                     timeout nil #'posframe-hide posframe-buffer)))
       nil)))
-
-(defun posframe--run-hide-timer (posframe-buffer secs)
-  "After a delay of SECS seconds, hide posframe which buffer is
-POSFRAME-BUFFER."
-  (when (and (numberp secs) (> secs 0))
-    (with-current-buffer posframe-buffer
-      (when (timerp posframe--timer)
-        (cancel-timer posframe--timer))
-      (setq-local posframe--timer
-                  (run-with-timer
-                   secs nil #'posframe-hide posframe-buffer)))))
 
 (defun posframe-get-frame-size (posframe-buffer &optional pixelwise)
   "Return the posframe's current frame text or PIXELWISE size.
