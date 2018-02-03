@@ -136,12 +136,17 @@ frame.")
   "Record the timer to deal with timeout argument
 of `posframe-show'.")
 
+(defvar posframe--refresh-timer nil
+  "Record the timer to deal with refresh argument
+of `posframe-show'.")
+
 (dolist (var '(posframe--frame
                posframe--timer
                posframe--last-position
                posframe--last-size
                posframe--last-args
-               posframe--timeout-timer))
+               posframe--timeout-timer
+               posframe--refresh-timer))
   (make-variable-buffer-local var)
   (put var 'permanent-local t))
 
@@ -299,7 +304,8 @@ This posframe's buffer is POSFRAME-BUFFER."
                          no-properties
                          keep-ratio
                          override-parameters
-                         timeout)
+                         timeout
+                         refresh)
   "Pop posframe and show STRING at POSITION.
 The POSITION can be a point or a cons of pixel numbers,
 for example: (X . Y).
@@ -329,6 +335,9 @@ used by posframe's frame can be overrided by it.
 
 If TIMEOUT is a number, a delay of number seconds, the posframe
 will auto hide.
+
+If REFRESH is a number, posframe's frame-size will be re-adjust
+every mumber seconds.
 
 you can use `posframe-delete-all' to delete all posframes."
   (let* ((position (or position (point)))
@@ -404,6 +413,18 @@ you can use `posframe-delete-all' to delete all posframes."
         (setq-local posframe--timeout-timer
                     (run-with-timer
                      timeout nil #'posframe-hide posframe-buffer)))
+      ;; Re-adjust posframe's size when buffer's content has changed.
+      (when (and (numberp refresh) (> refresh 0))
+        (unless (and width height)
+          (when (timerp posframe--refresh-timer)
+            (cancel-timer posframe--refresh-timer))
+          (setq-local posframe--refresh-timer
+                      (run-with-timer
+                       nil refresh
+                       #'(lambda (child-frame height min-height width min-width)
+                           (fit-frame-to-buffer
+                            child-frame height min-height width min-width))
+                       child-frame height min-height width min-width))))
       nil)))
 
 (defun posframe-get-frame-size (posframe-buffer &optional pixelwise)
@@ -434,6 +455,11 @@ This posframe's buffer is POSFRAME-BUFFER."
   (dolist (frame (frame-list))
     (let ((buffer (frame-parameter frame 'posframe-buffer)))
       (when (equal posframe-buffer buffer)
+        (with-current-buffer posframe-buffer
+          (dolist (timer '(posframe--refresh-timer
+                           posframe--timeout-timer))
+            (when (timerp timer)
+              (cancel-timer timer))))
         (delete-frame frame)))))
 
 (defun posframe--kill-buffer (posframe-buffer)
