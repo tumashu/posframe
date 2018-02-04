@@ -52,10 +52,9 @@
 ;; *** Create a posframe
 
 ;; #+BEGIN_EXAMPLE
-;; (when (>= emacs-major-version 26)
-;;   (posframe-show " *my-posframe-buffer*"
-;;                  :string "This is a test"
-;;                  :position (point)))
+;; (posframe-show " *my-posframe-buffer*"
+;;                :string "This is a test"
+;;                :position (point))
 ;; #+END_EXAMPLE
 
 ;; Addition arguments:
