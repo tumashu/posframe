@@ -1,23 +1,23 @@
 
 # &#30446;&#24405;
 
-1.  [Posframe README](#org868836c)
-    1.  [What is posframe](#org4059e00)
-    2.  [Installation](#org793f684)
-    3.  [Usage](#org4f80187)
-        1.  [Create a posframe](#org8dc61d6)
-        2.  [Hide a posframe](#org7d26675)
-        3.  [Hide all posframes](#orgae3b75a)
-        4.  [Delete a posframe](#org1ce137f)
-        5.  [Delete all posframes](#org5e5ed57)
+1.  [Posframe README](#org722523d)
+    1.  [What is posframe](#orgba000d1)
+    2.  [Installation](#org2f1ad23)
+    3.  [Usage](#org402dda2)
+        1.  [Create a posframe](#orgc58b1f3)
+        2.  [Hide a posframe](#orga881d72)
+        3.  [Hide all posframes](#org9b18b4b)
+        4.  [Delete a posframe](#org47ca9d2)
+        5.  [Delete all posframes](#org7d88d0f)
 
 
-<a id="org868836c"></a>
+<a id="org722523d"></a>
 
 # Posframe README
 
 
-<a id="org4059e00"></a>
+<a id="orgba000d1"></a>
 
 ## What is posframe
 
@@ -30,26 +30,24 @@ The main advantages are:
     of popup.el.
 2.  It works well with CJK language.
 
-NOTE: posframe requires emacs (version >= 26.0.91), but for
-compatibility reasons, it does not require emacs26 at package
-level, user should test emacs version before run \`posframe-show'.
+NOTE: For MacOS users, posframe need emacs (version >= 26.0.91)
 
 ![img](./snapshots/posframe-1.png)
 
 
-<a id="org793f684"></a>
+<a id="org2f1ad23"></a>
 
 ## Installation
 
     (require 'posframe)
 
 
-<a id="org4f80187"></a>
+<a id="org402dda2"></a>
 
 ## Usage
 
 
-<a id="org8dc61d6"></a>
+<a id="orgc58b1f3"></a>
 
 ### Create a posframe
 
@@ -69,28 +67,28 @@ Addition arguments:
     **all** the frame parameters of posframe's child-frame.
 
 
-<a id="org7d26675"></a>
+<a id="orga881d72"></a>
 
 ### Hide a posframe
 
     (posframe-hide " *my-posframe-buffer*")
 
 
-<a id="orgae3b75a"></a>
+<a id="org9b18b4b"></a>
 
 ### Hide all posframes
 
     M-x posframe-hide-all
 
 
-<a id="org1ce137f"></a>
+<a id="org47ca9d2"></a>
 
 ### Delete a posframe
 
     (posframe-delete " *my-posframe-buffer*")
 
 
-<a id="org5e5ed57"></a>
+<a id="org7d88d0f"></a>
 
 ### Delete all posframes
 

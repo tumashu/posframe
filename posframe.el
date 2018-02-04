@@ -7,7 +7,7 @@
 ;; URL: https://github.com/tumashu/posframe
 ;; Version: 0.1.0
 ;; Keywords: tooltip
-;; Package-Requires: ((emacs "24.4"))
+;; Package-Requires: ((emacs "26"))
 
 ;; This file is part of GNU Emacs.
 
@@ -37,9 +37,7 @@
 ;;    of popup.el.
 ;; 2. It works well with CJK language.
 
-;; NOTE: posframe requires emacs (version >= 26.0.91), but for
-;; compatibility reasons, it does not require emacs26 at package
-;; level, user should test emacs version before run `posframe-show'.
+;; NOTE: For MacOS users, posframe need emacs (version >= 26.0.91)
 
 ;; [[./snapshots/posframe-1.png]]
 
