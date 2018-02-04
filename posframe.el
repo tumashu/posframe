@@ -150,13 +150,13 @@ of `posframe-show'.")
   (make-variable-buffer-local var)
   (put var 'permanent-local t))
 
-(cl-defun posframe--compute-pixel-position (position
-                                            &key
-                                            posframe-width
-                                            posframe-height
-                                            (posframe-adjust t)
-                                            (x-pixel-offset 0)
-                                            (y-pixel-offset 0))
+(cl-defun posframe--get-pixel-position (position
+                                        &key
+                                        posframe-width
+                                        posframe-height
+                                        (posframe-adjust t)
+                                        (x-pixel-offset 0)
+                                        (y-pixel-offset 0))
   "Return bottom-left-corner pixel POSITION in WINDOW.
 its returned value is like (X . Y)
 
@@ -391,7 +391,7 @@ you can use `posframe-delete-all' to delete all posframes."
           (if (consp position)
               (cons (+ (car position) x-pixel-offset)
                     (+ (cdr position) y-pixel-offset))
-            (posframe--compute-pixel-position
+            (posframe--get-pixel-position
              position
              :posframe-width (frame-pixel-width child-frame)
              :posframe-height (frame-pixel-height child-frame)
