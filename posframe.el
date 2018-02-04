@@ -419,8 +419,9 @@ you can use `posframe-delete-all' to delete all posframes."
                       (run-with-timer
                        nil refresh
                        #'(lambda (child-frame height min-height width min-width)
-                           (fit-frame-to-buffer
-                            child-frame height min-height width min-width))
+                           (when (and child-frame (frame-live-p child-frame))
+                             (fit-frame-to-buffer
+                              child-frame height min-height width min-width)))
                        child-frame height min-height width min-width))))
       nil)))
 
