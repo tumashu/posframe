@@ -123,6 +123,9 @@
 (defvar posframe--last-size nil
   "Record the last size of posframe's frame.")
 
+(defvar posframe--last-parent-frame-size nil
+  "Record the last size of posframe's parent-frame.")
+
 (defvar posframe--last-args nil
   "Record the last arguments of `posframe--create-frame'.
 
@@ -340,12 +343,14 @@ you can use `posframe-delete-all' to delete all posframes."
   (let* ((position (or position (point)))
          (buffer (get-buffer-create posframe-buffer))
          (frame-resize-pixelwise t)
-         (frame (window-frame))
+         (parent-frame (window-frame))
+         (parent-frame-xmax (frame-pixel-width parent-frame))
+         (parent-frame-ymax (frame-pixel-height parent-frame))
          child-frame x-and-y)
 
     (posframe--create-frame
      posframe-buffer
-     :parent-frame frame
+     :parent-frame parent-frame
      :margin-left margin-left
      :margin-right margin-right
      :font font
@@ -397,9 +402,17 @@ you can use `posframe-delete-all' to delete all posframes."
 
     (with-current-buffer buffer
       ;; Move posframe's child-frame.
-      (unless (equal x-and-y posframe--last-position)
+      (unless (and (equal x-and-y posframe--last-position)
+                   ;; When working frame's size change, re-posit
+                   ;; the posframe.
+                   (equal posframe--last-parent-frame-size
+                          (cons parent-frame-xmax
+                                parent-frame-ymax)))
         (set-frame-position child-frame (car x-and-y) (cdr x-and-y))
-        (setq-local posframe--last-position x-and-y))
+        (setq-local posframe--last-position x-and-y)
+        (setq-local posframe--last-parent-frame-size
+                    (cons parent-frame-xmax
+                          parent-frame-ymax)))
       ;; Make posframe's child-frame visible
       (unless (frame-visible-p child-frame)
         (make-frame-visible child-frame))
