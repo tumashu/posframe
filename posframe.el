@@ -194,7 +194,7 @@ by sticking out of the display."
               (max 0 (if (> (+ y-buttom (or posframe-height 0)) ymax)
                          (- y-top (or posframe-height 0))
                        y-buttom)))
-      (cons x y-buttom))))
+      (cons (max 0 x) (max 0 y-buttom)))))
 
 (cl-defun posframe--create-frame (posframe-buffer
                                   &key
