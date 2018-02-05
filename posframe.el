@@ -391,8 +391,9 @@ you can use `posframe-delete-all' to delete all posframes."
     ;; buffer instead of posframe's buffer.
     (setq x-and-y
           (if (consp position)
-              (cons (+ (car position) x-pixel-offset)
-                    (+ (cdr position) y-pixel-offset))
+              (posframe--respect-modeline-and-minibuffer
+               (cons (+ (car position) x-pixel-offset)
+                     (+ (cdr position) y-pixel-offset)))
             (posframe--get-pixel-position
              position
              :posframe-width (frame-pixel-width child-frame)
@@ -437,6 +438,19 @@ you can use `posframe-delete-all' to delete all posframes."
                               child-frame height min-height width min-width)))
                        child-frame height min-height width min-width))))
       nil)))
+
+(defun posframe--respect-modeline-and-minibuffer (position)
+  "Get adjusted position based of POSITION which like (0 . -1).
+the new position respect modeline and minibuffer."
+  (if (>= (cdr position) 0)
+      position
+    (let ((modeline-height (window-mode-line-height))
+          (minibuffer-height
+           (window-pixel-height (minibuffer-window))))
+      (cons (car position)
+            (min (cdr position)
+                 (- 0 (+ modeline-height
+                         minibuffer-height)))))))
 
 (defun posframe-get-frame-size (posframe-buffer &optional pixelwise)
   "Return the posframe's current frame text or PIXELWISE size.
