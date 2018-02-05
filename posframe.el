@@ -120,7 +120,7 @@
 (defvar posframe--last-position nil
   "Record the last pixel position of posframe's frame.")
 
-(defvar posframe--last-size nil
+(defvar posframe--last-posframe-size nil
   "Record the last size of posframe's frame.")
 
 (defvar posframe--last-parent-frame-size nil
@@ -143,7 +143,7 @@ of `posframe-show'.")
 (dolist (var '(posframe--frame
                posframe--timer
                posframe--last-position
-               posframe--last-size
+               posframe--last-posframe-size
                posframe--last-args
                posframe--timeout-timer
                posframe--refresh-timer))
@@ -243,7 +243,7 @@ This posframe's buffer is POSFRAME-BUFFER."
         (posframe--delete-frame posframe-buffer)
         (setq-local posframe--last-args args)
         (setq-local posframe--last-position nil)
-        (setq-local posframe--last-size nil)
+        (setq-local posframe--last-posframe-size nil)
         (setq-local posframe--frame
                     (make-frame
                      `(,@override-parameters
@@ -363,7 +363,7 @@ you can use `posframe-delete-all' to delete all posframes."
     ;; https://github.com/tumashu/posframe/issues/4#issuecomment-357514918
     (when (and posframe-mouse-banish
                (not (equal (cdr (mouse-position)) '(0 . 0))))
-      (set-mouse-position frame 0 0))
+      (set-mouse-position parent-frame 0 0))
 
     (with-current-buffer buffer
       ;; posframe--frame is a buffer variable which
@@ -382,9 +382,9 @@ you can use `posframe-delete-all' to delete all posframes."
 
       ;; Set posframe's size
       (if (and width height)
-          (unless (equal posframe--last-size (cons width height))
+          (unless (equal posframe--last-posframe-size (cons width height))
             (set-frame-size child-frame width height)
-            (setq-local posframe--last-size (cons width height)))
+            (setq-local posframe--last-posframe-size (cons width height)))
         (fit-frame-to-buffer child-frame height min-height width min-width)))
 
     ;; Get the posframe's position, this must run in user's working
