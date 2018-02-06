@@ -33,8 +33,7 @@
 ;; child-frame with its root window's buffer.
 
 ;; The main advantages are:
-;; 1. It is very fast, `posframe-show' is faster than `popup-tip'
-;;    of popup.el.
+;; 1. It is fast enough for daily usage :-)
 ;; 2. It works well with CJK language.
 
 ;; NOTE: For MacOS users, posframe need emacs (version >= 26.0.91)
