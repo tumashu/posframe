@@ -150,9 +150,8 @@ of `posframe-show'.")
                                         &key
                                         posframe-width
                                         posframe-height
-                                        (posframe-adjust t)
-                                        (x-pixel-offset 0)
-                                        (y-pixel-offset 0))
+                                        x-pixel-offset
+                                        y-pixel-offset)
   "Return bottom-left-corner pixel POSITION in WINDOW.
 its returned value is like (X . Y)
 
@@ -161,7 +160,9 @@ and POSFRAME-ADJUST is non-nil, this function will
 use two values to adjust its output position,
 make sure the *tooltip* at position not disappear
 by sticking out of the display."
-  (let* ((window (selected-window))
+  (let* ((x-pixel-offset (or x-pixel-offset 0))
+         (y-pixel-offset (or y-pixel-offset 0))
+         (window (selected-window))
          (frame (window-frame window))
          (xmax (frame-pixel-width frame))
          (ymax (frame-pixel-height frame))
@@ -188,12 +189,10 @@ by sticking out of the display."
                       position)))
                   3)))
          (y-buttom (+ y-top font-height)))
-    (if posframe-adjust
-        (cons (max 0 (min x (- xmax (or posframe-width 0))))
-              (max 0 (if (> (+ y-buttom (or posframe-height 0)) ymax)
-                         (- y-top (or posframe-height 0))
-                       y-buttom)))
-      (cons (max 0 x) (max 0 y-buttom)))))
+    (cons (max 0 (min x (- xmax (or posframe-width 0))))
+          (max 0 (if (> (+ y-buttom (or posframe-height 0)) ymax)
+                     (- y-top (or posframe-height 0))
+                   y-buttom)))))
 
 (cl-defun posframe--create-frame (posframe-buffer
                                   &key
@@ -207,7 +206,9 @@ by sticking out of the display."
                                   override-parameters)
   "Create a child-frame for posframe.
 This posframe's buffer is POSFRAME-BUFFER."
-  (let ((buffer (get-buffer-create posframe-buffer))
+  (let ((left-fringe (or left-fringe 0))
+        (right-fringe (or right-fringe 0))
+        (buffer (get-buffer-create posframe-buffer))
         (after-make-frame-functions nil)
         (args (list parent-frame
                     foreground-color
@@ -288,12 +289,12 @@ This posframe's buffer is POSFRAME-BUFFER."
                          position
                          width
                          height
-                         (min-width 1)
-                         (min-height 1)
-                         (x-pixel-offset 0)
-                         (y-pixel-offset 0)
-                         (left-fringe 0)
-                         (right-fringe 0)
+                         min-width
+                         min-height
+                         x-pixel-offset
+                         y-pixel-offset
+                         left-fringe
+                         right-fringe
                          font
                          foreground-color
                          background-color
@@ -336,7 +337,11 @@ If REFRESH is a number, posframe's frame-size will be re-adjust
 every mumber seconds.
 
 you can use `posframe-delete-all' to delete all posframes."
-  (let* ((position (or position (point)))
+  (let* ((x-pixel-offset (or x-pixel-offset 0))
+         (y-pixel-offset (or y-pixel-offset 0))
+         (min-width (or min-width 1))
+         (min-height (or min-height 1))
+         (position (or position (point)))
          (buffer (get-buffer-create posframe-buffer))
          (frame-resize-pixelwise t)
          (parent-frame (window-frame))
@@ -444,6 +449,7 @@ you can use `posframe-delete-all' to delete all posframes."
   "Get adjusted position for POSITION which like (0 . -1).
 the new position will respect modeline and minibuffer and
 protect them from be hided over."
+  (princ position)
   (if (>= (cdr position) 0)
       position
     (let ((modeline-height
