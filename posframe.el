@@ -57,14 +57,10 @@
 ;;                :position (point))
 ;; #+END_EXAMPLE
 
-;; Addition arguments:
-;; 1. :position, set the position when posframe is poped up.
-;; 2. :background-color, set posframe's background color.
-;; 3. :foreground-color, set posframe's foreground color.
-;; 4. :left-fringe, set posframe's left fringe width.
-;; 5. :right-fringe, set posframe's right fringe width.
-;; 6. :override-parameters, User can use it to override
-;;    *all* the frame parameters of posframe's child-frame.
+;; Arguments documents:
+;; #+BEGIN_EXAMPLE
+;; C-h f posframe-show
+;; #+END_EXAMPLE
 
 ;; *** Hide a posframe
 ;; #+BEGIN_EXAMPLE

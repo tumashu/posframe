@@ -1,23 +1,23 @@
 
 # &#30446;&#24405;
 
-1.  [Posframe README](#org8d00721)
-    1.  [What is posframe](#org16493ca)
-    2.  [Installation](#orgbedc0b4)
-    3.  [Usage](#org396aaad)
-        1.  [Create a posframe](#org28cfe91)
-        2.  [Hide a posframe](#org9d35f14)
-        3.  [Hide all posframes](#org261ad75)
-        4.  [Delete a posframe](#orgf31caea)
-        5.  [Delete all posframes](#orge5eb6c4)
+1.  [Posframe README](#org3c9c1cd)
+    1.  [What is posframe](#orgb4e9f42)
+    2.  [Installation](#org7f774f0)
+    3.  [Usage](#org91d2ede)
+        1.  [Create a posframe](#org0326f21)
+        2.  [Hide a posframe](#org6e6d25e)
+        3.  [Hide all posframes](#org35f6819)
+        4.  [Delete a posframe](#org76b96fc)
+        5.  [Delete all posframes](#orge23219b)
 
 
-<a id="org8d00721"></a>
+<a id="org3c9c1cd"></a>
 
 # Posframe README
 
 
-<a id="org16493ca"></a>
+<a id="orgb4e9f42"></a>
 
 ## What is posframe
 
@@ -35,19 +35,19 @@ NOTE: For MacOS users, posframe need emacs (version >= 26.0.91)
 ![img](./snapshots/posframe-1.png)
 
 
-<a id="orgbedc0b4"></a>
+<a id="org7f774f0"></a>
 
 ## Installation
 
     (require 'posframe)
 
 
-<a id="org396aaad"></a>
+<a id="org91d2ede"></a>
 
 ## Usage
 
 
-<a id="org28cfe91"></a>
+<a id="org0326f21"></a>
 
 ### Create a posframe
 
@@ -55,39 +55,33 @@ NOTE: For MacOS users, posframe need emacs (version >= 26.0.91)
                    :string "This is a test"
                    :position (point))
 
-Addition arguments:
+Arguments documents:
 
-1.  :position, set the position when posframe is poped up.
-2.  :background-color, set posframe's background color.
-3.  :foreground-color, set posframe's foreground color.
-4.  :margin-left, set posframe's left margin width.
-5.  :margin-right, set posframe's right margin width.
-6.  :override-parameters, User can use it to override
-    **all** the frame parameters of posframe's child-frame.
+    C-h f posframe-show
 
 
-<a id="org9d35f14"></a>
+<a id="org6e6d25e"></a>
 
 ### Hide a posframe
 
     (posframe-hide " *my-posframe-buffer*")
 
 
-<a id="org261ad75"></a>
+<a id="org35f6819"></a>
 
 ### Hide all posframes
 
     M-x posframe-hide-all
 
 
-<a id="orgf31caea"></a>
+<a id="org76b96fc"></a>
 
 ### Delete a posframe
 
     (posframe-delete " *my-posframe-buffer*")
 
 
-<a id="orge5eb6c4"></a>
+<a id="orge23219b"></a>
 
 ### Delete all posframes
 
