@@ -61,8 +61,8 @@
 ;; 1. :position, set the position when posframe is poped up.
 ;; 2. :background-color, set posframe's background color.
 ;; 3. :foreground-color, set posframe's foreground color.
-;; 4. :margin-left, set posframe's left margin width.
-;; 5. :margin-right, set posframe's right margin width.
+;; 4. :left-fringe, set posframe's left fringe width.
+;; 5. :right-fringe, set posframe's right fringe width.
 ;; 6. :override-parameters, User can use it to override
 ;;    *all* the frame parameters of posframe's child-frame.
 
@@ -204,8 +204,8 @@ by sticking out of the display."
                                   parent-frame
                                   foreground-color
                                   background-color
-                                  margin-left
-                                  margin-right
+                                  left-fringe
+                                  right-fringe
                                   font
                                   keep-ratio
                                   override-parameters)
@@ -216,15 +216,15 @@ This posframe's buffer is POSFRAME-BUFFER."
         (args (list parent-frame
                     foreground-color
                     background-color
-                    margin-right
-                    margin-left
+                    right-fringe
+                    left-fringe
                     font
                     keep-ratio
                     override-parameters)))
     (with-current-buffer buffer
       ;; Many variables take effect after call `set-window-buffer'
-      (setq-local left-fringe-width (or margin-left 0))
-      (setq-local right-fringe-width (or margin-right 0))
+      (setq-local left-fringe-width (or left-fringe 0))
+      (setq-local right-fringe-width (or right-fringe 0))
       (setq-local fringes-outside-margins 0)
       (setq-local truncate-lines t)
       (setq-local mode-line-format nil)
@@ -263,8 +263,8 @@ This posframe's buffer is POSFRAME-BUFFER."
                        (internal-border-width . 0)
                        (vertical-scroll-bars . nil)
                        (horizontal-scroll-bars . nil)
-                       (left-fringe . ,margin-left)
-                       (right-fringe . ,margin-right)
+                       (left-fringe . ,left-fringe)
+                       (right-fringe . ,right-fringe)
                        (menu-bar-lines . 0)
                        (tool-bar-lines . 0)
                        (line-spacing . 0)
@@ -296,8 +296,8 @@ This posframe's buffer is POSFRAME-BUFFER."
                          (min-height 1)
                          (x-pixel-offset 0)
                          (y-pixel-offset 0)
-                         margin-left
-                         margin-right
+                         left-fringe
+                         right-fringe
                          font
                          foreground-color
                          background-color
@@ -320,7 +320,7 @@ If one of them is nil, posframe's frame-size will fit the
 content of buffer, if you don't want to posframe's
 size too small, MIN-WIDTH and MIN-HEIGTH will be useful
 
-If MARGIN-LEFT or MARGIN-RIGHT is a number, Left fringe or
+If LEFT-FRINGE or RIGHT-FRINGE is a number, Left fringe or
 right fringe with be showed with number width.
 
 By default, posframe's font is deriverd from current frame
@@ -351,8 +351,8 @@ you can use `posframe-delete-all' to delete all posframes."
     (posframe--create-frame
      posframe-buffer
      :parent-frame parent-frame
-     :margin-left margin-left
-     :margin-right margin-right
+     :left-fringe left-fringe
+     :right-fringe right-fringe
      :font font
      :foreground-color foreground-color
      :background-color background-color
