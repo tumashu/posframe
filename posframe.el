@@ -449,7 +449,6 @@ you can use `posframe-delete-all' to delete all posframes."
   "Get adjusted position for POSITION which like (0 . -1).
 the new position will respect modeline and minibuffer and
 protect them from be hided over."
-  (princ position)
   (if (>= (cdr position) 0)
       position
     (let ((modeline-height
