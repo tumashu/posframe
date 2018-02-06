@@ -387,9 +387,11 @@ you can use `posframe-delete-all' to delete all posframes."
     ;; buffer instead of posframe's buffer.
     (setq x-and-y
           (if (consp position)
-              (posframe--respect-modeline-and-minibuffer
+              (posframe--get-respect-position
                (cons (+ (car position) x-pixel-offset)
-                     (+ (cdr position) y-pixel-offset)))
+                     (+ (cdr position) y-pixel-offset))
+               :respect-minibuffer t
+               :respect-modeline t)
             (posframe--get-pixel-position
              position
              :posframe-width (frame-pixel-width child-frame)
@@ -435,14 +437,23 @@ you can use `posframe-delete-all' to delete all posframes."
                        child-frame height min-height width min-width))))
       nil)))
 
-(defun posframe--respect-modeline-and-minibuffer (position)
-  "Get adjusted position based of POSITION which like (0 . -1).
-the new position respect modeline and minibuffer."
+(cl-defun posframe--get-respect-position (position
+                                          &key
+                                          respect-minibuffer
+                                          respect-modeline)
+  "Get adjusted position for POSITION which like (0 . -1).
+the new position will respect modeline and minibuffer and
+protect them from be hided over."
   (if (>= (cdr position) 0)
       position
-    (let ((modeline-height (window-mode-line-height))
+    (let ((modeline-height
+           (if respect-modeline
+               (window-mode-line-height)
+             0))
           (minibuffer-height
-           (window-pixel-height (minibuffer-window))))
+           (if respect-minibuffer
+               (window-pixel-height (minibuffer-window))
+             0)))
       (cons (car position)
             (min (cdr position)
                  (- 0 (+ modeline-height
