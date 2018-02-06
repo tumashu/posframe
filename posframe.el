@@ -200,8 +200,8 @@ by sticking out of the display."
                                   parent-frame
                                   foreground-color
                                   background-color
-                                  left-fringe
-                                  right-fringe
+                                  (left-fringe 0)
+                                  (right-fringe 0)
                                   font
                                   keep-ratio
                                   override-parameters)
@@ -219,8 +219,8 @@ This posframe's buffer is POSFRAME-BUFFER."
                     override-parameters)))
     (with-current-buffer buffer
       ;; Many variables take effect after call `set-window-buffer'
-      (setq-local left-fringe-width (or left-fringe 0))
-      (setq-local right-fringe-width (or right-fringe 0))
+      (setq-local left-fringe-width left-fringe)
+      (setq-local right-fringe-width right-fringe)
       (setq-local fringes-outside-margins 0)
       (setq-local truncate-lines t)
       (setq-local mode-line-format nil)
