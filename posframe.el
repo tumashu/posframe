@@ -200,8 +200,8 @@ by sticking out of the display."
                                   parent-frame
                                   foreground-color
                                   background-color
-                                  (left-fringe 0)
-                                  (right-fringe 0)
+                                  left-fringe
+                                  right-fringe
                                   font
                                   keep-ratio
                                   override-parameters)
@@ -292,8 +292,8 @@ This posframe's buffer is POSFRAME-BUFFER."
                          (min-height 1)
                          (x-pixel-offset 0)
                          (y-pixel-offset 0)
-                         left-fringe
-                         right-fringe
+                         (left-fringe 0)
+                         (right-fringe 0)
                          font
                          foreground-color
                          background-color
