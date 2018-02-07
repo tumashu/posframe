@@ -193,6 +193,17 @@ by sticking out of the display."
                      (- y-top (or posframe-height 0))
                    y-buttom)))))
 
+(defun posframe--get-center-position (posframe-width posframe-height)
+  "Get the position which let posframe stay onto its parent-frame's center.
+This posframe's pixel width is POSFRAME-WIDTH,
+its pixel height is POSFRAME-HEIGHT."
+  (let* ((window (selected-window))
+         (frame (window-frame window))
+         (xmax (frame-pixel-width frame))
+         (ymax (frame-pixel-height frame)))
+    (cons (/ (- xmax posframe-width) 2)
+          (/ (- ymax posframe-height) 2))))
+
 (cl-defun posframe--create-frame (posframe-buffer
                                   &key
                                   parent-frame
@@ -303,8 +314,11 @@ This posframe's buffer is POSFRAME-BUFFER."
                          timeout
                          refresh)
   "Pop posframe and show STRING at POSITION.
-The POSITION can be a point or a cons of pixel numbers,
-for example: (X . Y).
+The POSITION can be:
+1. a number, which regard as a point.
+2. a cons of pixel numbers, for example: (0 . 0).
+3. 'center, which will put posframe onto the center
+   of its parent frame.
 
 This posframe's buffer is POSFRAME-BUFFER.
 
@@ -390,18 +404,22 @@ you can use `posframe-delete-all' to delete all posframes."
     ;; Get the posframe's position, this must run in user's working
     ;; buffer instead of posframe's buffer.
     (setq x-and-y
-          (if (consp position)
-              (posframe--get-respect-position
-               (cons (+ (car position) x-pixel-offset)
-                     (+ (cdr position) y-pixel-offset))
-               :respect-minibuffer t
-               :respect-modeline t)
-            (posframe--get-pixel-position
-             position
-             :posframe-width (frame-pixel-width child-frame)
-             :posframe-height (frame-pixel-height child-frame)
-             :x-pixel-offset x-pixel-offset
-             :y-pixel-offset y-pixel-offset)))
+          (cond ((eq position 'center)
+                 (posframe--get-center-position
+                  (frame-pixel-width child-frame)
+                  (frame-pixel-height child-frame)))
+                ((consp position)
+                 (posframe--get-respect-position
+                  (cons (+ (car position) x-pixel-offset)
+                        (+ (cdr position) y-pixel-offset))
+                  :respect-minibuffer t
+                  :respect-modeline t))
+                (t (posframe--get-pixel-position
+                    position
+                    :posframe-width (frame-pixel-width child-frame)
+                    :posframe-height (frame-pixel-height child-frame)
+                    :x-pixel-offset x-pixel-offset
+                    :y-pixel-offset y-pixel-offset))))
 
     (with-current-buffer buffer
       ;; Move posframe's child-frame.
