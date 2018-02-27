@@ -578,11 +578,11 @@ Optional argument FONT-HEIGHT ."
                       (or (cdr (posn-object-x-y posn-top-left)) 0))
                    y-pixel-offset))
          (font-height (or font-height (plist-get info :font-height)))
-         (y-buttom (+ y-top font-height)))
+         (y-bottom (+ y-top font-height)))
     (cons (max 0 (min x (- xmax (or posframe-width 0))))
-          (max 0 (if (> (+ y-buttom (or posframe-height 0)) ymax)
+          (max 0 (if (> (+ y-bottom (or posframe-height 0)) ymax)
                      (- y-top (or posframe-height 0))
-                   y-buttom)))))
+                   y-bottom)))))
 
 (defun posframe-poshandler-point-top-left-corner (info)
   "Posframe's position hanlder.
