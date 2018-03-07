@@ -157,8 +157,8 @@ This posframe's buffer is POSFRAME-BUFFER."
                     override-parameters)))
     (with-current-buffer posframe-buffer
       ;; Many variables take effect after call `set-window-buffer'
-      (setq-local left-fringe-width left-fringe)
-      (setq-local right-fringe-width right-fringe)
+      (setq-local left-fringe-width nil)
+      (setq-local right-fringe-width nil)
       (setq-local fringes-outside-margins 0)
       (setq-local truncate-lines t)
       (setq-local mode-line-format nil)
