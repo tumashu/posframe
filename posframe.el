@@ -468,9 +468,11 @@ WIDTH and MIN-WIDTH."
 
 (defun posframe-hide (posframe-buffer)
   "Hide posframe which buffer is POSFRAME-BUFFER."
-  (with-current-buffer (get-buffer-create posframe-buffer)
-    (when (frame-live-p posframe--frame)
-      (make-frame-invisible posframe--frame))))
+  (dolist (frame (frame-list))
+    (let ((buffer (frame-parameter frame 'posframe-buffer)))
+      (when (or (equal posframe-buffer (car buffer))
+                (equal posframe-buffer (cdr buffer)))
+        (make-frame-invisible frame)))))
 
 (defun posframe-delete (posframe-buffer)
   "Delete posframe which buffer POSFRAME-BUFFER."
