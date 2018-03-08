@@ -189,7 +189,8 @@ This posframe's buffer is POSFRAME-BUFFER."
                           (cons 'font font))
                        (parent-frame . ,(or parent-frame (window-frame)))
                        (keep-ratio ,keep-ratio)
-                       (posframe-buffer . ,posframe-buffer)
+                       (posframe-buffer . ,(cons (buffer-name posframe-buffer)
+                                                 posframe-buffer))
                        (no-accept-focus . t)
                        (min-width  . 0)
                        (min-height . 0)
@@ -481,8 +482,9 @@ WIDTH and MIN-WIDTH."
 This posframe's buffer is POSFRAME-BUFFER."
   (dolist (frame (frame-list))
     (let ((buffer (frame-parameter frame 'posframe-buffer)))
-      (when (equal posframe-buffer buffer)
-        (with-current-buffer posframe-buffer
+      (when (or (equal posframe-buffer (car buffer))
+                (equal posframe-buffer (cdr buffer)))
+        (with-current-buffer (get-buffer posframe-buffer)
           (dolist (timer '(posframe--refresh-timer
                            posframe--timeout-timer))
             (when (timerp timer)
