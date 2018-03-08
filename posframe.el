@@ -502,10 +502,9 @@ This posframe's buffer is POSFRAME-BUFFER."
 (defun posframe-hide-all ()
   "Hide all posframe's frames."
   (interactive)
-  (dolist (buffer (buffer-list))
-    (with-current-buffer buffer
-      (when (frame-live-p posframe--frame)
-        (make-frame-invisible posframe--frame)))))
+  (dolist (frame (frame-list))
+    (let ((buffer (frame-parameter frame 'posframe-buffer)))
+      (when buffer (make-frame-invisible frame)))))
 
 ;;;###autoload
 (defun posframe-delete-all ()
