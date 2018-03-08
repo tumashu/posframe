@@ -156,7 +156,9 @@ This posframe's buffer is POSFRAME-BUFFER."
                     left-fringe
                     font
                     keep-ratio
-                    override-parameters)))
+                    override-parameters
+                    respect-header-line
+                    respect-mode-line)))
     (with-current-buffer posframe-buffer
       ;; Many variables take effect after call `set-window-buffer'
       (setq-local left-fringe-width nil)
