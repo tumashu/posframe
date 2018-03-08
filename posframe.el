@@ -469,9 +469,9 @@ WIDTH and MIN-WIDTH."
 (defun posframe-hide (posframe-buffer)
   "Hide posframe which buffer is POSFRAME-BUFFER."
   (dolist (frame (frame-list))
-    (let ((buffer (frame-parameter frame 'posframe-buffer)))
-      (when (or (equal posframe-buffer (car buffer))
-                (equal posframe-buffer (cdr buffer)))
+    (let ((buffer-info (frame-parameter frame 'posframe-buffer)))
+      (when (or (equal posframe-buffer (car buffer-info))
+                (equal posframe-buffer (cdr buffer-info)))
         (make-frame-invisible frame)))))
 
 (defun posframe-delete (posframe-buffer)
@@ -483,9 +483,9 @@ WIDTH and MIN-WIDTH."
   "Kill child-frame of posframe.
 This posframe's buffer is POSFRAME-BUFFER."
   (dolist (frame (frame-list))
-    (let ((buffer (frame-parameter frame 'posframe-buffer)))
-      (when (or (equal posframe-buffer (car buffer))
-                (equal posframe-buffer (cdr buffer)))
+    (let ((buffer-info (frame-parameter frame 'posframe-buffer)))
+      (when (or (equal posframe-buffer (car buffer-info))
+                (equal posframe-buffer (cdr buffer-info)))
         (with-current-buffer (get-buffer posframe-buffer)
           (dolist (timer '(posframe--refresh-timer
                            posframe--timeout-timer))
@@ -503,16 +503,16 @@ This posframe's buffer is POSFRAME-BUFFER."
   "Hide all posframe's frames."
   (interactive)
   (dolist (frame (frame-list))
-    (let ((buffer (frame-parameter frame 'posframe-buffer)))
-      (when buffer (make-frame-invisible frame)))))
+    (let ((buffer-info (frame-parameter frame 'posframe-buffer)))
+      (when buffer-info (make-frame-invisible frame)))))
 
 ;;;###autoload
 (defun posframe-delete-all ()
   "Delete all posframe's frames and buffers."
   (interactive)
   (dolist (frame (frame-list))
-    (let ((buffer (frame-parameter frame 'posframe-buffer)))
-      (when buffer (delete-frame frame))))
+    (let ((buffer-info (frame-parameter frame 'posframe-buffer)))
+      (when buffer-info (delete-frame frame))))
   (dolist (buffer (buffer-list))
     (with-current-buffer buffer
       (when posframe--frame
