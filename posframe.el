@@ -140,7 +140,9 @@ frame.")
                                      right-fringe
                                      font
                                      keep-ratio
-                                     override-parameters)
+                                     override-parameters
+                                     respect-header-line
+                                     respect-mode-line)
   "Create a child-frame for posframe.
 This posframe's buffer is POSFRAME-BUFFER."
   (let ((left-fringe (or left-fringe 0))
@@ -161,11 +163,13 @@ This posframe's buffer is POSFRAME-BUFFER."
       (setq-local right-fringe-width nil)
       (setq-local fringes-outside-margins 0)
       (setq-local truncate-lines t)
-      (setq-local mode-line-format nil)
-      (setq-local header-line-format nil)
       (setq-local cursor-type nil)
       (setq-local cursor-in-non-selected-windows nil)
       (setq-local show-trailing-whitespace nil)
+      (unless respect-mode-line
+        (setq-local mode-line-format nil))
+      (unless respect-header-line
+        (setq-local header-line-format nil))
 
       ;; Create child-frame
       (unless (and (frame-live-p posframe--frame)
@@ -217,8 +221,10 @@ This posframe's buffer is POSFRAME-BUFFER."
                        (desktop-dont-save . t))))
         (let ((posframe-window (frame-root-window posframe--frame)))
           ;; This method is more stable than 'setq mode/header-line-format nil'
-          (set-window-parameter posframe-window 'mode-line-format 'none)
-          (set-window-parameter posframe-window 'header-line-format 'none)
+          (unless respect-mode-line
+            (set-window-parameter posframe-window 'mode-line-format 'none))
+          (unless respect-header-line
+            (set-window-parameter posframe-window 'header-line-format 'none))
           (set-window-buffer posframe-window posframe-buffer)))
       posframe--frame)))
 
@@ -238,6 +244,8 @@ This posframe's buffer is POSFRAME-BUFFER."
                          font
                          foreground-color
                          background-color
+                         respect-header-line
+                         respect-mode-line
                          no-properties
                          keep-ratio
                          override-parameters
@@ -295,6 +303,10 @@ By default, posframe's foreground and background color are
 deriverd from current frame, user can set them with the help
 of FOREGROUND-COLOR and BACKGROUND-COLOR.
 
+By default, posframe will force hide header-line and mode-line
+If user want to show header-line or mode-line in posframe,
+set RESPECT-HEADER-LINE or RESPECT-MODE-LINE to t.
+
 OVERRIDE-PARAMETERS is very powful, *all* the frame parameters
 used by posframe's frame can be overrided by it.
 
@@ -335,6 +347,8 @@ you can use `posframe-delete-all' to delete all posframes."
              :foreground-color foreground-color
              :background-color background-color
              :keep-ratio keep-ratio
+             :respect-header-line respect-header-line
+             :respect-mode-line respect-mode-line
              :override-parameters override-parameters))
 
       ;; Insert string to posframe-buffer.
