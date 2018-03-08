@@ -523,10 +523,7 @@ This posframe's buffer is POSFRAME-BUFFER."
   "Auto delete posframe when its buffer is killed.
 
 This function is used by `kill-buffer-hook'."
-  (dolist (frame (frame-list))
-    (let ((buffer (frame-parameter frame 'posframe-buffer)))
-      (when (eq buffer (current-buffer))
-        (delete-frame frame)))))
+  (posframe--delete-frame (current-buffer)))
 
 (add-hook 'kill-buffer-hook #'posframe-auto-delete)
 
