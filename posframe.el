@@ -483,14 +483,16 @@ WIDTH and MIN-WIDTH."
   "Kill child-frame of posframe.
 This posframe's buffer is POSFRAME-BUFFER."
   (dolist (frame (frame-list))
-    (let ((buffer-info (frame-parameter frame 'posframe-buffer)))
+    (let ((buffer-info (frame-parameter frame 'posframe-buffer))
+          (buffer (get-buffer posframe-buffer)))
       (when (or (equal posframe-buffer (car buffer-info))
                 (equal posframe-buffer (cdr buffer-info)))
-        (with-current-buffer (get-buffer posframe-buffer)
-          (dolist (timer '(posframe--refresh-timer
-                           posframe--timeout-timer))
-            (when (timerp timer)
-              (cancel-timer timer))))
+        (when buffer
+          (with-current-buffer buffer
+            (dolist (timer '(posframe--refresh-timer
+                             posframe--timeout-timer))
+              (when (timerp timer)
+                (cancel-timer timer)))))
         (delete-frame frame)))))
 
 (defun posframe--kill-buffer (posframe-buffer)
