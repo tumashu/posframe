@@ -1,23 +1,23 @@
 
 # &#30446;&#24405;
 
-1.  [Posframe README](#org53f6910)
-    1.  [What is posframe](#org5cf1be8)
-    2.  [Installation](#org5f830e9)
-    3.  [Usage](#org40db1ee)
-        1.  [Create a posframe](#org6f36699)
-        2.  [Hide a posframe](#orgcd529fe)
-        3.  [Hide all posframes](#org4e71a28)
-        4.  [Delete a posframe](#org0f069f2)
-        5.  [Delete all posframes](#org853d491)
+1.  [Posframe README](#orgb0e618a)
+    1.  [What is posframe](#orga5aca6b)
+    2.  [Installation](#orgc054dab)
+    3.  [Usage](#orga60ff65)
+        1.  [Create a posframe](#org216b84e)
+        2.  [Hide a posframe](#orgda0528f)
+        3.  [Hide all posframes](#org7904f7f)
+        4.  [Delete a posframe](#org9aed6aa)
+        5.  [Delete all posframes](#orga1ab8fd)
 
 
-<a id="org53f6910"></a>
+<a id="orgb0e618a"></a>
 
 # Posframe README
 
 
-<a id="org5cf1be8"></a>
+<a id="orga5aca6b"></a>
 
 ## What is posframe
 
@@ -29,24 +29,24 @@ The main advantages are:
 1.  It is fast enough for daily usage :-)
 2.  It works well with CJK language.
 
-NOTE: For MacOS users, posframe need emacs (version >= 26.0.91)
+NOTE: For MacOS users, posframe need Emacs (version >= 26.0.91)
 
 ![img](./snapshots/posframe-1.png)
 
 
-<a id="org5f830e9"></a>
+<a id="orgc054dab"></a>
 
 ## Installation
 
     (require 'posframe)
 
 
-<a id="org40db1ee"></a>
+<a id="orga60ff65"></a>
 
 ## Usage
 
 
-<a id="org6f36699"></a>
+<a id="org216b84e"></a>
 
 ### Create a posframe
 
@@ -59,28 +59,33 @@ Arguments documents:
     C-h f posframe-show
 
 
-<a id="orgcd529fe"></a>
+<a id="orgda0528f"></a>
 
 ### Hide a posframe
 
     (posframe-hide " *my-posframe-buffer*")
 
 
-<a id="org4e71a28"></a>
+<a id="org7904f7f"></a>
 
 ### Hide all posframes
 
     M-x posframe-hide-all
 
 
-<a id="org0f069f2"></a>
+<a id="org9aed6aa"></a>
 
 ### Delete a posframe
 
-    (posframe-delete " *my-posframe-buffer*")
+1.  Delete posframe and its buffer
+
+        (posframe-delete " *my-posframe-buffer*")
+2.  Only delete posframe's frame
+
+        (posframe-delete-frame " *my-posframe-buffer*")
 
 
-<a id="org853d491"></a>
+<a id="orga1ab8fd"></a>
 
 ### Delete all posframes
 
@@ -91,5 +96,4 @@ suggest not run this command if you are sharing a buffer
 between posframe and other packages.
 
 
-
-Converted from posframe.el by [el2org](https://github.com/tumashu/el2org) .
+Converted from posframe.el by [el2org](https://github.com/tumashu/el2org).
