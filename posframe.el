@@ -89,8 +89,6 @@
 ;; * posframe's code                         :CODE:
 (require 'cl-lib)
 
-(defconst posframe-version "0.1.0")
-
 (defgroup posframe nil
   "Pop a posframe (just a frame) at point"
   :group 'lisp
