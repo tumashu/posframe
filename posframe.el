@@ -111,7 +111,7 @@
 (defvar-local posframe--frame nil
   "Record posframe's frame.")
 
-(defvar-local posframe--last-position nil
+(defvar-local posframe--last-posframe-pixel-position nil
   "Record the last pixel position of posframe's frame.")
 
 (defvar-local posframe--last-posframe-size nil
@@ -184,7 +184,7 @@ This posframe's buffer is POSFRAME-BUFFER."
                    (equal posframe--last-args args))
         (posframe-delete-frame posframe-buffer)
         (setq-local posframe--last-args args)
-        (setq-local posframe--last-position nil)
+        (setq-local posframe--last-posframe-pixel-position nil)
         (setq-local posframe--last-posframe-size nil)
         (setq-local posframe--frame
                     (make-frame
@@ -442,13 +442,13 @@ WIDTH and MIN-WIDTH."
                                               parent-frame-height)
   "Move POSFRAME to POSITION.
 This need PARENT-FRAME-WIDTH and PARENT-FRAME-HEIGHT"
-  (unless (and (equal position posframe--last-position)
+  (unless (and (equal position posframe--last-posframe-pixel-position)
                ;; When working frame's size change, re-posit
                ;; the posframe.
                (equal posframe--last-parent-frame-size
                       (cons parent-frame-width parent-frame-height)))
     (set-frame-position posframe (car position) (cdr position))
-    (setq-local posframe--last-position position)
+    (setq-local posframe--last-posframe-pixel-position position)
     (setq-local posframe--last-parent-frame-size
                 (cons parent-frame-width parent-frame-height)))
   ;; Make posframe's posframe--frame visible
