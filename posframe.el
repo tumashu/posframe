@@ -120,6 +120,9 @@
 (defvar-local posframe--last-parent-frame-size nil
   "Record the last size of posframe's parent-frame.")
 
+(defvar-local posframe--last-poshandler-info nil
+  "Record the last poshandler info.")
+
 (defvar-local posframe--last-args nil
   "Record the last arguments of `posframe--create-posframe'.
 
@@ -552,17 +555,20 @@ This function is used by `kill-buffer-hook'."
 
 the structure of INFO can be found in docstring
 of `posframe-show'."
-  (funcall
-   (or (plist-get info :poshandler)
-       (let ((position (plist-get info :position)))
-         (cond ((integerp position)
-                #'posframe-poshandler-point-bottom-left-corner)
-               ((and (consp position)
-                     (integerp (car position))
-                     (integerp (cdr position)))
-                #'posframe-poshandler-absolute-x-y)
-               (t (error "Posframe: have no valid poshandler")))))
-   info))
+  (if (equal info posframe--last-poshandler-info)
+      posframe--last-posframe-pixel-position
+    (setq posframe--last-poshandler-info info)
+    (funcall
+     (or (plist-get info :poshandler)
+         (let ((position (plist-get info :position)))
+           (cond ((integerp position)
+                  #'posframe-poshandler-point-bottom-left-corner)
+                 ((and (consp position)
+                       (integerp (car position))
+                       (integerp (cdr position)))
+                  #'posframe-poshandler-absolute-x-y)
+                 (t (error "Posframe: have no valid poshandler")))))
+     info)))
 
 (defun posframe-poshandler-absolute-x-y (info)
   "Posframe's position hanlder.
