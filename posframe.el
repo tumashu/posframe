@@ -123,6 +123,9 @@
 (defvar-local posframe--last-poshandler-info nil
   "Record the last poshandler info.")
 
+(defvar-local posframe--last-font-height-info nil
+  "Record the last font height info.")
+
 (defvar-local posframe--last-args nil
   "Record the last arguments of `posframe--create-posframe'.
 
@@ -394,15 +397,20 @@ you can use `posframe-delete-all' to delete all posframes."
 
 (defun posframe--get-font-height (position)
   "Get the font's height at POSITION."
-  (when (integerp position)
-    (if (= position 1)
-        (default-line-height)
-      (aref (font-info
-             (font-at
-              (if (and (= position (point-max)))
-                  (- position 1)
-                position)))
-            3))))
+  (if (eq position (car posframe--last-font-height-info))
+      (cdr posframe--last-font-height-info)
+    (let ((height (when (integerp position)
+                    (if (= position 1)
+                        (default-line-height)
+                      (aref (font-info
+                             (font-at
+                              (if (and (= position (point-max)))
+                                  (- position 1)
+                                position)))
+                            3)))))
+      (setq posframe--last-font-height-info
+            (cons position height))
+      height)))
 
 (defun posframe--mouse-banish (frame)
   "Banish mouse to the (0 . 0) of FRAME.
