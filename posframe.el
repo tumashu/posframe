@@ -378,6 +378,8 @@ you can use `posframe-delete-all' to delete all posframes."
           :font-height ,font-height
           :font-width ,font-width
           :posframe ,posframe
+          :height ,(frame-pixel-height posframe)
+          :width ,(frame-pixel-width posframe)
           :posframe-buffer ,posframe-buffer
           :parent-frame ,parent-frame
           :parent-window ,parent-window
