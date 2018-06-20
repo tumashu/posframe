@@ -5,7 +5,7 @@
 ;; Author: Feng Shu <tumashu@163.com>
 ;; Maintainer: Feng Shu <tumashu@163.com>
 ;; URL: https://github.com/tumashu/posframe
-;; Version: 0.4.0
+;; Version: 0.4.1
 ;; Keywords: tooltip
 ;; Package-Requires: ((emacs "26"))
 
@@ -372,7 +372,7 @@ you can use `posframe-delete-all' to delete all posframes."
       (posframe--set-frame-position
        posframe
        (posframe-run-poshandler
-        `(;All poshandlers will get info from this plist.
+        `(             ;All poshandlers will get info from this plist.
           :position ,position
           :poshandler ,poshandler
           :font-height ,font-height
@@ -475,7 +475,12 @@ This need PARENT-FRAME-WIDTH and PARENT-FRAME-HEIGHT"
       (cancel-timer posframe--timeout-timer))
     (setq-local posframe--timeout-timer
                 (run-with-timer
-                 secs nil #'make-frame-invisible posframe))))
+                 secs nil #'posframe-hide-frame posframe))))
+
+(defun posframe-hide-frame (frame)
+  "This function used to instead `make-frame-invisible' to make hide frame safely."
+  (when (frame-live-p frame)
+    (make-frame-invisible frame)))
 
 (defun posframe--run-refresh-timer (posframe repeat
                                              height min-height
@@ -503,7 +508,7 @@ WIDTH and MIN-WIDTH."
     (let ((buffer-info (frame-parameter frame 'posframe-buffer)))
       (when (or (equal posframe-buffer (car buffer-info))
                 (equal posframe-buffer (cdr buffer-info)))
-        (make-frame-invisible frame)))))
+        (posframe-hide-frame frame)))))
 
 (defun posframe-delete (posframe-buffer)
   "Delete posframe which buffer POSFRAME-BUFFER."
@@ -537,7 +542,7 @@ This posframe's buffer is POSFRAME-BUFFER."
   (interactive)
   (dolist (frame (frame-list))
     (let ((buffer-info (frame-parameter frame 'posframe-buffer)))
-      (when buffer-info (make-frame-invisible frame)))))
+      (when buffer-info (posframe-hide-frame frame)))))
 
 ;;;###autoload
 (defun posframe-delete-all ()
