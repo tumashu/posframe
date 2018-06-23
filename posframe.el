@@ -282,16 +282,18 @@ by default, poshandler is auto selected based on
 POSITION's type, but user can *force* set one with
 the help of POSHANDLER argument. the below are buildin
 poshandler functions:
-1. `posframe-poshandler-frame-center'
-2. `posframe-poshandler-frame-bottom-left-corner'
-3. `posframe-poshandler-frame-bottom-right-corner'
-4. `posframe-poshandler-window-center'
-5. `posframe-poshandler-window-top-left-corner'
-6. `posframe-poshandler-window-top-right-corner'
-7. `posframe-poshandler-window-bottom-left-corner'
-8. `posframe-poshandler-window-bottom-right-corner'
-9. `posframe-poshandler-point-top-left-corner'
-9. `posframe-poshandler-point-bottom-left-corner'
+1.  `posframe-poshandler-frame-center'
+2.  `posframe-poshandler-frame-top-left-corner'
+3.  `posframe-poshandler-frame-top-right-corner'
+4.  `posframe-poshandler-frame-bottom-left-corner'
+5.  `posframe-poshandler-frame-bottom-right-corner'
+6.  `posframe-poshandler-window-center'
+7.  `posframe-poshandler-window-top-left-corner'
+8.  `posframe-poshandler-window-top-right-corner'
+9.  `posframe-poshandler-window-bottom-left-corner'
+10. `posframe-poshandler-window-bottom-right-corner'
+11. `posframe-poshandler-point-top-left-corner'
+12. `posframe-poshandler-point-bottom-left-corner'
 
 This posframe's buffer is POSFRAME-BUFFER.
 
@@ -659,6 +661,23 @@ be found in docstring of `posframe-show'."
           (/ (- (frame-pixel-height parent-frame)
                 (frame-pixel-height posframe))
              2))))
+
+(defun posframe-poshandler-frame-top-left-corner (_info)
+  "Posframe's position handler.
+
+Get a position which let posframe stay onto its parent-frame's
+top left corner.  The structure of INFO can be found
+in docstring of `posframe-show'."
+  '(0 . 0))
+
+(defun posframe-poshandler-frame-top-right-corner (_info)
+  "Posframe's position handler.
+
+Get a position which let posframe stay onto its parent-frame's
+top right corner.  The structure of INFO can be found
+in docstring of `posframe-show'."
+  '(-1 . 0))
+
 
 (defun posframe-poshandler-frame-bottom-left-corner (_info)
   "Posframe's position handler.
