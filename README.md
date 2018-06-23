@@ -3,23 +3,23 @@ Note: this file is auto converted from posframe.el by [el2org](https://github.co
 
 # &#30446;&#24405;
 
-1.  [Posframe README](#org0b9c3bd)
-    1.  [What is posframe](#org0728352)
-    2.  [Installation](#org515eb16)
-    3.  [Usage](#orgf346c5e)
-        1.  [Create a posframe](#orgfd5312d)
-        2.  [Hide a posframe](#org530c1c6)
-        3.  [Hide all posframes](#org5cf1eb8)
-        4.  [Delete a posframe](#org5147f85)
-        5.  [Delete all posframes](#org22b7dfe)
+1.  [Posframe README](#org83cbaa0)
+    1.  [What is posframe](#org3ce725d)
+    2.  [Installation](#org545827a)
+    3.  [Usage](#orgdac766b)
+        1.  [Create a posframe](#orgea6aecd)
+        2.  [Hide a posframe](#orga5310b9)
+        3.  [Hide all posframes](#orgbf09855)
+        4.  [Delete a posframe](#org68db811)
+        5.  [Delete all posframes](#org12f2467)
 
 
-<a id="org0b9c3bd"></a>
+<a id="org83cbaa0"></a>
 
 # Posframe README
 
 
-<a id="org0728352"></a>
+<a id="org3ce725d"></a>
 
 ## What is posframe
 
@@ -36,61 +36,60 @@ NOTE: For MacOS users, posframe need Emacs (version >= 26.0.91)
 ![img](./snapshots/posframe-1.png)
 
 
-<a id="org515eb16"></a>
+<a id="org545827a"></a>
 
 ## Installation
 
     (require 'posframe)
 
 
-<a id="orgf346c5e"></a>
+<a id="orgdac766b"></a>
 
 ## Usage
 
 
-<a id="orgfd5312d"></a>
+<a id="orgea6aecd"></a>
 
 ### Create a posframe
 
 1.  Simple way
 
+        NOTE: buffers prefixed with space will be not showed in buffer-list.
         (posframe-show " *my-posframe-buffer*"
                        :string "This is a test"
                        :position (point))
-
-    Arguments documents:
-
-        C-h f posframe-show
-
-    Note: buffers prefixed with space will be not showed in buffer-list.
 
 2.  Advanced way
 
         (defvar my-posframe-buffer " *my-posframe-buffer*")
 
-        (with-current-buffer my-posframe-buffer
+        (with-current-buffer (get-buffer-create my-posframe-buffer)
           (erase-buffer)
           (insert "Hello world"))
 
         (posframe-show my-posframe-buffer
                        :position (point))
 
+3.  Arguments
 
-<a id="org530c1c6"></a>
+        C-h f posframe-show
+
+
+<a id="orga5310b9"></a>
 
 ### Hide a posframe
 
     (posframe-hide " *my-posframe-buffer*")
 
 
-<a id="org5cf1eb8"></a>
+<a id="orgbf09855"></a>
 
 ### Hide all posframes
 
     M-x posframe-hide-all
 
 
-<a id="org5147f85"></a>
+<a id="org68db811"></a>
 
 ### Delete a posframe
 
@@ -102,7 +101,7 @@ NOTE: For MacOS users, posframe need Emacs (version >= 26.0.91)
         (posframe-delete-frame " *my-posframe-buffer*")
 
 
-<a id="org22b7dfe"></a>
+<a id="org12f2467"></a>
 
 ### Delete all posframes
 
