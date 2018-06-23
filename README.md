@@ -1,23 +1,25 @@
+Note: this file is auto converted from posframe.el by [el2org](https://github.com/tumashu/el2org), please do not edit it by hand!!!
+
 
 # &#30446;&#24405;
 
-1.  [Posframe README](#orgb0e618a)
-    1.  [What is posframe](#orga5aca6b)
-    2.  [Installation](#orgc054dab)
-    3.  [Usage](#orga60ff65)
-        1.  [Create a posframe](#org216b84e)
-        2.  [Hide a posframe](#orgda0528f)
-        3.  [Hide all posframes](#org7904f7f)
-        4.  [Delete a posframe](#org9aed6aa)
-        5.  [Delete all posframes](#orga1ab8fd)
+1.  [Posframe README](#org0b9c3bd)
+    1.  [What is posframe](#org0728352)
+    2.  [Installation](#org515eb16)
+    3.  [Usage](#orgf346c5e)
+        1.  [Create a posframe](#orgfd5312d)
+        2.  [Hide a posframe](#org530c1c6)
+        3.  [Hide all posframes](#org5cf1eb8)
+        4.  [Delete a posframe](#org5147f85)
+        5.  [Delete all posframes](#org22b7dfe)
 
 
-<a id="orgb0e618a"></a>
+<a id="org0b9c3bd"></a>
 
 # Posframe README
 
 
-<a id="orga5aca6b"></a>
+<a id="org0728352"></a>
 
 ## What is posframe
 
@@ -34,46 +36,61 @@ NOTE: For MacOS users, posframe need Emacs (version >= 26.0.91)
 ![img](./snapshots/posframe-1.png)
 
 
-<a id="orgc054dab"></a>
+<a id="org515eb16"></a>
 
 ## Installation
 
     (require 'posframe)
 
 
-<a id="orga60ff65"></a>
+<a id="orgf346c5e"></a>
 
 ## Usage
 
 
-<a id="org216b84e"></a>
+<a id="orgfd5312d"></a>
 
 ### Create a posframe
 
-    (posframe-show " *my-posframe-buffer*"
-                   :string "This is a test"
-                   :position (point))
+1.  Simple way
 
-Arguments documents:
+        (posframe-show " *my-posframe-buffer*"
+                       :string "This is a test"
+                       :position (point))
 
-    C-h f posframe-show
+    Arguments documents:
+
+        C-h f posframe-show
+
+    Note: buffers prefixed with space will be not showed in buffer-list.
+
+2.  Advanced way
+
+        (defvar my-posframe-buffer " *my-posframe-buffer*")
+
+        (with-current-buffer my-posframe-buffer
+          (erase-buffer)
+          (insert "Hello world"))
+
+        (posframe-show my-posframe-buffer
+                       :position (point))
 
 
-<a id="orgda0528f"></a>
+<a id="org530c1c6"></a>
 
 ### Hide a posframe
 
     (posframe-hide " *my-posframe-buffer*")
 
 
-<a id="org7904f7f"></a>
+<a id="org5cf1eb8"></a>
 
 ### Hide all posframes
 
     M-x posframe-hide-all
 
 
-<a id="org9aed6aa"></a>
+<a id="org5147f85"></a>
 
 ### Delete a posframe
 
@@ -85,7 +102,7 @@ Arguments documents:
         (posframe-delete-frame " *my-posframe-buffer*")
 
 
-<a id="orga1ab8fd"></a>
+<a id="org22b7dfe"></a>
 
 ### Delete all posframes
 
@@ -94,6 +111,3 @@ Arguments documents:
 Note: this command will delete all posframe buffers,
 suggest not run this command if you are sharing a buffer
 between posframe and other packages.
-
-
-Converted from posframe.el by [el2org](https://github.com/tumashu/el2org).

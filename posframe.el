@@ -50,6 +50,7 @@
 
 ;; *** Create a posframe
 
+;; **** Simple way
 ;; #+BEGIN_EXAMPLE
 ;; (posframe-show " *my-posframe-buffer*"
 ;;                :string "This is a test"
@@ -59,6 +60,20 @@
 ;; Arguments documents:
 ;; #+BEGIN_EXAMPLE
 ;; C-h f posframe-show
+;; #+END_EXAMPLE
+
+;; Note: buffers prefixed with space will be not showed in buffer-list.
+
+;; **** Advanced way
+;; #+BEGIN_EXAMPLE
+;; (defvar my-posframe-buffer " *my-posframe-buffer*")
+
+;; (with-current-buffer my-posframe-buffer
+;;   (erase-buffer)
+;;   (insert "Hello world"))
+
+;; (posframe-show my-posframe-buffer
+;;                :position (point))
 ;; #+END_EXAMPLE
 
 ;; *** Hide a posframe
