@@ -372,7 +372,7 @@ you can use `posframe-delete-all' to delete all posframes."
       (posframe--set-frame-position
        posframe
        (posframe-run-poshandler
-        `(             ;All poshandlers will get info from this plist.
+        `(;All poshandlers will get info from this plist.
           :position ,position
           :poshandler ,poshandler
           :font-height ,font-height
