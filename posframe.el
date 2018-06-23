@@ -475,9 +475,9 @@ This need PARENT-FRAME-WIDTH and PARENT-FRAME-HEIGHT"
       (cancel-timer posframe--timeout-timer))
     (setq-local posframe--timeout-timer
                 (run-with-timer
-                 secs nil #'posframe-hide-frame posframe))))
+                 secs nil #'posframe--make-frame-invisible posframe))))
 
-(defun posframe-hide-frame (frame)
+(defun posframe--make-frame-invisible (frame)
   "This function used to instead `make-frame-invisible' to make hide frame safely."
   (when (frame-live-p frame)
     (make-frame-invisible frame)))
@@ -508,7 +508,7 @@ WIDTH and MIN-WIDTH."
     (let ((buffer-info (frame-parameter frame 'posframe-buffer)))
       (when (or (equal posframe-buffer (car buffer-info))
                 (equal posframe-buffer (cdr buffer-info)))
-        (posframe-hide-frame frame)))))
+        (posframe--make-frame-invisible frame)))))
 
 (defun posframe-delete (posframe-buffer)
   "Delete posframe which buffer POSFRAME-BUFFER."
@@ -542,7 +542,7 @@ This posframe's buffer is POSFRAME-BUFFER."
   (interactive)
   (dolist (frame (frame-list))
     (let ((buffer-info (frame-parameter frame 'posframe-buffer)))
-      (when buffer-info (posframe-hide-frame frame)))))
+      (when buffer-info (posframe--make-frame-invisible frame)))))
 
 ;;;###autoload
 (defun posframe-delete-all ()
