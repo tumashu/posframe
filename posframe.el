@@ -220,6 +220,7 @@ This posframe's buffer is POSFRAME-BUFFER."
                        (keep-ratio ,keep-ratio)
                        (posframe-buffer . ,(cons (buffer-name posframe-buffer)
                                                  posframe-buffer))
+                       (fullscreen . nil)
                        (no-accept-focus . t)
                        (min-width  . 0)
                        (min-height . 0)
