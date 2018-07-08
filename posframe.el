@@ -179,6 +179,7 @@ This posframe's buffer is POSFRAME-BUFFER."
                     background-color
                     right-fringe
                     left-fringe
+                    internal-border-width
                     font
                     keep-ratio
                     override-parameters
