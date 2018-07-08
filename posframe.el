@@ -166,7 +166,8 @@ frame.")
                                      keep-ratio
                                      override-parameters
                                      respect-header-line
-                                     respect-mode-line)
+                                     respect-mode-line
+                                     face-remap)
   "Create a child-frame for posframe.
 This posframe's buffer is POSFRAME-BUFFER."
   (let ((left-fringe (or left-fringe 0))
@@ -184,7 +185,8 @@ This posframe's buffer is POSFRAME-BUFFER."
                     keep-ratio
                     override-parameters
                     respect-header-line
-                    respect-mode-line)))
+                    respect-mode-line
+                    face-remap)))
     (with-current-buffer posframe-buffer
       ;; Many variables take effect after call `set-window-buffer'
       (setq-local left-fringe-width nil)
@@ -194,6 +196,7 @@ This posframe's buffer is POSFRAME-BUFFER."
       (setq-local cursor-type nil)
       (setq-local cursor-in-non-selected-windows nil)
       (setq-local show-trailing-whitespace nil)
+      (setq-local face-remapping-alist face-remap)
       (unless respect-mode-line
         (setq-local mode-line-format nil))
       (unless respect-header-line
@@ -276,6 +279,7 @@ This posframe's buffer is POSFRAME-BUFFER."
                          background-color
                          respect-header-line
                          respect-mode-line
+                         face-remap
                          no-properties
                          keep-ratio
                          override-parameters
@@ -344,6 +348,11 @@ By default, posframe will force hide header-line and mode-line
 If user want to show header-line or mode-line in posframe,
 set RESPECT-HEADER-LINE or RESPECT-MODE-LINE to t.
 
+If user want to let posframe use different faces from other frame.
+user can set FACE-REMAP, more setting details can be found:
+
+  C-h v face-remapping-alist
+
 OVERRIDE-PARAMETERS is very powful, *all* the frame parameters
 used by posframe's frame can be overrided by it.
 
@@ -387,6 +396,7 @@ you can use `posframe-delete-all' to delete all posframes."
              :keep-ratio keep-ratio
              :respect-header-line respect-header-line
              :respect-mode-line respect-mode-line
+             :face-remap face-remap
              :override-parameters override-parameters))
 
       ;; Insert string to posframe-buffer.
