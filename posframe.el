@@ -161,6 +161,7 @@ frame.")
                                      background-color
                                      left-fringe
                                      right-fringe
+                                     internal-border-width
                                      font
                                      keep-ratio
                                      override-parameters
@@ -170,6 +171,7 @@ frame.")
 This posframe's buffer is POSFRAME-BUFFER."
   (let ((left-fringe (or left-fringe 0))
         (right-fringe (or right-fringe 0))
+        (internal-border-width (or internal-border-width 0))
         (posframe-buffer (get-buffer-create posframe-buffer))
         (after-make-frame-functions nil)
         (args (list parent-frame
@@ -225,7 +227,7 @@ This posframe's buffer is POSFRAME-BUFFER."
                        (min-width  . 0)
                        (min-height . 0)
                        (border-width . 0)
-                       (internal-border-width . 0)
+                       (internal-border-width . ,internal-border-width)
                        (vertical-scroll-bars . nil)
                        (horizontal-scroll-bars . nil)
                        (left-fringe . ,left-fringe)
@@ -267,6 +269,7 @@ This posframe's buffer is POSFRAME-BUFFER."
                          y-pixel-offset
                          left-fringe
                          right-fringe
+                         internal-border-width
                          font
                          foreground-color
                          background-color
@@ -324,6 +327,11 @@ size too small, MIN-WIDTH and MIN-HEIGTH will be useful
 If LEFT-FRINGE or RIGHT-FRINGE is a number, Left fringe or
 right fringe with be showed with number width.
 
+By default, posframe shows no border, user can let border
+showed by setting INTERNAL-BORDER-WIDTH to a postive number,
+by the way, border's color is specified by the background of
+the ‘internal-border’ face.
+
 By default, posframe's font is deriverd from current frame
 user can set posframe's font with FONT argument.
 
@@ -372,6 +380,7 @@ you can use `posframe-delete-all' to delete all posframes."
              :parent-frame parent-frame
              :left-fringe left-fringe
              :right-fringe right-fringe
+             :internal-border-width internal-border-width
              :foreground-color foreground-color
              :background-color background-color
              :keep-ratio keep-ratio
