@@ -296,11 +296,28 @@ POSITION can be:
 POSHANDLER is a function with one argument, and return
 a real position. its argument is a plist, which like
 
-  (:position xxx :poshandler xxx
-   :font-height xxx :font-width xxx
-   :posframe xxx :posframe-buffer xxx
-   :parent-frame xxx :parent-window xxx
-   :x-pixel-offset xxx :y-pixel-offset xxx)
+  (:position xxx
+   :position-info xxx
+   :poshandler xxx
+   :font-height xxx
+   :font-width xxx
+   :posframe xxx
+   :posframe-width xxx
+   :posframe-height xxx
+   :posframe-buffer xxx
+   :parent-frame xxx
+   :parent-window-left xxx
+   :parent-window-top xxx
+   :parent-frame-width xxx
+   :parent-frame-height xxx
+   :parent-window xxx
+   :parent-window-width  xxx
+   :parent-window-height xxx
+   :minibuffer-height
+   :mode-line-height
+   :header-line-height
+   :x-pixel-offset xxx
+   :y-pixel-offset xxx)
 
 by default, poshandler is auto selected based on
 POSITION's type, but user can *force* set one with
@@ -370,11 +387,19 @@ you can use `posframe-delete-all' to delete all posframes."
          (min-width (or min-width 1))
          (min-height (or min-height 1))
          (parent-window (selected-window))
+         (parent-window-top (window-pixel-top parent-window))
+         (parent-window-left (window-pixel-left parent-window))
+         (parent-window-width (window-pixel-width parent-window))
+         (parent-window-height (window-pixel-height parent-window))
+         (position-info (posn-at-point position parent-window))
          (parent-frame (window-frame parent-window))
          (parent-frame-width (frame-pixel-width parent-frame))
          (parent-frame-height (frame-pixel-height parent-frame))
          (font-width (default-font-width))
          (font-height (posframe--get-font-height position))
+         (mode-line-height (window-mode-line-height))
+         (minibuffer-height (window-pixel-height (minibuffer-window)))
+         (header-line-height (window-header-line-height parent-window))
          (frame-resize-pixelwise t)
          posframe)
 
@@ -412,15 +437,25 @@ you can use `posframe-delete-all' to delete all posframes."
        (posframe-run-poshandler
         `(;All poshandlers will get info from this plist.
           :position ,position
+          :position-info ,position-info
           :poshandler ,poshandler
           :font-height ,font-height
           :font-width ,font-width
           :posframe ,posframe
-          :height ,(frame-pixel-height posframe)
-          :width ,(frame-pixel-width posframe)
+          :posframe-width ,(frame-pixel-width posframe)
+          :posframe-height ,(frame-pixel-height posframe)
           :posframe-buffer ,posframe-buffer
           :parent-frame ,parent-frame
+          :parent-frame-width ,parent-frame-width
+          :parent-frame-height ,parent-frame-height
           :parent-window ,parent-window
+          :parent-window-top ,parent-window-top
+          :parent-window-left ,parent-window-left
+          :parent-window-width ,parent-window-width
+          :parent-window-height ,parent-window-height
+          :mode-line-height ,mode-line-height
+          :minibuffer-height ,minibuffer-height
+          :header-line-height ,header-line-height
           :x-pixel-offset ,x-pixel-offset
           :y-pixel-offset ,y-pixel-offset))
        parent-frame-width parent-frame-height)
@@ -643,29 +678,25 @@ the structure of INFO can be found in docstring
 of `posframe-show'.
 
 Optional argument FONT-HEIGHT ."
-  (let* ((position (plist-get info :position))
-         (x-pixel-offset (plist-get info :x-pixel-offset))
+  (let* ((x-pixel-offset (plist-get info :x-pixel-offset))
          (y-pixel-offset (plist-get info :y-pixel-offset))
-         (posframe-width (frame-pixel-width
-                          (plist-get info :posframe)))
-         (posframe-height (frame-pixel-height
-                           (plist-get info :posframe)))
+         (posframe-width (plist-get info :posframe-width))
+         (posframe-height (plist-get info :posframe-height))
          (window (plist-get info :parent-window))
-         (frame (plist-get info :parent-frame))
-         (xmax (frame-pixel-width frame))
-         (ymax (frame-pixel-height frame))
-         (header-line-height (window-header-line-height window))
-         (posn-top-left (posn-at-point position window))
+         (xmax (plist-get info :parent-frame-width))
+         (ymax (plist-get info :parent-frame-height))
+         (position-info (plist-get info :position-info))
+         (header-line-height (plist-get info :header-line-height))
          (x (+ (car (window-inside-pixel-edges window))
-               (- (or (car (posn-x-y posn-top-left)) 0)
-                  (or (car (posn-object-x-y posn-top-left)) 0))
+               (- (or (car (posn-x-y position-info)) 0)
+                  (or (car (posn-object-x-y position-info)) 0))
                x-pixel-offset))
          (y-top (+ (cadr (window-pixel-edges window))
                    header-line-height
-                   (- (or (cdr (posn-x-y posn-top-left)) 0)
+                   (- (or (cdr (posn-x-y position-info)) 0)
                       ;; Fix the conflict with flycheck
                       ;; http://lists.gnu.org/archive/html/emacs-devel/2018-01/msg00537.html
-                      (or (cdr (posn-object-x-y posn-top-left)) 0))
+                      (or (cdr (posn-object-x-y position-info)) 0))
                    y-pixel-offset))
          (font-height (or font-height (plist-get info :font-height)))
          (y-bottom (+ y-top font-height)))
@@ -689,14 +720,12 @@ of `posframe-show'."
 Get a position which let posframe stay onto its
 parent-frame's center.  The structure of INFO can
 be found in docstring of `posframe-show'."
-  (let* ((posframe (plist-get info :posframe))
-         (parent-frame (plist-get info :parent-frame)))
-    (cons (/ (- (frame-pixel-width parent-frame)
-                (frame-pixel-width posframe))
-             2)
-          (/ (- (frame-pixel-height parent-frame)
-                (frame-pixel-height posframe))
-             2))))
+  (cons (/ (- (plist-get info :parent-frame-width)
+              (plist-get info :posframe-width))
+           2)
+        (/ (- (plist-get info :parent-frame-height)
+              (plist-get info :posframe-height))
+           2)))
 
 (defun posframe-poshandler-frame-top-left-corner (_info)
   "Posframe's position handler.
@@ -715,25 +744,25 @@ in docstring of `posframe-show'."
   '(-1 . 0))
 
 
-(defun posframe-poshandler-frame-bottom-left-corner (_info)
+(defun posframe-poshandler-frame-bottom-left-corner (info)
   "Posframe's position handler.
 
 Get a position which let posframe stay onto its parent-frame's
 bottom left corner.  The structure of INFO can be found
 in docstring of `posframe-show'."
   (cons 0 (- 0
-             (window-mode-line-height)
-             (window-pixel-height (minibuffer-window)))))
+             (plist-get info :mode-line-height)
+             (plist-get info :minibuffer-height))))
 
-(defun posframe-poshandler-frame-bottom-right-corner (_info)
+(defun posframe-poshandler-frame-bottom-right-corner (info)
   "Posframe's position handler.
 
 Get a position which let posframe stay onto its parent-frame's
 bottom right corner.  The structure of INFO can be found
 in docstring of `posframe-show'."
   (cons -1 (- 0
-              (window-mode-line-height)
-              (window-pixel-height (minibuffer-window)))))
+              (plist-get info :mode-line-height)
+              (plist-get info :minibuffer-height))))
 
 (defun posframe-poshandler-window-center (info)
   "Posframe's position handler.
@@ -741,14 +770,12 @@ in docstring of `posframe-show'."
 Get a position which let posframe stay onto current window's
 center.  The structure of INFO can be found in docstring
 of `posframe-show'."
-  (let* ((posframe (plist-get info :posframe))
-         (parent-window (plist-get info :parent-window))
-         (window-left (window-pixel-left parent-window))
-         (window-top (window-pixel-top parent-window))
-         (window-width (window-pixel-width parent-window))
-         (window-height (window-pixel-height parent-window))
-         (posframe-width (frame-pixel-width posframe))
-         (posframe-height (frame-pixel-height posframe)))
+  (let* ((window-left (plist-get info :parent-window-left))
+         (window-top (plist-get info :parent-window-top))
+         (window-width (plist-get info :parent-window-width))
+         (window-height (plist-get info :parent-window-height))
+         (posframe-width (plist-get info :posframe-width))
+         (posframe-height (plist-get info :posframe-height)))
     (cons (+ window-left (/ (- window-width posframe-width) 2))
           (+ window-top (/ (- window-height posframe-height) 2)))))
 
@@ -758,9 +785,8 @@ of `posframe-show'."
 Get a position which let posframe stay onto current window's
 top left corner.  The structure of INFO can be found in
 docstring of `posframe-show'."
-  (let* ((parent-window (plist-get info :parent-window))
-         (window-left (window-pixel-left parent-window))
-         (window-top (window-pixel-top parent-window)))
+  (let* ((window-left (plist-get info :parent-window-left))
+         (window-top (plist-get info :parent-window-top)))
     (cons window-left
           window-top)))
 
@@ -770,12 +796,10 @@ docstring of `posframe-show'."
 Get a position which let posframe stay onto current window's
 top right corner.  The structure of INFO can be found in
 docstring of `posframe-show'."
-  (let* ((posframe (plist-get info :posframe))
-         (window (plist-get info :parent-window))
-         (window-left (window-pixel-left window))
-         (window-top (window-pixel-top window))
-         (window-width (window-pixel-width window))
-         (posframe-width (frame-pixel-width posframe)))
+  (let* ((window-left (plist-get info :parent-window-left))
+         (window-top (plist-get info :parent-window-top))
+         (window-width (plist-get info :parent-window-width))
+         (posframe-width (plist-get info :posframe-width)))
     (cons (+ window-left window-width
              (- 0 posframe-width))
           window-top)))
@@ -786,16 +810,14 @@ docstring of `posframe-show'."
 Get a position which let posframe stay onto current window's
 bottom left corner.  The structure of INFO can be found in
 docstring of `posframe-show'."
-  (let* ((posframe (plist-get info :posframe))
-         (window (plist-get info :parent-window))
-         (window-left (window-pixel-left window))
-         (window-top (window-pixel-top window))
-         (window-height (window-pixel-height window))
-         (posframe-height (frame-pixel-height posframe))
-         (modeline-height (window-mode-line-height)))
+  (let* ((window-left (plist-get info :parent-window-left))
+         (window-top (plist-get info :parent-window-top))
+         (window-height (plist-get info :parent-window-height))
+         (posframe-height (plist-get info :posframe-height))
+         (mode-line-height (plist-get info :mode-line-height)))
     (cons window-left
           (+ window-top window-height
-             (- 0 modeline-height posframe-height)))))
+             (- 0 mode-line-height posframe-height)))))
 
 (defun posframe-poshandler-window-bottom-right-corner (info)
   "Posframe's position handler.
@@ -803,19 +825,17 @@ docstring of `posframe-show'."
 Get a position which let posframe stay onto current window's
 bottom right corner.  The structure of INFO can be found in
 docstring of `posframe-show'."
-  (let* ((posframe (plist-get info :posframe))
-         (window (plist-get info :parent-window))
-         (window-left (window-pixel-left window))
-         (window-top (window-pixel-top window))
-         (window-width (window-pixel-width window))
-         (window-height (window-pixel-height window))
-         (posframe-width (frame-pixel-width posframe))
-         (posframe-height (frame-pixel-height posframe))
-         (modeline-height (window-mode-line-height)))
+  (let* ((window-left (plist-get info :parent-window-left))
+         (window-top (plist-get info :parent-window-top))
+         (window-width (plist-get info :parent-window-width))
+         (window-height (plist-get info :parent-window-height))
+         (posframe-width (plist-get info :posframe-width))
+         (posframe-height (plist-get info :posframe-height))
+         (mode-line-height (plist-get info :mode-line-height)))
     (cons (+ window-left window-width
              (- 0 posframe-width))
           (+ window-top window-height
-             (- 0 modeline-height posframe-height)))))
+             (- 0 mode-line-height posframe-height)))))
 
 (provide 'posframe)
 
