@@ -728,6 +728,18 @@ be found in docstring of `posframe-show'."
               (plist-get info :posframe-height))
            2)))
 
+
+(defun posframe-poshandler-frame-top-center (info)
+  "Posframe's position handler.
+
+Get a position which let posframe stay onto its
+parent-frame's top center.  The structure of INFO can
+be found in docstring of `posframe-show'."
+  (cons (/ (- (plist-get info :parent-frame-width)
+              (plist-get info :posframe-width))
+           2)
+        0))
+
 (defun posframe-poshandler-frame-top-left-corner (_info)
   "Posframe's position handler.
 
