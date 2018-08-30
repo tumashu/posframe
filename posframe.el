@@ -325,17 +325,18 @@ POSITION's type, but user can *force* set one with
 the help of POSHANDLER argument. the below are buildin
 poshandler functions:
 1.  `posframe-poshandler-frame-center'
-2.  `posframe-poshandler-frame-top-left-corner'
-3.  `posframe-poshandler-frame-top-right-corner'
-4.  `posframe-poshandler-frame-bottom-left-corner'
-5.  `posframe-poshandler-frame-bottom-right-corner'
-6.  `posframe-poshandler-window-center'
-7.  `posframe-poshandler-window-top-left-corner'
-8.  `posframe-poshandler-window-top-right-corner'
-9.  `posframe-poshandler-window-bottom-left-corner'
-10. `posframe-poshandler-window-bottom-right-corner'
-11. `posframe-poshandler-point-top-left-corner'
-12. `posframe-poshandler-point-bottom-left-corner'
+2.  `posframe-poshandler-frame-top-center'
+3.  `posframe-poshandler-frame-top-left-corner'
+4.  `posframe-poshandler-frame-top-right-corner'
+5.  `posframe-poshandler-frame-bottom-left-corner'
+6.  `posframe-poshandler-frame-bottom-right-corner'
+7.  `posframe-poshandler-window-center'
+8.  `posframe-poshandler-window-top-left-corner'
+9.  `posframe-poshandler-window-top-right-corner'
+10.  `posframe-poshandler-window-bottom-left-corner'
+11. `posframe-poshandler-window-bottom-right-corner'
+12. `posframe-poshandler-point-top-left-corner'
+13. `posframe-poshandler-point-bottom-left-corner'
 
 This posframe's buffer is POSFRAME-BUFFER.
 
