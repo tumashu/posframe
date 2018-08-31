@@ -333,7 +333,7 @@ poshandler functions:
 7.  `posframe-poshandler-window-center'
 8.  `posframe-poshandler-window-top-left-corner'
 9.  `posframe-poshandler-window-top-right-corner'
-10.  `posframe-poshandler-window-bottom-left-corner'
+10. `posframe-poshandler-window-bottom-left-corner'
 11. `posframe-poshandler-window-bottom-right-corner'
 12. `posframe-poshandler-point-top-left-corner'
 13. `posframe-poshandler-point-bottom-left-corner'
