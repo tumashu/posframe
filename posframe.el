@@ -153,7 +153,7 @@ frame.")
 (defvar-local posframe--refresh-timer nil
   "Record the timer to deal with refresh argument of `posframe-show'.")
 
-(defvar-local posframe--initialize-p nil
+(defvar-local posframe--initialized-p nil
   "Record initialize status of `posframe-show'.")
 
 (cl-defun posframe--create-posframe (posframe-buffer
@@ -415,10 +415,10 @@ you can use `posframe-delete-all' to delete all posframes."
     (with-current-buffer posframe-buffer
 
       ;; Initialize
-      (unless posframe--initialize-p
+      (unless posframe--initialized-p
         (when (functionp initialize)
           (funcall initialize)
-          (setq posframe--initialize-p t)))
+          (setq posframe--initialized-p t)))
 
       ;; Move mouse to (0 . 0)
       (posframe--mouse-banish parent-frame)
