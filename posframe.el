@@ -877,8 +877,4 @@ docstring of `posframe-show'."
 
 (provide 'posframe)
 
-;; Local Variables:
-;; coding: utf-8
-;; End:
-
 ;;; posframe.el ends here
