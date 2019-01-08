@@ -198,6 +198,7 @@ This posframe's buffer is POSFRAME-BUFFER."
                     face-remap)))
     (with-current-buffer posframe-buffer
       ;; Many variables take effect after call `set-window-buffer'
+      (setq-local display-line-numbers nil)
       (setq-local frame-title-format "")
       (setq-local left-fringe-width nil)
       (setq-local right-fringe-width nil)
