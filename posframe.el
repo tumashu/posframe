@@ -130,6 +130,13 @@ If :initialize argument of `posframe-show' is nil, this function
 will be called as fallback."
   :type 'function)
 
+(defcustom posframe-use-child-frame t
+  "Use child-frame to when it is non-nil.
+
+otherwise, tooltip created by `x-show-tip' will be used
+instead of child-frame."
+  :type 'boolean)
+
 (defvar-local posframe--frame nil
   "Record posframe's frame.")
 
@@ -422,80 +429,129 @@ you can use `posframe-delete-all' to delete all posframes."
          (frame-resize-pixelwise t)
          posframe)
 
-    (with-current-buffer posframe-buffer
+    (if (not posframe-use-child-frame)
+        (let ((x-gtk-use-system-tooltips nil)
+              (tooltip-reuse-hidden-frame t)
+              (x-y
+               (posframe-run-poshandler
+                `(;All poshandlers will get info from this plist.
+                  :position ,position
+                  :position-info ,position-info
+                  :poshandler ,poshandler
+                  :font-height ,font-height
+                  :font-width ,font-width
+                  ;; :posframe ,posframe
+                  ;; :posframe-width ,(frame-pixel-width posframe)
+                  ;; :posframe-height ,(frame-pixel-height posframe)
+                  :posframe-buffer ,posframe-buffer
+                  :parent-frame ,parent-frame
+                  :parent-frame-width ,parent-frame-width
+                  :parent-frame-height ,parent-frame-height
+                  :parent-window ,parent-window
+                  :parent-window-top ,parent-window-top
+                  :parent-window-left ,parent-window-left
+                  :parent-window-width ,parent-window-width
+                  :parent-window-height ,parent-window-height
+                  :mode-line-height ,mode-line-height
+                  :minibuffer-height ,minibuffer-height
+                  :header-line-height ,header-line-height
+                  :x-pixel-offset ,x-pixel-offset
+                  :y-pixel-offset ,y-pixel-offset))))
+          (princ x-y)
+          (x-show-tip
+           (substring-no-properties
+            (or string
+                (with-current-buffer posframe-buffer
+                  (buffer-substring-no-properties))))
+           (selected-frame)
+           `((name . "tooltip")
+             ,(when internal-border-width
+                (cons 'internal-border-width internal-border-width))
+             ,(when foreground-color
+                (cons 'foreground-color foreground-color))
+             ,(when background-color
+                (cons 'background-color background-color))
+             (left . ,(car x-y))
+             (top . ,(cdr x-y))
+             (border-width . 1)
+             (no-special-glyphs . t))
+           (or timeout 10)
+           x-pixel-offset
+           y-pixel-offset))
 
-      ;; Initialize
-      (unless posframe--initialized-p
-        (let ((func (or initialize posframe-default-initialize-function)))
-          (when (functionp func)
-            (funcall func)
-            (setq posframe--initialized-p t))))
+      (with-current-buffer posframe-buffer
+        ;; Initialize
+        (unless posframe--initialized-p
+          (let ((func (or initialize posframe-default-initialize-function)))
+            (when (functionp func)
+              (funcall func)
+              (setq posframe--initialized-p t))))
 
-      ;; Move mouse to (0 . 0)
-      (posframe--mouse-banish parent-frame)
+        ;; Move mouse to (0 . 0)
+        (posframe--mouse-banish parent-frame)
 
-      ;; Create posframe
-      (setq posframe
-            (posframe--create-posframe
-             posframe-buffer
-             :font font
-             :parent-frame parent-frame
-             :left-fringe left-fringe
-             :right-fringe right-fringe
-             :internal-border-width internal-border-width
-             :foreground-color foreground-color
-             :background-color background-color
-             :keep-ratio keep-ratio
-             :respect-header-line respect-header-line
-             :respect-mode-line respect-mode-line
-             :face-remap face-remap
-             :override-parameters override-parameters))
+        ;; Create posframe
+        (setq posframe
+              (posframe--create-posframe
+               posframe-buffer
+               :font font
+               :parent-frame parent-frame
+               :left-fringe left-fringe
+               :right-fringe right-fringe
+               :internal-border-width internal-border-width
+               :foreground-color foreground-color
+               :background-color background-color
+               :keep-ratio keep-ratio
+               :respect-header-line respect-header-line
+               :respect-mode-line respect-mode-line
+               :face-remap face-remap
+               :override-parameters override-parameters))
 
-      ;; Insert string to posframe-buffer.
-      (posframe--insert-string string no-properties)
+        ;; Insert string to posframe-buffer.
+        (posframe--insert-string string no-properties)
 
-      ;; Set posframe's size
-      (posframe--set-frame-size
-       posframe height min-height width min-width)
+        ;; Set posframe's size
+        (posframe--set-frame-size
+         posframe height min-height width min-width)
 
-      ;; Move posframe
-      (posframe--set-frame-position
-       posframe
-       (posframe-run-poshandler
-        `(;All poshandlers will get info from this plist.
-          :position ,position
-          :position-info ,position-info
-          :poshandler ,poshandler
-          :font-height ,font-height
-          :font-width ,font-width
-          :posframe ,posframe
-          :posframe-width ,(frame-pixel-width posframe)
-          :posframe-height ,(frame-pixel-height posframe)
-          :posframe-buffer ,posframe-buffer
-          :parent-frame ,parent-frame
-          :parent-frame-width ,parent-frame-width
-          :parent-frame-height ,parent-frame-height
-          :parent-window ,parent-window
-          :parent-window-top ,parent-window-top
-          :parent-window-left ,parent-window-left
-          :parent-window-width ,parent-window-width
-          :parent-window-height ,parent-window-height
-          :mode-line-height ,mode-line-height
-          :minibuffer-height ,minibuffer-height
-          :header-line-height ,header-line-height
-          :x-pixel-offset ,x-pixel-offset
-          :y-pixel-offset ,y-pixel-offset))
-       parent-frame-width parent-frame-height)
+        ;; Move posframe
+        (posframe--set-frame-position
+         posframe
+         (posframe-run-poshandler
+          `(;All poshandlers will get info from this plist.
+            :position ,position
+            :position-info ,position-info
+            :poshandler ,poshandler
+            :font-height ,font-height
+            :font-width ,font-width
+            :posframe ,posframe
+            :posframe-width ,(frame-pixel-width posframe)
+            :posframe-height ,(frame-pixel-height posframe)
+            :posframe-buffer ,posframe-buffer
+            :parent-frame ,parent-frame
+            :parent-frame-width ,parent-frame-width
+            :parent-frame-height ,parent-frame-height
+            :parent-window ,parent-window
+            :parent-window-top ,parent-window-top
+            :parent-window-left ,parent-window-left
+            :parent-window-width ,parent-window-width
+            :parent-window-height ,parent-window-height
+            :mode-line-height ,mode-line-height
+            :minibuffer-height ,minibuffer-height
+            :header-line-height ,header-line-height
+            :x-pixel-offset ,x-pixel-offset
+            :y-pixel-offset ,y-pixel-offset))
+         parent-frame-width parent-frame-height)
 
-      ;; Delay hide posframe when timeout is a number.
-      (posframe--run-timeout-timer posframe timeout)
+        ;; Delay hide posframe when timeout is a number.
+        (posframe--run-timeout-timer posframe timeout)
 
-      ;; Re-adjust posframe's size when buffer's content has changed.
-      (posframe--run-refresh-timer
-       posframe refresh height min-height width min-width)
+        ;; Re-adjust posframe's size when buffer's content has changed.
+        (posframe--run-refresh-timer
+         posframe refresh height min-height width min-width)
 
-      ;; Do not return anything.
-      nil)))
+        ;; Do not return anything.
+        nil))))
 
 (defun posframe--get-font-height (position)
   "Get the font's height at POSITION."
@@ -670,7 +726,8 @@ This function is used by `kill-buffer-hook'."
 
 the structure of INFO can be found in docstring
 of `posframe-show'."
-  (if (equal info posframe--last-poshandler-info)
+  (if (and (equal info posframe--last-poshandler-info)
+           posframe--last-posframe-pixel-position)
       posframe--last-posframe-pixel-position
     (setq posframe--last-poshandler-info info)
     (funcall
