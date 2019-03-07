@@ -200,6 +200,8 @@ This posframe's buffer is POSFRAME-BUFFER."
       ;; Many variables take effect after call `set-window-buffer'
       (setq-local display-line-numbers nil)
       (setq-local frame-title-format "")
+      (setq-local left-margin-width nil)
+      (setq-local right-margin-width nil)
       (setq-local left-fringe-width nil)
       (setq-local right-fringe-width nil)
       (setq-local fringes-outside-margins 0)
