@@ -171,6 +171,7 @@ frame.")
                                      left-fringe
                                      right-fringe
                                      internal-border-width
+                                     internal-border-color
                                      font
                                      keep-ratio
                                      override-parameters
@@ -264,6 +265,9 @@ This posframe's buffer is POSFRAME-BUFFER."
                        (inhibit-double-buffering . ,posframe-inhibit-double-buffering)
                        ;; Do not save child-frame when use desktop.el
                        (desktop-dont-save . t))))
+        (when internal-border-color
+          (set-face-background 'internal-border
+                               internal-border-color posframe--frame))
         (let ((posframe-window (frame-root-window posframe--frame)))
           ;; This method is more stable than 'setq mode/header-line-format nil'
           (unless respect-mode-line
@@ -287,6 +291,7 @@ This posframe's buffer is POSFRAME-BUFFER."
                          left-fringe
                          right-fringe
                          internal-border-width
+                         internal-border-color
                          font
                          foreground-color
                          background-color
@@ -366,8 +371,8 @@ right fringe with be showed with number width.
 
 By default, posframe shows no border, user can let border
 showed by setting INTERNAL-BORDER-WIDTH to a postive number,
-by the way, border's color is specified by the background of
-the ‘internal-border’ face.
+by the way, border's color can be specified by INTERNAL-BORDER-COLOR
+or ‘internal-border’ face.
 
 By default, posframe's font is deriverd from current frame
 user can set posframe's font with FONT argument.
@@ -445,6 +450,7 @@ you can use `posframe-delete-all' to delete all posframes."
              :left-fringe left-fringe
              :right-fringe right-fringe
              :internal-border-width internal-border-width
+             :internal-border-color internal-border-color
              :foreground-color foreground-color
              :background-color background-color
              :keep-ratio keep-ratio
