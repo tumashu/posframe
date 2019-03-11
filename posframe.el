@@ -502,6 +502,9 @@ you can use `posframe-delete-all' to delete all posframes."
       (posframe--run-refresh-timer
        posframe refresh height min-height width min-width)
 
+      ;; Make sure not hide buffer's content for scroll down.
+      (set-window-point (frame-root-window posframe--frame) 0)
+
       ;; Do not return anything.
       nil)))
 
