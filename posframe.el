@@ -163,6 +163,13 @@ frame.")
 (defvar-local posframe--initialized-p nil
   "Record initialize status of `posframe-show'.")
 
+(defun posframe-workable-p ()
+  "Test posframe workable status."
+  (and (>= emacs-major-version 26)
+       (not (or noninteractive
+                emacs-basic-display
+                (not (display-graphic-p))))))
+
 (cl-defun posframe--create-posframe (posframe-buffer
                                      &key
                                      parent-frame
