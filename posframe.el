@@ -310,7 +310,8 @@ This posframe's buffer is POSFRAME-BUFFER."
                          keep-ratio
                          override-parameters
                          timeout
-                         refresh)
+                         refresh
+                         &allow-other-keys)
   "Pop posframe and show STRING at POSITION.
 
 POSITION can be:
