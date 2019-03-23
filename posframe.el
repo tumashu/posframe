@@ -114,6 +114,11 @@
   :group 'lisp
   :prefix "posframe-")
 
+(defcustom posframe-font nil
+  "Default posframe font"
+  :group 'posframe
+  :type 'string)
+
 (defcustom posframe-mouse-banish (not (eq system-type 'darwin))
   "Mouse will be moved to (0 , 0) when it is non-nil."
   :group 'posframe
@@ -454,7 +459,7 @@ you can use `posframe-delete-all' to delete all posframes."
       (setq posframe
             (posframe--create-posframe
              posframe-buffer
-             :font font
+             :font (or font posframe-font)
              :parent-frame parent-frame
              :left-fringe left-fringe
              :right-fringe right-fringe
