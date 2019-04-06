@@ -628,7 +628,11 @@ WIDTH and MIN-WIDTH."
     (let ((buffer-info (frame-parameter frame 'posframe-buffer)))
       (when (or (equal posframe-buffer (car buffer-info))
                 (equal posframe-buffer (cdr buffer-info)))
-        (posframe--make-frame-invisible frame)))))
+        (posframe--make-frame-invisible frame)
+        ;; Fix the bug: https://github.com/tumashu/ivy-posframe/pull/30#issuecomment-480371982
+        (with-current-buffer posframe-buffer
+          (erase-buffer))
+        (redraw-frame frame)))))
 
 (defun posframe-delete (posframe-buffer)
   "Delete posframe which buffer POSFRAME-BUFFER."
