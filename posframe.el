@@ -586,7 +586,9 @@ This need PARENT-FRAME-WIDTH and PARENT-FRAME-HEIGHT"
                 (cons parent-frame-width parent-frame-height)))
   ;; Make posframe's posframe--frame visible
   (unless (frame-visible-p posframe)
-    (make-frame-visible posframe)))
+    (make-frame-visible posframe)
+    ;; Fix issue: https://github.com/tumashu/ivy-posframe/pull/30
+    (redraw-frame posframe)))
 
 (defun posframe--run-timeout-timer (posframe secs)
   "Hide POSFRAME after a delay of SECS seconds."
