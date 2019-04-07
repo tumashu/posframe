@@ -547,15 +547,12 @@ https://github.com/tumashu/posframe/issues/4#issuecomment-357514918"
 If NO-PROPERTIES is non-nil, all properties of STRING
 will be removed."
   (when (and string (stringp string))
-    (remove-text-properties
-     0 (length string) '(read-only t) string)
-    ;; Does inserting string then deleting the before
-    ;; contents reduce flicking? Maybe :-)
-    (goto-char (point-min))
-    (if no-properties
-        (insert (substring-no-properties string))
-      (insert string))
-    (delete-region (point) (point-max))))
+    (remove-text-properties 0 (length string) '(read-only t) string)
+    (let ((string* (if no-properties
+                       (substring-no-properties string)
+                     string)))
+      (erase-buffer)
+      (insert string*))))
 
 (defun posframe--set-frame-size (posframe height min-height width min-width)
   "Set POSFRAME's size.
