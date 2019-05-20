@@ -105,6 +105,16 @@
 ;; suggest not run this command if you are sharing a buffer
 ;; between posframe and other packages.
 
+;; *** Customizing pointer control
+
+;; By default, posframe moves the pointer to point (0,0) in
+;; the frame, as a way to address an issue with mouse focus.
+;; To disable this feature, add this to your init.el:
+;; #+BEGIN_EXAMPLE
+;; (setq posframe-mouse-banish nil)
+;; #+END_EXAMPLE
+
+
 ;;; Code:
 ;; * posframe's code                         :CODE:
 (require 'cl-lib)
