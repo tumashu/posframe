@@ -531,15 +531,13 @@ you can use `posframe-delete-all' to delete all posframes."
   "Get the font's height at POSITION."
   (if (eq position (car posframe--last-font-height-info))
       (cdr posframe--last-font-height-info)
-    (let ((height (when (integerp position)
-                    (if (= position 1)
-                        (default-line-height)
-                      (aref (font-info
-                             (font-at
-                              (if (and (= position (point-max)))
-                                  (- position 1)
-                                position)))
-                            3)))))
+    (let* ((font (font-at (if (and (= position (point-max)))
+                              (- position 1)
+                            position)))
+           (height (when (integerp position)
+                     (if (or (= position 1) (not (fontp font)))
+                         (default-line-height)
+                       (aref (font-info font) 3)))))
       (setq posframe--last-font-height-info
             (cons position height))
       height)))
