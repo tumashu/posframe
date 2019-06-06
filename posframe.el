@@ -134,13 +134,6 @@
   :group 'posframe
   :type 'boolean)
 
-(defcustom posframe-default-initialize-function nil
-  "The default :initialize function of `posframe-show'.
-
-If :initialize argument of `posframe-show' is nil, this function
-will be called as fallback."
-  :type 'function)
-
 (defvar-local posframe--frame nil
   "Record posframe's frame.")
 
@@ -443,7 +436,7 @@ you can use `posframe-delete-all' to delete all posframes."
 
       ;; Initialize
       (unless posframe--initialized-p
-        (let ((func (or initialize posframe-default-initialize-function)))
+        (let ((func initialize))
           (when (functionp func)
             (funcall func)
             (setq posframe--initialized-p t))))
