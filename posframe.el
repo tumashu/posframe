@@ -114,6 +114,17 @@
 ;; (setq posframe-mouse-banish nil)
 ;; #+END_EXAMPLE
 
+;; *** Set fallback argument of posframe-show
+
+;; user can set fallback values of posframe-show's arguments with the
+;; help of `posframe-arghandler'. the below example set fallback
+;; border-width to 10 and fallback background color to green.
+
+;; (setq posframe-arghandler #'my-posframe-arghandler)
+;; (defun my-posframe-arghandler (posframe-buffer arg-name value)
+;;   (let ((info '(:internal-border-width 10 :background-color "green")))
+;;     (or (plist-get info arg-name) value)))
+
 
 ;;; Code:
 ;; * posframe's code                         :CODE:
@@ -133,6 +144,14 @@
   "Set the posframe's frame-parameter: inhibit-double-buffering."
   :group 'posframe
   :type 'boolean)
+
+(defcustom posframe-arghandler #'posframe-arghandler-default
+  "A function used to handle posframe-show's argument.
+
+User can use this feature to set the default value of
+posframe-show's argument."
+  :group 'posframe
+  :type 'function)
 
 (defvar-local posframe--frame nil
   "Record posframe's frame.")
@@ -285,6 +304,10 @@ This posframe's buffer is POSFRAME-BUFFER."
           (set-window-buffer posframe-window posframe-buffer)))
       posframe--frame)))
 
+(defun posframe-arghandler-default (posframe-buffer arg-name value)
+  "The default value of `posframe-arghandler'"
+  value)
+
 (cl-defun posframe-show (posframe-buffer
                          &key
                          string
@@ -409,12 +432,31 @@ If REFRESH is a number, posframe's frame-size will be re-adjust
 every mumber seconds.
 
 you can use `posframe-delete-all' to delete all posframes."
-  (let* ((position (or position (point)))
+  (let* ((position (or (funcall posframe-arghandler posframe-buffer :position position) (point)))
+         (poshandler (funcall posframe-arghandler posframe-buffer :poshandler poshandler))
+         (width (funcall posframe-arghandler posframe-buffer :width width))
+         (height (funcall posframe-arghandler posframe-buffer :height height))
+         (min-width (or (funcall posframe-arghandler posframe-buffer :min-width min-width) 1))
+         (min-height (or (funcall posframe-arghandler posframe-buffer :min-height min-height) 1))
+         (x-pixel-offset (or (funcall posframe-arghandler posframe-buffer :x-pixel-offset x-pixel-offset) 0))
+         (y-pixel-offset (or (funcall posframe-arghandler posframe-buffer :y-pixel-offset y-pixel-offset) 0))
+         (left-fringe (funcall posframe-arghandler posframe-buffer :left-fringe left-fringe))
+         (right-fringe (funcall posframe-arghandler posframe-buffer :right-fringe right-fringe))
+         (internal-border-width (funcall posframe-arghandler posframe-buffer :internal-border-width internal-border-width))
+         (internal-border-color (funcall posframe-arghandler posframe-buffer :internal-border-color internal-border-color))
+         (font (funcall posframe-arghandler posframe-buffer :font font))
+         (foreground-color (funcall posframe-arghandler posframe-buffer :foreground-color foreground-color))
+         (background-color (funcall posframe-arghandler posframe-buffer :background-color background-color))
+         (respect-header-line (funcall posframe-arghandler posframe-buffer :respect-header-line respect-header-line))
+         (respect-mode-line (funcall posframe-arghandler posframe-buffer :respect-mode-line respect-mode-line))
+         (initialize (funcall posframe-arghandler posframe-buffer :initialize initialize))
+         (no-properties (funcall posframe-arghandler posframe-buffer :no-properties no-properties))
+         (keep-ratio (funcall posframe-arghandler posframe-buffer :keep-ratio keep-ratio))
+         (override-parameters (funcall posframe-arghandler posframe-buffer :override-parameters override-parameters))
+         (timeout (funcall posframe-arghandler posframe-buffer :timeout timeout))
+         (refresh (funcall posframe-arghandler posframe-buffer :refresh refresh))
+         ;;-----------------------------------------------------
          (posframe-buffer (get-buffer-create posframe-buffer))
-         (x-pixel-offset (or x-pixel-offset 0))
-         (y-pixel-offset (or y-pixel-offset 0))
-         (min-width (or min-width 1))
-         (min-height (or min-height 1))
          (parent-window (selected-window))
          (parent-window-top (window-pixel-top parent-window))
          (parent-window-left (window-pixel-left parent-window))
