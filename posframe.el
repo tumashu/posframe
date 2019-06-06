@@ -666,6 +666,16 @@ This posframe's buffer is POSFRAME-BUFFER."
   (when (buffer-live-p posframe-buffer)
     (kill-buffer posframe-buffer)))
 
+(defun posframe-funcall (posframe-buffer function &rest arguments)
+  "Select posframe of POSFRAME-BUFFER's, and call FUNCTION.
+passing remaining arguments to it."
+  (when (get-buffer posframe-buffer)
+    (with-current-buffer posframe-buffer
+      (when (framep posframe--frame)
+        (with-selected-frame posframe--frame
+          (when (functionp function)
+            (apply function arguments)))))))
+
 ;;;###autoload
 (defun posframe-hide-all ()
   "Hide all posframe's frames."
