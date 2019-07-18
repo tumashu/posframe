@@ -309,6 +309,7 @@ This posframe's buffer is POSFRAME-BUFFER."
   "The default value of `posframe-arghandler'. Return VALUE."
   value)
 
+;;;###autoload
 (cl-defun posframe-show (posframe-buffer
                          &key
                          string
