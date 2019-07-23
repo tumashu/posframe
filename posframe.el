@@ -178,6 +178,12 @@ posframe-show's argument."
 If these args have changed, posframe will recreate its
 frame.")
 
+(defvar-local posframe--last-frame-parameters nil
+  "Record the last frame parameters of `posframe--create-posframe'.
+
+If these args have changed, posframe will recreate its
+frame.")
+
 (defvar-local posframe--timeout-timer nil
   "Record the timer to deal with timeout argument of `posframe-show'.")
 
@@ -193,6 +199,19 @@ frame.")
        (not (or noninteractive
                 emacs-basic-display
                 (not (display-graphic-p))))))
+
+(defun posframe--parameters-changed-p ()
+  "Check if frame parameters changed or not."
+  (let ((old posframe--last-frame-parameters)
+        (new (frame-parameters posframe--frame))
+        (check-list '(cursor-color
+                      background-mode
+                      foreground-color
+                      background-color
+                      font)))
+    (remove nil (mapcar
+                 (lambda (x) (unless (equal (assoc x old) (assoc x new)) x))
+                 check-list))))
 
 (cl-defun posframe--create-posframe (posframe-buffer
                                      &key
@@ -250,7 +269,8 @@ This posframe's buffer is POSFRAME-BUFFER."
                    ;; existing frame at possible, but when
                    ;; user change args, recreating frame
                    ;; is needed.
-                   (equal posframe--last-args args))
+                   (equal posframe--last-args args)
+                   (not (posframe--parameters-changed-p)))
         (posframe-delete-frame posframe-buffer)
         (setq-local posframe--last-args args)
         (setq-local posframe--last-posframe-pixel-position nil)
@@ -293,6 +313,7 @@ This posframe's buffer is POSFRAME-BUFFER."
                        (inhibit-double-buffering . ,posframe-inhibit-double-buffering)
                        ;; Do not save child-frame when use desktop.el
                        (desktop-dont-save . t))))
+        (setq-local posframe--last-frame-parameters (frame-parameters posframe--frame))
         (when internal-border-color
           (set-face-background 'internal-border
                                internal-border-color posframe--frame))
