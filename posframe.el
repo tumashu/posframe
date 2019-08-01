@@ -712,16 +712,16 @@ passing remaining ARGUMENTS to it."
   "Hide all posframe's frames."
   (interactive)
   (dolist (frame (frame-list))
-    (let ((buffer-info (frame-parameter frame 'posframe-buffer)))
-      (when buffer-info (posframe--make-frame-invisible frame)))))
+    (when (frame-parameter frame 'posframe-buffer)
+      (posframe--make-frame-invisible frame))))
 
 ;;;###autoload
 (defun posframe-delete-all ()
   "Delete all posframe's frames and buffers."
   (interactive)
   (dolist (frame (frame-list))
-    (let ((buffer-info (frame-parameter frame 'posframe-buffer)))
-      (when buffer-info (delete-frame frame))))
+    (when (frame-parameter frame 'posframe-buffer)
+      (delete-frame frame)))
   (dolist (buffer (buffer-list))
     (with-current-buffer buffer
       (when posframe--frame
