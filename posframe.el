@@ -92,7 +92,7 @@
 ;;    #+BEGIN_EXAMPLE
 ;;    (posframe-delete " *my-posframe-buffer*")
 ;;    #+END_EXAMPLE
-;; 2. Only delete posframe's frame
+;; 2. Only delete the frame
 ;;    #+BEGIN_EXAMPLE
 ;;    (posframe-delete-frame " *my-posframe-buffer*")
 ;;    #+END_EXAMPLE
@@ -671,17 +671,20 @@ BUFFER-OR-NAME can be a buffer or a buffer name."
     (with-current-buffer buffer posframe--frame)))
 
 (defun posframe-hide (buffer-or-name)
-  "Hide posframe pertaining to BUFFER-OR-NAME."
+  "Hide posframe pertaining to BUFFER-OR-NAME.
+BUFFER-OR-NAME can be a buffer or a buffer name."
   (when-let ((frame (posframe-buffer-frame buffer-or-name)))
     (posframe--make-frame-invisible frame)))
 
 (defun posframe-delete (buffer-or-name)
-  "Delete posframe which buffer BUFFER-OR-NAME."
+  "Delete posframe pertaining to BUFFER-OR-NAME and kill the buffer.
+BUFFER-OR-NAME can be a buffer or a buffer name."
   (posframe-delete-frame buffer-or-name)
   (posframe--kill-buffer buffer-or-name))
 
 (defun posframe-delete-frame (buffer-or-name)
-  "Delete posframe pertaining to BUFFER-OR-NAME."
+  "Delete posframe pertaining to BUFFER-OR-NAME.
+BUFFER-OR-NAME can be a buffer or a buffer name."
   (when-let ((buffer (get-buffer buffer-or-name)))
     (with-current-buffer buffer
       (dolist (timer '(posframe--refresh-timer
@@ -692,12 +695,14 @@ BUFFER-OR-NAME can be a buffer or a buffer name."
         (delete-frame posframe--frame)))))
 
 (defun posframe--kill-buffer (buffer-or-name)
-  "Kill posframe's buffer: BUFFER-OR-NAME."
+  "Kill posframe's buffer: BUFFER-OR-NAME.
+BUFFER-OR-NAME can be a buffer or a buffer name."
   (when (buffer-live-p (get-buffer buffer-or-name))
     (kill-buffer buffer-or-name)))
 
 (defun posframe-funcall (buffer-or-name function &rest arguments)
-  "Select posframe of BUFFER-OR-NAME and call FUNCTION with ARGUMENTS."
+  "Select posframe of BUFFER-OR-NAME and call FUNCTION with ARGUMENTS.
+BUFFER-OR-NAME can be a buffer or a buffer name."
   (when (functionp function)
     (when (get-buffer buffer-or-name)
       (with-current-buffer buffer-or-name
@@ -707,7 +712,7 @@ BUFFER-OR-NAME can be a buffer or a buffer name."
 
 ;;;###autoload
 (defun posframe-hide-all ()
-  "Hide all posframe's frames."
+  "Hide all posframe frames."
   (interactive)
   (dolist (frame (frame-list))
     (when (frame-parameter frame 'posframe-buffer)
@@ -715,7 +720,7 @@ BUFFER-OR-NAME can be a buffer or a buffer name."
 
 ;;;###autoload
 (defun posframe-delete-all ()
-  "Delete all posframe's frames and buffers."
+  "Delete all posframe frames and buffers."
   (interactive)
   (dolist (frame (frame-list))
     (when (frame-parameter frame 'posframe-buffer)
