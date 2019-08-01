@@ -209,7 +209,7 @@ frame.")
                                      override-parameters
                                      respect-header-line
                                      respect-mode-line)
-  "Create a child-frame for posframe.
+  "Create and return a posframe child frame.
 This posframe's buffer is BUFFER-OR-NAME."
   (let ((left-fringe (or left-fringe 0))
         (right-fringe (or right-fringe 0))
