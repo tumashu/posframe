@@ -698,13 +698,12 @@ This posframe's buffer is BUFFER-OR-NAME."
     (kill-buffer buffer-or-name)))
 
 (defun posframe-funcall (buffer-or-name function &rest arguments)
-  "Select posframe of BUFFER-OR-NAME's, and call FUNCTION.
-passing remaining ARGUMENTS to it."
-  (when (get-buffer buffer-or-name)
-    (with-current-buffer buffer-or-name
-      (when (framep posframe--frame)
-        (with-selected-frame posframe--frame
-          (when (functionp function)
+  "Select posframe of BUFFER-OR-NAME and call FUNCTION with ARGUMENTS."
+  (when (functionp function)
+    (when (get-buffer buffer-or-name)
+      (with-current-buffer buffer-or-name
+        (when (framep posframe--frame)
+          (with-selected-frame posframe--frame
             (apply function arguments)))))))
 
 ;;;###autoload
