@@ -130,6 +130,7 @@
 ;;; Code:
 ;; * posframe's code                         :CODE:
 (require 'cl-lib)
+(eval-when-compile (require 'subr-x))   ; `when-let'
 
 (defgroup posframe nil
   "Pop a posframe (just a frame) at point"
@@ -677,20 +678,15 @@ WIDTH and MIN-WIDTH."
   (posframe--kill-buffer buffer-or-name))
 
 (defun posframe-delete-frame (buffer-or-name)
-  "Kill child-frame of posframe.
-This posframe's buffer is BUFFER-OR-NAME."
-  (dolist (frame (frame-list))
-    (let ((buffer-info (frame-parameter frame 'posframe-buffer))
-          (buffer (get-buffer buffer-or-name)))
-      (when (or (equal buffer-or-name (car buffer-info))
-                (equal buffer-or-name (cdr buffer-info)))
-        (when buffer
-          (with-current-buffer buffer
-            (dolist (timer '(posframe--refresh-timer
-                             posframe--timeout-timer))
-              (when (timerp timer)
-                (cancel-timer timer)))))
-        (delete-frame frame)))))
+  "Delete posframe pertaining to BUFFER-OR-NAME."
+  (when-let ((buffer (get-buffer buffer-or-name)))
+    (with-current-buffer buffer
+      (dolist (timer '(posframe--refresh-timer
+                       posframe--timeout-timer))
+        (when (timerp timer)
+          (cancel-timer timer)))
+      (when (frame-live-p posframe--frame)
+        (delete-frame posframe--frame)))))
 
 (defun posframe--kill-buffer (buffer-or-name)
   "Kill posframe's buffer: BUFFER-OR-NAME."
