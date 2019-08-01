@@ -245,6 +245,8 @@ This posframe's buffer is BUFFER-OR-NAME."
       (unless respect-header-line
         (setq-local header-line-format nil))
 
+      (add-hook 'kill-buffer-hook #'posframe-auto-delete nil t)
+
       ;; Create child-frame
       (unless (and (frame-live-p posframe--frame)
                    ;; For speed reason, posframe will reuse
@@ -735,8 +737,6 @@ BUFFER-OR-NAME can be a buffer or a buffer name."
 
 This function is used by `kill-buffer-hook'."
   (posframe-delete-frame (current-buffer)))
-
-(add-hook 'kill-buffer-hook #'posframe-auto-delete)
 
 ;; Posframe's position handler
 (defun posframe-run-poshandler (info)
