@@ -692,7 +692,7 @@ This posframe's buffer is POSFRAME-BUFFER."
 
 (defun posframe--kill-buffer (posframe-buffer)
   "Kill posframe's buffer: POSFRAME-BUFFER."
-  (when (buffer-live-p posframe-buffer)
+  (when (buffer-live-p (get-buffer posframe-buffer))
     (kill-buffer posframe-buffer)))
 
 (defun posframe-funcall (posframe-buffer function &rest arguments)
