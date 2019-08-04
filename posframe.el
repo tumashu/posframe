@@ -305,10 +305,11 @@ This posframe's buffer is POSFRAME-BUFFER."
           (set-window-buffer posframe-window posframe-buffer)))
       posframe--frame)))
 
-(defun posframe-arghandler-default (posframe-buffer arg-name value)
-  "The default value of `posframe-arghandler'"
+(defun posframe-arghandler-default (_posframe-buffer _arg-name value)
+  "The default value of `posframe-arghandler'. Return VALUE."
   value)
 
+;;;###autoload
 (cl-defun posframe-show (posframe-buffer
                          &key
                          string
@@ -637,7 +638,7 @@ This need PARENT-FRAME-WIDTH and PARENT-FRAME-HEIGHT"
                  secs nil #'posframe--make-frame-invisible posframe))))
 
 (defun posframe--make-frame-invisible (frame)
-  "This function used to instead `make-frame-invisible' to make hide frame safely."
+  "`make-frame-invisible' replacement to hide FRAME safely."
   (when (frame-live-p frame)
     (make-frame-invisible frame)))
 
@@ -697,7 +698,7 @@ This posframe's buffer is POSFRAME-BUFFER."
 
 (defun posframe-funcall (posframe-buffer function &rest arguments)
   "Select posframe of POSFRAME-BUFFER's, and call FUNCTION.
-passing remaining arguments to it."
+passing remaining ARGUMENTS to it."
   (when (get-buffer posframe-buffer)
     (with-current-buffer posframe-buffer
       (when (framep posframe--frame)
