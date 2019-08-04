@@ -28,15 +28,15 @@
 ;;; Commentary:
 
 ;; * Posframe README                                :README:
-;; ** What is posframe
-;; Posframe can pop a posframe at point, this *posframe* is a
-;; child-frame with its root window's buffer.
+;; ** What is posframe?
+;; Posframe can pop up a frame at point, this *posframe* is a
+;; child-frame connected to its root window's buffer.
 
 ;; The main advantages are:
 ;; 1. It is fast enough for daily usage :-)
-;; 2. It works well with CJK language.
+;; 2. It works well with CJK languages.
 
-;; NOTE: For MacOS users, posframe need Emacs (version >= 26.0.91)
+;; NOTE: For MacOS users, posframe needs Emacs version >= 26.0.91
 
 ;; [[./snapshots/posframe-1.png]]
 
@@ -101,11 +101,11 @@
 ;; M-x posframe-delete-all
 ;; #+END_EXAMPLE
 
-;; Note: this command will delete all posframe buffers,
-;; suggest not run this command if you are sharing a buffer
+;; Note: this command will delete all posframe buffers.
+;; You probably shouldn't use it if you are sharing a buffer
 ;; between posframe and other packages.
 
-;; *** Customizing pointer control
+;; *** Customizing mouse pointer control
 
 ;; By default, posframe moves the pointer to point (0,0) in
 ;; the frame, as a way to address an issue with mouse focus.
@@ -114,10 +114,10 @@
 ;; (setq posframe-mouse-banish nil)
 ;; #+END_EXAMPLE
 
-;; *** Set fallback argument of posframe-show
+;; *** Set fallback arguments of posframe-show
 
-;; user can set fallback values of posframe-show's arguments with the
-;; help of `posframe-arghandler'. the below example set fallback
+;; Users can set fallback values of posframe-show's arguments with the
+;; help of `posframe-arghandler'.  The example below sets fallback
 ;; border-width to 10 and fallback background color to green.
 
 ;; #+BEGIN_EXAMPLE
@@ -149,8 +149,8 @@
 (defcustom posframe-arghandler #'posframe-arghandler-default
   "A function used to handle posframe-show's argument.
 
-User can use this feature to set the default value of
-posframe-show's argument."
+Users can use this feature to set the default value of
+posframe-show's arguments."
   :group 'posframe
   :type 'function)
 
@@ -337,16 +337,16 @@ This posframe's buffer is POSFRAME-BUFFER."
                          timeout
                          refresh
                          &allow-other-keys)
-  "Pop posframe and show STRING at POSITION.
+  "Pop up a posframe and show STRING at POSITION.
 
 POSITION can be:
-1. A integer number, which regard as a point.
-2. A cons of integer, which regard as absolute X and Y.
-3. Other types, User should set POSHANDLER manual to deal
-   with them.
+1. An integer, meaning point position.
+2. A cons of two integers, meaning absolute X and Y coordinates.
+3. Other type, in which case the corresponding POSHANDLER should be
+   provided.
 
-POSHANDLER is a function with one argument, and return
-a real position. its argument is a plist, which like
+POSHANDLER is a function of one argument returning an actual
+position.  Its argument is a plist of the following form:
 
   (:position xxx
    :position-info xxx
@@ -371,10 +371,10 @@ a real position. its argument is a plist, which like
    :x-pixel-offset xxx
    :y-pixel-offset xxx)
 
-by default, poshandler is auto selected based on
-POSITION's type, but user can *force* set one with
-the help of POSHANDLER argument. the below are buildin
-poshandler functions:
+By default, poshandler is auto-selected based on the type of POSITION,
+but the selection can be overridden using the POSHANDLER argument.
+The builtin poshandler functions are listed below:
+
 1.  `posframe-poshandler-frame-center'
 2.  `posframe-poshandler-frame-top-center'
 3.  `posframe-poshandler-frame-top-left-corner'
@@ -392,48 +392,47 @@ poshandler functions:
 This posframe's buffer is POSFRAME-BUFFER.
 
 If NO-PROPERTIES is non-nil, The STRING's properties will
-be removed before showed in posframe.
+be removed before being shown in posframe.
 
-posframe's frame-size can be set by WIDTH and HEIGHT,
-If one of them is nil, posframe's frame-size will fit the
-content of buffer, if you don't want to posframe's
-size too small, MIN-WIDTH and MIN-HEIGTH will be useful
+Posframe's frame size can be set by WIDTH and HEIGHT.
+If one of them is nil, posframe's frame size will fit the
+buffer.  MIN-WIDTH and MIN-HEIGTH can be useful to prevent
+posframe becoming too small.
 
-If LEFT-FRINGE or RIGHT-FRINGE is a number, Left fringe or
-right fringe with be showed with number width.
+If LEFT-FRINGE or RIGHT-FRINGE is a number, left fringe or
+right fringe with be shown with the specified width.
 
-By default, posframe shows no border, user can let border
-showed by setting INTERNAL-BORDER-WIDTH to a postive number,
-by the way, border's color can be specified by INTERNAL-BORDER-COLOR
-or ‘internal-border’ face.
+By default, posframe shows no borders, but users can specify
+borders by setting INTERNAL-BORDER-WIDTH to a positive number.
+Border color can be specified by INTERNAL-BORDER-COLOR
+or via the ‘internal-border’ face.
 
-By default, posframe's font is deriverd from current frame
-user can set posframe's font with FONT argument.
+Posframe's font as well as foreground and background colors are
+derived from the current frame by default, but can be overridden
+using the FONT, FOREGROUND-COLOR and BACKGROUND-COLOR arguments,
+respectively.
 
-By default, posframe's foreground and background color are
-deriverd from current frame, user can set them with the help
-of FOREGROUND-COLOR and BACKGROUND-COLOR.
+By default, posframe will display no header-line or mode-line.
+In case a header-line or mode-line is desired, users can set
+RESPECT-HEADER-LINE or RESPECT-MODE-LINE to t.
 
-By default, posframe will force hide header-line and mode-line
-If user want to show header-line or mode-line in posframe,
-set RESPECT-HEADER-LINE or RESPECT-MODE-LINE to t.
-
-INITIALIZE is a function with no argument, it will run when
+INITIALIZE is a function with no argument.  It will run when
 posframe buffer is first selected with `with-current-buffer'
-in posframe-show, and only run once for speed reason, If INITIALIZE
-is nil, `posframe-default-initialize-function' will be used as
-fallback, user can use this variable to global set posframe buffer.
+in `posframe-show', and only run once (for performance reasons).
+If INITIALIZE is nil, `posframe-default-initialize-function' will
+be used as fallback; this variable can be used to set posframe
+buffer gobally.
 
 OVERRIDE-PARAMETERS is very powful, *all* the frame parameters
-used by posframe's frame can be overrided by it.
+used by posframe's frame can be overridden by it.
 
-If TIMEOUT is a number, a delay of number seconds, the posframe
-will auto hide.
+TIMEOUT can specify the number of seconds after which the posframe
+will auto-hide.
 
-If REFRESH is a number, posframe's frame-size will be re-adjust
-every mumber seconds.
+If REFRESH is a number, posframe's frame-size will be re-adjusted
+every REFRESH seconds.
 
-you can use `posframe-delete-all' to delete all posframes."
+You can use `posframe-delete-all' to delete all posframes."
   (let* ((position (or (funcall posframe-arghandler posframe-buffer :position position) (point)))
          (poshandler (funcall posframe-arghandler posframe-buffer :poshandler poshandler))
          (width (funcall posframe-arghandler posframe-buffer :width width))
