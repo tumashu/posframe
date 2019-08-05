@@ -665,17 +665,14 @@ WIDTH and MIN-WIDTH."
                           frame height min-height width min-width)))
                    posframe height min-height width min-width)))))
 
-(defun posframe-buffer-frame (buffer-or-name)
-  "Return the posframe pertaining to BUFFER-OR-NAME.
-BUFFER-OR-NAME can be a buffer or a buffer name."
-  (when-let ((buffer (get-buffer buffer-or-name)))
-    (with-current-buffer buffer posframe--frame)))
-
 (defun posframe-hide (buffer-or-name)
   "Hide posframe pertaining to BUFFER-OR-NAME.
 BUFFER-OR-NAME can be a buffer or a buffer name."
-  (when-let ((frame (posframe-buffer-frame buffer-or-name)))
-    (posframe--make-frame-invisible frame)))
+  (dolist (frame (frame-list))
+    (let ((buffer-info (frame-parameter frame 'posframe-buffer)))
+      (when (or (equal buffer-or-name (car buffer-info))
+                (equal buffer-or-name (cdr buffer-info)))
+        (posframe--make-frame-invisible frame)))))
 
 (defun posframe-delete (buffer-or-name)
   "Delete posframe pertaining to BUFFER-OR-NAME and kill the buffer.
