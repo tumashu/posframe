@@ -304,7 +304,8 @@ This posframe's buffer is BUFFER-OR-NAME."
             (set-window-parameter posframe-window 'mode-line-format 'none))
           (unless respect-header-line
             (set-window-parameter posframe-window 'header-line-format 'none))
-          (set-window-buffer posframe-window buffer)))
+          (set-window-buffer posframe-window buffer)
+          (set-window-dedicated-p posframe-window t)))
       posframe--frame)))
 
 (defun posframe-arghandler-default (_buffer-or-name _arg-name value)
