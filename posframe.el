@@ -606,7 +606,8 @@ WIDTH and MIN-WIDTH."
   (if (and width height)
       (unless (equal posframe--last-posframe-size
                      (cons width height))
-        (set-frame-size posframe width height)
+        (fit-frame-to-buffer
+         posframe height min-height width min-width)
         (setq-local posframe--last-posframe-size
                     (cons width height)))
     (fit-frame-to-buffer
