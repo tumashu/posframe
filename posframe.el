@@ -6,7 +6,7 @@
 ;; Maintainer: Feng Shu <tumashu@163.com>
 ;; URL: https://github.com/tumashu/posframe
 ;; Version: 0.5.0
-;; Keywords: tooltip
+;; Keywords: convenience, tooltip
 ;; Package-Requires: ((emacs "26"))
 
 ;; This file is part of GNU Emacs.
@@ -311,7 +311,7 @@ This posframe's buffer is BUFFER-OR-NAME."
       posframe--frame)))
 
 (defun posframe-arghandler-default (_buffer-or-name _arg-name value)
-  "The default value of `posframe-arghandler'. Return VALUE."
+  "The default value of `posframe-arghandler'.  Return VALUE."
   value)
 
 ;;;###autoload
