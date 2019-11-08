@@ -309,7 +309,7 @@ This posframe's buffer is BUFFER-OR-NAME."
       posframe--frame)))
 
 (defun posframe-arghandler-default (_buffer-or-name _arg-name value)
-  "The default value of `posframe-arghandler'. Return VALUE."
+  "The default value of `posframe-arghandler'.  Return VALUE."
   value)
 
 ;;;###autoload
