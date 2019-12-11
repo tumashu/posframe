@@ -610,11 +610,11 @@ It will set the size by the POSFRAME's HEIGHT, MIN-HEIGHT
 WIDTH and MIN-WIDTH."
   (if (and width height)
       (unless (equal posframe--last-posframe-size
-                     (cons width height))
+                     (list height min-height width min-width))
         (fit-frame-to-buffer
          posframe height min-height width min-width)
         (setq-local posframe--last-posframe-size
-                    (cons width height)))
+                    (list height min-height width min-width)))
     (fit-frame-to-buffer
      posframe height min-height width min-width)))
 
@@ -671,6 +671,36 @@ WIDTH and MIN-WIDTH."
                          (fit-frame-to-buffer
                           frame height min-height width min-width)))
                    posframe height min-height width min-width)))))
+
+(defun posframe-refresh (buffer-or-name)
+  "Refresh posframe pertaining to BUFFER-OR-NAME.
+
+For example:
+
+   (defvar buf \" *test*\")
+   (posframe-show buf)
+
+   (with-current-buffer buf
+     (erase-buffer)
+     (insert \"ffffffffffffff\")
+     (posframe-refresh buf))
+
+User can use posframe-show's :refresh argument,
+to do similar job:
+
+   (defvar buf \" *test*\")
+   (posframe-show buf :refresh 0.25)
+
+   (with-current-buffer buf
+     (erase-buffer)
+     (insert \"ffffffffffffff\"))"
+  (dolist (frame (frame-list))
+    (let ((buffer-info (frame-parameter frame 'posframe-buffer)))
+      (when (or (equal buffer-or-name (car buffer-info))
+                (equal buffer-or-name (cdr buffer-info)))
+        (with-current-buffer buffer-or-name
+          (apply #'fit-frame-to-buffer
+                 frame posframe--last-posframe-size))))))
 
 (defun posframe-hide (buffer-or-name)
   "Hide posframe pertaining to BUFFER-OR-NAME.
