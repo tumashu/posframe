@@ -571,6 +571,9 @@ You can use `posframe-delete-all' to delete all posframes."
       ;; Make sure not hide buffer's content for scroll down.
       (set-window-point (frame-root-window posframe--frame) 0)
 
+      ;; Force raise the current posframe.
+      (raise-frame posframe--frame)
+
       ;; Sometimes, if no this line, border can not be showed properly.
       (redisplay)
 
