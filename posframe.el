@@ -571,7 +571,10 @@ You can use `posframe-delete-all' to delete all posframes."
       ;; Make sure not hide buffer's content for scroll down.
       (set-window-point (frame-root-window posframe--frame) 0)
 
-      ;; Do not return anything.
+      ;; Sometimes, if no this line, border can not be showed properly.
+      (redisplay)
+
+      ;;Do not return anything.
       nil)))
 
 (defun posframe--get-font-height (position)
