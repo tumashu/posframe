@@ -197,6 +197,7 @@ frame.")
 (defvar-local posframe--initialized-p nil
   "Record initialize status of `posframe-show'.")
 
+;;;###autoload
 (defun posframe-workable-p ()
   "Test posframe workable status."
   (and (>= emacs-major-version 26)
