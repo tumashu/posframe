@@ -575,9 +575,6 @@ You can use `posframe-delete-all' to delete all posframes."
       ;; Force raise the current posframe.
       (raise-frame posframe--frame)
 
-      ;; Sometimes, if no this line, border can not be showed properly.
-      (redisplay)
-
       ;;Do not return anything.
       nil)))
 
