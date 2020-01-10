@@ -584,7 +584,7 @@ You can use `posframe-delete-all' to delete all posframes."
       (cdr posframe--last-font-height-info)
     (let* ((font (when (and (integerp position)
                             (not (= position 1)))
-                   (font-at (if (and (>= position (point-max)))
+                   (font-at (if (>= position (point-max))
                                 (- (point-max) 1)
                               position))))
            (height (when (integerp position)
