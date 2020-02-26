@@ -146,7 +146,7 @@
   :group 'lisp
   :prefix "posframe-")
 
-(defcustom posframe-mouse-banish (not (eq system-type 'darwin))
+(defcustom posframe-mouse-banish nil
   "Mouse will be moved to (0 , 0) when it is non-nil."
   :group 'posframe
   :type 'boolean)
