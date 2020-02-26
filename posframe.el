@@ -575,8 +575,8 @@ You can use `posframe-delete-all' to delete all posframes."
       ;; Force raise the current posframe.
       (raise-frame posframe--frame)
 
-      ;;Do not return anything.
-      nil)))
+      ;; Return posframe
+      posframe)))
 
 (defun posframe--get-font-height (position)
   "Get the font's height at POSITION."
