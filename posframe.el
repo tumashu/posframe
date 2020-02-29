@@ -600,14 +600,8 @@ You can use `posframe-delete-all' to delete all posframes."
 (defun posframe--redirect-posframe-focus ()
   "Redirect focus from the posframe to the previous frame. This prevents the
 posframe from catching keyboard input if the window manager selects it."
-  (interactive)
-  (if (eq (selected-frame) posframe--frame)
-      (when posframe--previous-frame
-        (redirect-frame-focus posframe--frame posframe--previous-frame))
-    (progn
-      (setf posframe--previous-frame (selected-frame))
-      (when posframe--frame
-        (redirect-frame-focus posframe--frame posframe--previous-frame)))))
+  (when (eq (selected-frame) posframe--frame)
+    (redirect-frame-focus posframe--frame (frame-parent))))
 
 (add-hook 'focus-in-hook #'posframe--redirect-posframe-focus)
 
