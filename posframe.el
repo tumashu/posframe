@@ -595,10 +595,8 @@ You can use `posframe-delete-all' to delete all posframes."
             (cons position height))
       height)))
 
-(defvar posframe--previous-frame nil)
-
 (defun posframe--redirect-posframe-focus ()
-  "Redirect focus from the posframe to the previous frame. This prevents the
+  "Redirect focus from the posframe to the parent frame. This prevents the
 posframe from catching keyboard input if the window manager selects it."
   (when (eq (selected-frame) posframe--frame)
     (redirect-frame-focus posframe--frame (frame-parent))))
