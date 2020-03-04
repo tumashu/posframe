@@ -644,7 +644,9 @@ WIDTH and MIN-WIDTH."
         (setq-local posframe--last-posframe-size
                     (list height min-height width min-width)))
     (fit-frame-to-buffer
-     posframe height min-height width min-width)))
+     posframe height min-height width min-width)
+    (setq-local posframe--last-posframe-size
+                (list height min-height width min-width))))
 
 (defun posframe--set-frame-position (posframe position
                                               parent-frame-width
@@ -695,9 +697,10 @@ WIDTH and MIN-WIDTH."
                   (run-with-timer
                    nil repeat
                    #'(lambda (frame height min-height width min-width)
-                       (when (and frame (frame-live-p frame))
-                         (fit-frame-to-buffer
-                          frame height min-height width min-width)))
+                       (let ((frame-resize-pixelwise t))
+                         (when (and frame (frame-live-p frame))
+                           (fit-frame-to-buffer
+                            frame height min-height width min-width))))
                    posframe height min-height width min-width)))))
 
 (defun posframe-refresh (buffer-or-name)
@@ -723,7 +726,8 @@ to do similar job:
      (erase-buffer)
      (insert \"ffffffffffffff\"))"
   (dolist (frame (frame-list))
-    (let ((buffer-info (frame-parameter frame 'posframe-buffer)))
+    (let ((buffer-info (frame-parameter frame 'posframe-buffer))
+          (frame-resize-pixelwise t))
       (when (or (equal buffer-or-name (car buffer-info))
                 (equal buffer-or-name (cdr buffer-info)))
         (with-current-buffer buffer-or-name
