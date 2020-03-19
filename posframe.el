@@ -147,7 +147,11 @@
   :prefix "posframe-")
 
 (defcustom posframe-mouse-banish (not (eq system-type 'darwin))
-  "Mouse will be moved to (0 , 0) when it is non-nil."
+  "Mouse will be moved to (0 , 0) when it is non-nil.
+
+This option is used to solve the problem of child frame getting
+focus, with the help of `posframe--redirect-posframe-focus',
+setting this option to `t' will work well in *most* cases."
   :group 'posframe
   :type 'boolean)
 
