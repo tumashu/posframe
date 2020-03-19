@@ -151,7 +151,7 @@
 
 This option is used to solve the problem of child frame getting
 focus, with the help of `posframe--redirect-posframe-focus',
-setting this option to `t' will work well in *most* cases."
+setting this option to `nil' will work well in *most* cases."
   :group 'posframe
   :type 'boolean)
 
