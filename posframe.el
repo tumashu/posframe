@@ -386,6 +386,7 @@ position.  Its argument is a plist of the following form:
    :minibuffer-height
    :mode-line-height
    :header-line-height
+   :tab-line-height
    :x-pixel-offset xxx
    :y-pixel-offset xxx)
 
@@ -498,6 +499,9 @@ You can use `posframe-delete-all' to delete all posframes."
          (mode-line-height (window-mode-line-height))
          (minibuffer-height (window-pixel-height (minibuffer-window)))
          (header-line-height (window-header-line-height parent-window))
+         (tab-line-height (if (functionp 'window-tab-line-height)
+                              (window-tab-line-height)
+                            0))
          (frame-resize-pixelwise t)
          posframe)
 
@@ -562,6 +566,7 @@ You can use `posframe-delete-all' to delete all posframes."
           :mode-line-height ,mode-line-height
           :minibuffer-height ,minibuffer-height
           :header-line-height ,header-line-height
+          :tab-line-height ,tab-line-height
           :x-pixel-offset ,x-pixel-offset
           :y-pixel-offset ,y-pixel-offset))
        parent-frame-width parent-frame-height)
@@ -853,11 +858,13 @@ Optional argument FONT-HEIGHT ."
          (ymax (plist-get info :parent-frame-height))
          (position-info (plist-get info :position-info))
          (header-line-height (plist-get info :header-line-height))
+         (tab-line-height (plist-get info :tab-line-height))
          (x (+ (car (window-inside-pixel-edges window))
                (- (or (car (posn-x-y position-info)) 0)
                   (or (car (posn-object-x-y position-info)) 0))
                x-pixel-offset))
          (y-top (+ (cadr (window-pixel-edges window))
+                   tab-line-height
                    header-line-height
                    (- (or (cdr (posn-x-y position-info)) 0)
                       ;; Fix the conflict with flycheck
