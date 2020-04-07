@@ -1076,6 +1076,13 @@ bottom center.  The structure of INFO can be found in docstring of
           (+ window-top window-height
              (- 0 mode-line-height posframe-height)))))
 
+(defvar x-gtk-resize-child-frames)
+(when (and (string-match-p "GTK3" system-configuration-features)
+           (member (getenv "XDG_CURRENT_DESKTOP") '("GNOME")))
+  (if (> emacs-major-version 26)
+      (message "Posframe: GNOME+GTK3 may need to set variable `x-gtk-resize-child-frames' to 'resize-mode or 'hide.")
+    (message "Posframe: GNOME+GTK3 have resize bug: https://lists.gnu.org/archive/html/emacs-devel/2020-01/msg00343.html")))
+
 (provide 'posframe)
 
 ;;; posframe.el ends here
