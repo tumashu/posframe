@@ -649,17 +649,10 @@ will be removed."
   "Set POSFRAME's size.
 It will set the size by the POSFRAME's HEIGHT, MIN-HEIGHT
 WIDTH and MIN-WIDTH."
-  (if (and width height)
-      (unless (equal posframe--last-posframe-size
-                     (list height min-height width min-width))
-        (fit-frame-to-buffer
-         posframe height min-height width min-width)
-        (setq-local posframe--last-posframe-size
-                    (list height min-height width min-width)))
-    (fit-frame-to-buffer
-     posframe height min-height width min-width)
-    (setq-local posframe--last-posframe-size
-                (list height min-height width min-width))))
+  (fit-frame-to-buffer
+   posframe height min-height width min-width)
+  (setq-local posframe--last-posframe-size
+              (list height min-height width min-width)))
 
 (defun posframe--set-frame-position (posframe position
                                               parent-frame-width
