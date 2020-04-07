@@ -428,10 +428,11 @@ or a name of a (possibly nonexistent) buffer.
 If NO-PROPERTIES is non-nil, The STRING's properties will
 be removed before being shown in posframe.
 
-Posframe's frame size can be set by WIDTH and HEIGHT.
-If one of them is nil, posframe's frame size will fit the
-buffer.  MIN-WIDTH and MIN-HEIGTH can be useful to prevent
-posframe becoming too small.
+WIDTH, MIN-WIDTH, HEIGHT and MIN-HEIGHT, specify bounds on the
+new total size of posframe.  MIN-HEIGHT and MIN-WIDTH default to
+the values of ‘window-min-height’ and ‘window-min-width’
+respectively.  These arguments are specified in the canonical
+character width and height of posframe.
 
 If LEFT-FRINGE or RIGHT-FRINGE is a number, left fringe or
 right fringe with be shown with the specified width.
