@@ -38,7 +38,18 @@
 
 ;; NOTE:
 ;; 1. For MacOS users, posframe needs Emacs version >= 26.0.91
-;; 2. Posframe will be very very slow when emacs is built with --with-x-toolkit=athena.
+;; 2. GNOME and MATE users with GTK3 builds should set
+;;    `x-gtk-resize-child-frames' to 'resize-mode or 'hide, then
+;;    restart emacs.
+
+;;    1. 'resize-mode has better behavior but not future-compatible.
+;;    2. 'hide is more future-proof but will blink the child frame every
+;;       time it's resized.
+
+;;    More details:
+
+;;    1. [[https://git.savannah.gnu.org/cgit/emacs.git/commit/?h=emacs-27&id=c49d379f17bcb0ce82604def2eaa04bda00bd5ec][Fix some problems with moving and resizing child frames]]
+;;    2. [[https://lists.gnu.org/archive/html/emacs-devel/2020-01/msg00343.html][Emacs's set-frame-size can not work well with gnome-shell?]]
 
 ;; [[./snapshots/posframe-1.png]]
 
