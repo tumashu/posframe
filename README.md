@@ -3,26 +3,26 @@ Note: this file is auto converted from posframe.el by [el2org](https://github.co
 
 # &#30446;&#24405;
 
-1.  [Posframe README](#orgb61be23)
-    1.  [What is posframe?](#org5080ea1)
-    2.  [Installation](#org13757b4)
-    3.  [Usage](#orgb6f31c8)
-        1.  [Create a posframe](#org0fed3aa)
-        2.  [Hide a posframe](#org51f216e)
-        3.  [Hide all posframes](#orgd19653c)
-        4.  [Delete a posframe](#org665e97b)
-        5.  [Delete all posframes](#org8302046)
-        6.  [Customizing mouse pointer control](#orgb484be3)
-        7.  [Set fallback arguments of posframe-show](#orgfcc0fc2)
-        8.  [Some packages which use posframe](#org56e8b88)
+1.  [Posframe README](#org2ae7aec)
+    1.  [What is posframe?](#orgaff395c)
+    2.  [Installation](#org90b3f22)
+    3.  [Usage](#orgfce7a67)
+        1.  [Create a posframe](#org4d0acfe)
+        2.  [Hide a posframe](#org17e2db2)
+        3.  [Hide all posframes](#org3e00d98)
+        4.  [Delete a posframe](#org69d6930)
+        5.  [Delete all posframes](#org0460351)
+        6.  [Customizing mouse pointer control](#org5706c29)
+        7.  [Set fallback arguments of posframe-show](#orgdf55be7)
+        8.  [Some packages which use posframe](#org51247a5)
 
 
-<a id="orgb61be23"></a>
+<a id="org2ae7aec"></a>
 
 # Posframe README
 
 
-<a id="org5080ea1"></a>
+<a id="orgaff395c"></a>
 
 ## What is posframe?
 
@@ -37,12 +37,9 @@ The main advantages are:
 NOTE:
 
 1.  For MacOS users, posframe needs Emacs version >= 26.0.91
-2.  GNOME users with GTK3 builds should set \`x-gtk-resize-child-frames'
-    to 'resize-mode or 'hide, then run command \`posframe-hack'.
-    
-    1.  'resize-mode has better behavior but not future-compatible.
-    2.  'hide is more future-proof but will blink the child frame every
-        time it's resized.
+2.  GNOME users with GTK3 builds need Emacs 27 or later.
+    See variable \`posframe-gtk-resize-child-frames'
+    which auto-detects this configuration.
     
     More details:
     
@@ -52,19 +49,19 @@ NOTE:
 ![img](./snapshots/posframe-1.png)
 
 
-<a id="org13757b4"></a>
+<a id="org90b3f22"></a>
 
 ## Installation
 
     (require 'posframe)
 
 
-<a id="orgb6f31c8"></a>
+<a id="orgfce7a67"></a>
 
 ## Usage
 
 
-<a id="org0fed3aa"></a>
+<a id="org4d0acfe"></a>
 
 ### Create a posframe
 
@@ -92,21 +89,21 @@ NOTE:
         C-h f posframe-show
 
 
-<a id="org51f216e"></a>
+<a id="org17e2db2"></a>
 
 ### Hide a posframe
 
     (posframe-hide " *my-posframe-buffer*")
 
 
-<a id="orgd19653c"></a>
+<a id="org3e00d98"></a>
 
 ### Hide all posframes
 
     M-x posframe-hide-all
 
 
-<a id="org665e97b"></a>
+<a id="org69d6930"></a>
 
 ### Delete a posframe
 
@@ -118,7 +115,7 @@ NOTE:
         (posframe-delete-frame " *my-posframe-buffer*")
 
 
-<a id="org8302046"></a>
+<a id="org0460351"></a>
 
 ### Delete all posframes
 
@@ -129,7 +126,7 @@ You probably shouldn't use it if you are sharing a buffer
 between posframe and other packages.
 
 
-<a id="orgb484be3"></a>
+<a id="org5706c29"></a>
 
 ### Customizing mouse pointer control
 
@@ -140,7 +137,7 @@ To disable this feature, add this to your init.el:
     (setq posframe-mouse-banish nil)
 
 
-<a id="orgfcc0fc2"></a>
+<a id="orgdf55be7"></a>
 
 ### Set fallback arguments of posframe-show
 
@@ -154,7 +151,7 @@ border-width to 10 and fallback background color to green.
         (or (plist-get info arg-name) value)))
 
 
-<a id="org56e8b88"></a>
+<a id="org51247a5"></a>
 
 ### Some packages which use posframe
 
