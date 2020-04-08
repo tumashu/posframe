@@ -38,16 +38,12 @@
 
 ;; NOTE:
 ;; 1. For MacOS users, posframe needs Emacs version >= 26.0.91
-;; 2. GNOME and MATE users with GTK3 builds should set
-;;    `x-gtk-resize-child-frames' to 'resize-mode or 'hide, then
-;;    restart emacs.
-
+;; 2. GNOME users with GTK3 builds should set `x-gtk-resize-child-frames'
+;;    to 'resize-mode or 'hide, then run command `posframe-delete-all'.
 ;;    1. 'resize-mode has better behavior but not future-compatible.
 ;;    2. 'hide is more future-proof but will blink the child frame every
 ;;       time it's resized.
-
 ;;    More details:
-
 ;;    1. [[https://git.savannah.gnu.org/cgit/emacs.git/commit/?h=emacs-27&id=c49d379f17bcb0ce82604def2eaa04bda00bd5ec][Fix some problems with moving and resizing child frames]]
 ;;    2. [[https://lists.gnu.org/archive/html/emacs-devel/2020-01/msg00343.html][Emacs's set-frame-size can not work well with gnome-shell?]]
 
@@ -1071,12 +1067,20 @@ bottom center.  The structure of INFO can be found in docstring of
              (- 0 mode-line-height posframe-height)))))
 
 (defvar x-gtk-resize-child-frames)
-(when (and (string-match-p "GTK3" system-configuration-features)
-           (member (getenv "XDG_CURRENT_DESKTOP") '("GNOME"))
-           x-gtk-resize-child-frames)
-  (if (> emacs-major-version 26)
-      (message "Posframe: GNOME+GTK3 may need to set variable `x-gtk-resize-child-frames' to 'resize-mode or 'hide.")
-    (message "Posframe: GNOME+GTK3 have resize bug: https://lists.gnu.org/archive/html/emacs-devel/2020-01/msg00343.html")))
+
+(defun posframe-hack ()
+  "Do something hack for posframe."
+  (when (and (string-match-p "GTK[3]" (or system-configuration-features ""))
+             (string-match-p "GNOME" (or (getenv "XDG_CURRENT_DESKTOP") ""))
+             (not x-gtk-resize-child-frames))
+    (if (> emacs-major-version 26)
+        (progn
+          (setq x-gtk-resize-child-frames 'resize-mode)
+          (posframe-delete-all)
+          (message "Posframe: variable `x-gtk-resize-child-frames' has been set to 'resize-mode for GNOME/GTK3"))
+      (message "Posframe: GNOME+GTK3 have resize bug: https://lists.gnu.org/archive/html/emacs-devel/2020-01/msg00343.html"))))
+
+(posframe-hack)
 
 (provide 'posframe)
 
