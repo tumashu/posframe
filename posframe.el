@@ -43,6 +43,7 @@
 ;;    1. 'resize-mode has better behavior but not future-compatible.
 ;;    2. 'hide is more future-proof but will blink the child frame every
 ;;       time it's resized.
+
 ;;    More details:
 ;;    1. [[https://git.savannah.gnu.org/cgit/emacs.git/commit/?h=emacs-27&id=c49d379f17bcb0ce82604def2eaa04bda00bd5ec][Fix some problems with moving and resizing child frames]]
 ;;    2. [[https://lists.gnu.org/archive/html/emacs-devel/2020-01/msg00343.html][Emacs's set-frame-size can not work well with gnome-shell?]]
@@ -208,6 +209,25 @@ frame.")
 (defvar-local posframe--initialized-p nil
   "Record initialize status of `posframe-show'.")
 
+;; Avoid compilation warnings on Emacs < 27.
+(defvar x-gtk-resize-child-frames)
+
+(defvar posframe-gtk-resize-child-frames
+  (when (and
+         (> emacs-major-version 26)
+         (string-match-p "GTK3" system-configuration-features)
+         (let ((value (getenv "XDG_CURRENT_DESKTOP")))
+           (and (stringp value)
+                ;; It can be "ubuntu:GNOME".
+                (string-match-p "GNOME" value))))
+    ;; Not future-proof, but we can use it now.
+    'resize-mode)
+  "Value to bind `x-gtk-resize-child-frames' to.
+
+The value `resize-mode' only has effect on new child frames, so
+if you change it, call `posframe-delete-all' for it to take
+effect.")
+
 ;;;###autoload
 (defun posframe-workable-p ()
   "Test posframe workable status."
@@ -237,6 +257,7 @@ This posframe's buffer is BUFFER-OR-NAME."
         (internal-border-width (or internal-border-width 0))
         (buffer (get-buffer-create buffer-or-name))
         (after-make-frame-functions nil)
+        (x-gtk-resize-child-frames posframe-gtk-resize-child-frames)
         (args (list parent-frame
                     foreground-color
                     background-color
@@ -641,11 +662,17 @@ will be removed."
       (erase-buffer)
       (insert str))))
 
+(defun posframe--fit-frame-to-buffer (posframe height min-height width min-width)
+  ;; This only has effect if the user set the latter var to `hide'.
+  (let ((x-gtk-resize-child-frames posframe-gtk-resize-child-frames))
+    (fit-frame-to-buffer
+     posframe height min-height width min-width)))
+
 (defun posframe--set-frame-size (posframe height min-height width min-width)
   "Set POSFRAME's size.
 It will set the size by the POSFRAME's HEIGHT, MIN-HEIGHT
 WIDTH and MIN-WIDTH."
-  (fit-frame-to-buffer
+  (posframe--fit-frame-to-buffer
    posframe height min-height width min-width)
   (setq-local posframe--last-posframe-size
               (list height min-height width min-width)))
@@ -701,7 +728,7 @@ WIDTH and MIN-WIDTH."
                    #'(lambda (frame height min-height width min-width)
                        (let ((frame-resize-pixelwise t))
                          (when (and frame (frame-live-p frame))
-                           (fit-frame-to-buffer
+                           (posframe--fit-frame-to-buffer
                             frame height min-height width min-width))))
                    posframe height min-height width min-width)))))
 
@@ -733,7 +760,7 @@ to do similar job:
       (when (or (equal buffer-or-name (car buffer-info))
                 (equal buffer-or-name (cdr buffer-info)))
         (with-current-buffer buffer-or-name
-          (apply #'fit-frame-to-buffer
+          (apply #'posframe--fit-frame-to-buffer
                  frame posframe--last-posframe-size))))))
 
 (defun posframe-hide (buffer-or-name)
@@ -1066,23 +1093,6 @@ bottom center.  The structure of INFO can be found in docstring of
           (+ window-top window-height
              (- 0 mode-line-height posframe-height)))))
 
-(defvar x-gtk-resize-child-frames)
-
-;;;###autoload
-(defun posframe-hack ()
-  "Do something hack for posframe."
-  (interactive)
-  (posframe-delete-all)
-  (when (and (string-match-p "GTK[3]" (or system-configuration-features ""))
-             (string-match-p "GNOME" (or (getenv "XDG_CURRENT_DESKTOP") ""))
-             (not x-gtk-resize-child-frames))
-    (if (> emacs-major-version 26)
-        (progn
-          (setq x-gtk-resize-child-frames 'resize-mode)
-          (message "Posframe: variable `x-gtk-resize-child-frames' has been set to 'resize-mode for GNOME/GTK3"))
-      (message "Posframe: GNOME+GTK3 have resize bug: https://lists.gnu.org/archive/html/emacs-devel/2020-01/msg00343.html"))))
-
-(posframe-hack)
 
 (provide 'posframe)
 
