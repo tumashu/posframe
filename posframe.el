@@ -659,6 +659,7 @@ will be removed."
       (insert str))))
 
 (defun posframe--fit-frame-to-buffer (posframe height min-height width min-width)
+  ;; This only has effect if the user set the latter var to `hide'.
   (let ((x-gtk-resize-child-frames posframe-gtk-resize-child-frames))
     (fit-frame-to-buffer
      posframe height min-height width min-width)))
