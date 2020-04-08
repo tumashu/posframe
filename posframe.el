@@ -39,7 +39,7 @@
 ;; NOTE:
 ;; 1. For MacOS users, posframe needs Emacs version >= 26.0.91
 ;; 2. GNOME users with GTK3 builds should set `x-gtk-resize-child-frames'
-;;    to 'resize-mode or 'hide, then run command `posframe-delete-all'.
+;;    to 'resize-mode or 'hide, then run command `posframe-hack'.
 ;;    1. 'resize-mode has better behavior but not future-compatible.
 ;;    2. 'hide is more future-proof but will blink the child frame every
 ;;       time it's resized.
@@ -1068,15 +1068,17 @@ bottom center.  The structure of INFO can be found in docstring of
 
 (defvar x-gtk-resize-child-frames)
 
+;;;###autoload
 (defun posframe-hack ()
   "Do something hack for posframe."
+  (interactive)
+  (posframe-delete-all)
   (when (and (string-match-p "GTK[3]" (or system-configuration-features ""))
              (string-match-p "GNOME" (or (getenv "XDG_CURRENT_DESKTOP") ""))
              (not x-gtk-resize-child-frames))
     (if (> emacs-major-version 26)
         (progn
           (setq x-gtk-resize-child-frames 'resize-mode)
-          (posframe-delete-all)
           (message "Posframe: variable `x-gtk-resize-child-frames' has been set to 'resize-mode for GNOME/GTK3"))
       (message "Posframe: GNOME+GTK3 have resize bug: https://lists.gnu.org/archive/html/emacs-devel/2020-01/msg00343.html"))))
 
