@@ -221,8 +221,8 @@ frame.")
   "Value to bind `x-gtk-resize-child-frames' to.
 
 The value `resize-mode' only has effect on new child frames, so
-if you change it, you might have to create a new posframe, or
-just restart Emacs.")
+if you change it, call `posframe-delete-all' for it to take
+effect.")
 
 ;;;###autoload
 (defun posframe-workable-p ()
