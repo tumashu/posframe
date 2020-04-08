@@ -208,6 +208,9 @@ frame.")
 (defvar-local posframe--initialized-p nil
   "Record initialize status of `posframe-show'.")
 
+;; Avoid compilation warnings on Emacs < 27.
+(defvar x-gtk-resize-child-frames)
+
 (defvar posframe-gtk-resize-child-frames
   (when (and
          (> emacs-major-version 26)
