@@ -160,5 +160,6 @@ border-width to 10 and fallback background color to green.
 3.  [pyim](https://github.com/tumashu/pyim)
 4.  [ivy-posframe](https://github.com/tumashu/ivy-posframe)
 5.  [company-posframe](https://github.com/tumashu/company-posframe)
-6.  &#x2026;
+6.  [dap-mode](https://github.com/emacs-lsp/dap-mode)
+7.  &#x2026;
 
