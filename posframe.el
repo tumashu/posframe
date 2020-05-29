@@ -582,30 +582,30 @@ You can use `posframe-delete-all' to delete all posframes."
       (posframe--set-frame-position
        posframe
        (posframe-run-poshandler
-        `(;All poshandlers will get info from this plist.
-          :position ,position
-          :position-info ,position-info
-          :poshandler ,poshandler
-          :font-height ,font-height
-          :font-width ,font-width
-          :posframe ,posframe
-          :posframe-width ,(frame-pixel-width posframe)
-          :posframe-height ,(frame-pixel-height posframe)
-          :posframe-buffer ,buffer
-          :parent-frame ,parent-frame
-          :parent-frame-width ,parent-frame-width
-          :parent-frame-height ,parent-frame-height
-          :parent-window ,parent-window
-          :parent-window-top ,parent-window-top
-          :parent-window-left ,parent-window-left
-          :parent-window-width ,parent-window-width
-          :parent-window-height ,parent-window-height
-          :mode-line-height ,mode-line-height
-          :minibuffer-height ,minibuffer-height
-          :header-line-height ,header-line-height
-          :tab-line-height ,tab-line-height
-          :x-pixel-offset ,x-pixel-offset
-          :y-pixel-offset ,y-pixel-offset))
+        ;; All poshandlers will get info from this plist.
+        (list :position position
+              :position-info position-info
+              :poshandler poshandler
+              :font-height font-height
+              :font-width font-width
+              :posframe posframe
+              :posframe-width (frame-pixel-width posframe)
+              :posframe-height (frame-pixel-height posframe)
+              :posframe-buffer buffer
+              :parent-frame parent-frame
+              :parent-frame-width parent-frame-width
+              :parent-frame-height parent-frame-height
+              :parent-window parent-window
+              :parent-window-top parent-window-top
+              :parent-window-left parent-window-left
+              :parent-window-width parent-window-width
+              :parent-window-height parent-window-height
+              :mode-line-height mode-line-height
+              :minibuffer-height minibuffer-height
+              :header-line-height header-line-height
+              :tab-line-height tab-line-height
+              :x-pixel-offset x-pixel-offset
+              :y-pixel-offset y-pixel-offset))
        parent-frame-width parent-frame-height)
 
       ;; Delay hide posframe when timeout is a number.
