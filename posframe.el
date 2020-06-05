@@ -245,6 +245,7 @@ effect.")
                                      internal-border-color
                                      font
                                      keep-ratio
+                                     lines-truncate
                                      override-parameters
                                      respect-header-line
                                      respect-mode-line
@@ -278,7 +279,10 @@ This posframe's buffer is BUFFER-OR-NAME."
       (setq-local left-fringe-width nil)
       (setq-local right-fringe-width nil)
       (setq-local fringes-outside-margins 0)
-      (setq-local truncate-lines nil)
+      ;; Need to use `lines-truncate' as our keyword variable instead of
+      ;; `truncate-lines' so we don't shadow the variable that we are trying to
+      ;; set.
+      (setq-local truncate-lines lines-truncate)
       (setq-local cursor-type nil)
       (setq-local cursor-in-non-selected-windows nil)
       (setq-local show-trailing-whitespace nil)
@@ -384,6 +388,7 @@ This posframe's buffer is BUFFER-OR-NAME."
                          initialize
                          no-properties
                          keep-ratio
+                         lines-truncate
                          override-parameters
                          timeout
                          refresh
@@ -481,6 +486,9 @@ If INITIALIZE is nil, `posframe-default-initialize-function' will
 be used as fallback; this variable can be used to set posframe
 buffer gobally.
 
+If LINES-TRUNCATE is non-nil, then lines will truncate in the
+posframe instead of wrap.
+
 OVERRIDE-PARAMETERS is very powful, *all* the frame parameters
 used by posframe's frame can be overridden by it.
 
@@ -512,6 +520,7 @@ You can use `posframe-delete-all' to delete all posframes."
          (initialize (funcall posframe-arghandler buffer-or-name :initialize initialize))
          (no-properties (funcall posframe-arghandler buffer-or-name :no-properties no-properties))
          (keep-ratio (funcall posframe-arghandler buffer-or-name :keep-ratio keep-ratio))
+         (lines-truncate (funcall posframe-arghandler buffer-or-name :lines-truncate lines-truncate))
          (override-parameters (funcall posframe-arghandler buffer-or-name :override-parameters override-parameters))
          (timeout (funcall posframe-arghandler buffer-or-name :timeout timeout))
          (refresh (funcall posframe-arghandler buffer-or-name :refresh refresh))
@@ -566,6 +575,7 @@ You can use `posframe-delete-all' to delete all posframes."
              :foreground-color foreground-color
              :background-color background-color
              :keep-ratio keep-ratio
+             :lines-truncate lines-truncate
              :respect-header-line respect-header-line
              :respect-mode-line respect-mode-line
              :respect-tab-line respect-tab-line
