@@ -183,6 +183,9 @@ posframe-show's arguments."
 (defvar-local posframe--last-posframe-size nil
   "Record the last size of posframe's frame.")
 
+(defvar-local posframe--last-posframe-displayed-size nil
+  "Record the last displayed size of posframe's frame.")
+
 (defvar-local posframe--last-parent-frame-size nil
   "Record the last size of posframe's parent-frame.")
 
@@ -704,11 +707,17 @@ This need PARENT-FRAME-WIDTH and PARENT-FRAME-HEIGHT"
                ;; When working frame's size change, re-posit
                ;; the posframe.
                (equal posframe--last-parent-frame-size
-                      (cons parent-frame-width parent-frame-height)))
+                      (cons parent-frame-width parent-frame-height))
+               (equal posframe--last-posframe-displayed-size
+                      (cons (frame-pixel-width posframe)
+                            (frame-pixel-height posframe))))
     (set-frame-position posframe (car position) (cdr position))
     (setq-local posframe--last-posframe-pixel-position position)
     (setq-local posframe--last-parent-frame-size
-                (cons parent-frame-width parent-frame-height)))
+                (cons parent-frame-width parent-frame-height))
+    (setq-local posframe--last-posframe-displayed-size
+                (cons (frame-pixel-width posframe)
+                      (frame-pixel-height posframe))))
   ;; Make posframe's posframe--frame visible
   (unless (frame-visible-p posframe)
     (make-frame-visible posframe)
