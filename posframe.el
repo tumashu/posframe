@@ -451,6 +451,7 @@ The builtin poshandler functions are listed below:
 14. `posframe-poshandler-window-bottom-right-corner'
 15. `posframe-poshandler-point-top-left-corner'
 16. `posframe-poshandler-point-bottom-left-corner'
+17. `posframe-poshandler-point-bottom-left-corner-upward'
 
 This posframe's buffer is BUFFER-OR-NAME, which can be a buffer
 or a name of a (possibly nonexistent) buffer.
@@ -896,7 +897,7 @@ of `posframe-show'."
     (cons (+ (car position) x-pixel-offset)
           (+ (cdr position) y-pixel-offset))))
 
-(defun posframe-poshandler-point-bottom-left-corner (info &optional font-height)
+(defun posframe-poshandler-point-bottom-left-corner (info &optional font-height upward)
   "Posframe's position hanlder.
 
 Get bottom-left-corner pixel position of a point,
@@ -929,9 +930,21 @@ Optional argument FONT-HEIGHT ."
          (font-height (or font-height (plist-get info :font-height)))
          (y-bottom (+ y-top font-height)))
     (cons (max 0 (min x (- xmax (or posframe-width 0))))
-          (max 0 (if (> (+ y-bottom (or posframe-height 0)) ymax)
+          (max 0 (if (if upward
+                         (> (- y-bottom (or posframe-height 0)) 0)
+                       (> (+ y-bottom (or posframe-height 0)) ymax))
                      (- y-top (or posframe-height 0))
                    y-bottom)))))
+
+(defun posframe-poshandler-point-bottom-left-corner-upward (info)
+  "Posframe's position hanlder.
+
+Get a position of a point, by which posframe can put above it,
+the structure of INFO can be found in docstring
+of `posframe-show'.
+
+Optional argument FONT-HEIGHT ."
+  (posframe-poshandler-point-bottom-left-corner info nil t))
 
 (defun posframe-poshandler-point-top-left-corner (info)
   "Posframe's position hanlder.
@@ -954,7 +967,6 @@ be found in docstring of `posframe-show'."
         (/ (- (plist-get info :parent-frame-height)
               (plist-get info :posframe-height))
            2)))
-
 
 (defun posframe-poshandler-frame-top-center (info)
   "Posframe's position handler.
