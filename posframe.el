@@ -252,7 +252,8 @@ effect.")
                                      override-parameters
                                      respect-header-line
                                      respect-mode-line
-                                     respect-tab-line)
+                                     respect-tab-line
+                                     accept-focus)
   "Create and return a posframe child frame.
 This posframe's buffer is BUFFER-OR-NAME."
   (let ((left-fringe (or left-fringe 0))
@@ -323,7 +324,7 @@ This posframe's buffer is BUFFER-OR-NAME."
                        (posframe-buffer . ,(cons (buffer-name buffer)
                                                  buffer))
                        (fullscreen . nil)
-                       (no-accept-focus . t)
+                       (no-accept-focus . ,(not accept-focus))
                        (min-width  . 0)
                        (min-height . 0)
                        (border-width . 0)
@@ -395,6 +396,7 @@ This posframe's buffer is BUFFER-OR-NAME."
                          override-parameters
                          timeout
                          refresh
+                         accept-focus
                          &allow-other-keys)
   "Pop up a posframe and show STRING at POSITION.
 
@@ -502,6 +504,9 @@ will auto-hide.
 If REFRESH is a number, posframe's frame-size will be re-adjusted
 every REFRESH seconds.
 
+When ACCEPT-FOCUS is non-nil, posframe will accept focus.
+be careful, you may face some bugs when set it to non-nil.
+
 You can use `posframe-delete-all' to delete all posframes."
   (let* ((position (or (funcall posframe-arghandler buffer-or-name :position position) (point)))
          (poshandler (funcall posframe-arghandler buffer-or-name :poshandler poshandler))
@@ -528,6 +533,7 @@ You can use `posframe-delete-all' to delete all posframes."
          (override-parameters (funcall posframe-arghandler buffer-or-name :override-parameters override-parameters))
          (timeout (funcall posframe-arghandler buffer-or-name :timeout timeout))
          (refresh (funcall posframe-arghandler buffer-or-name :refresh refresh))
+         (accept-focus (funcall posframe-arghandler buffer-or-name :accept-focus accept-focus))
          ;;-----------------------------------------------------
          (buffer (get-buffer-create buffer-or-name))
          (parent-window (selected-window))
@@ -583,7 +589,8 @@ You can use `posframe-delete-all' to delete all posframes."
              :respect-header-line respect-header-line
              :respect-mode-line respect-mode-line
              :respect-tab-line respect-tab-line
-             :override-parameters override-parameters))
+             :override-parameters override-parameters
+             :accept-focus accept-focus))
 
       ;; Insert string into the posframe buffer
       (posframe--insert-string string no-properties)
