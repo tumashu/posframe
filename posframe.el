@@ -273,7 +273,8 @@ This posframe's buffer is BUFFER-OR-NAME."
                     override-parameters
                     respect-header-line
                     respect-mode-line
-                    respect-tab-line)))
+                    respect-tab-line
+                    accept-focus)))
     (with-current-buffer buffer
       ;; Many variables take effect after call `set-window-buffer'
       (setq-local display-line-numbers nil)
