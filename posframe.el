@@ -802,11 +802,16 @@ to do similar job:
 (defun posframe-hide (buffer-or-name)
   "Hide posframe pertaining to BUFFER-OR-NAME.
 BUFFER-OR-NAME can be a buffer or a buffer name."
-  (dolist (frame (frame-list))
-    (let ((buffer-info (frame-parameter frame 'posframe-buffer)))
-      (when (or (equal buffer-or-name (car buffer-info))
-                (equal buffer-or-name (cdr buffer-info)))
-        (posframe--make-frame-invisible frame)))))
+  ;; Make sure buffer-list-update-hook is nil when posframe-hide is
+  ;; called, otherwise:
+  ;;   (add-hook 'buffer-list-update-hook  #'posframe-hide)
+  ;; will lead to infinite recursion.
+  (let ((buffer-list-update-hook nil))
+    (dolist (frame (frame-list))
+      (let ((buffer-info (frame-parameter frame 'posframe-buffer)))
+        (when (or (equal buffer-or-name (car buffer-info))
+                  (equal buffer-or-name (cdr buffer-info)))
+          (posframe--make-frame-invisible frame))))))
 
 (defun posframe-delete (buffer-or-name)
   "Delete posframe pertaining to BUFFER-OR-NAME and kill the buffer.
