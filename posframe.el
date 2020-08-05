@@ -174,14 +174,6 @@ posframe-show's arguments."
   :group 'posframe
   :type 'function)
 
-(defvar posframe--buffer nil
-  "Record posframe buffer.
-This variable is used by `posframe-hide-when-switch-buffer'.")
-
-(defvar posframe--parent-buffer nil
-  "Record posframe parent window's buffer.
-This variable is used by `posframe-hide-when-switch-buffer'.")
-
 (defvar-local posframe--frame nil
   "Record posframe's frame.")
 
@@ -406,7 +398,7 @@ This posframe's buffer is BUFFER-OR-NAME."
                          timeout
                          refresh
                          accept-focus
-                         hide-when-switch-buffer
+                         hidehandler
                          &allow-other-keys)
   "Pop up a posframe and show STRING at POSITION.
 
@@ -517,8 +509,17 @@ every REFRESH seconds.
 When ACCEPT-FOCUS is non-nil, posframe will accept focus.
 be careful, you may face some bugs when set it to non-nil.
 
-When HIDE-WHEN-SWITCH-BUFFER is non-nil, posframe will hide when
-its parent window buffer change.
+HIDEHANDLER is a function, when it return t, posframe will be
+hide when `post-command-hook' is executed, this function has a
+plist argument:
+
+  (:posframe-buffer xxx
+   :posframe-parent-buffer xxx)
+
+The builtin hidehandler functions are listed below:
+
+1. `posframe-hidehandler-when-buffer-switch'
+
 
 You can use `posframe-delete-all' to delete all posframes."
   (let* ((position (or (funcall posframe-arghandler buffer-or-name :position position) (point)))
@@ -547,7 +548,7 @@ You can use `posframe-delete-all' to delete all posframes."
          (timeout (funcall posframe-arghandler buffer-or-name :timeout timeout))
          (refresh (funcall posframe-arghandler buffer-or-name :refresh refresh))
          (accept-focus (funcall posframe-arghandler buffer-or-name :accept-focus accept-focus))
-         (hide-when-switch-buffer (funcall posframe-arghandler buffer-or-name :hide-when-switch-buffer hide-when-switch-buffer))
+         (hidehandler (funcall posframe-arghandler buffer-or-name :hidehandler hidehandler))
          ;;-----------------------------------------------------
          (buffer (get-buffer-create buffer-or-name))
          (parent-window (selected-window))
@@ -657,9 +658,11 @@ You can use `posframe-delete-all' to delete all posframes."
       (raise-frame posframe--frame)
 
       ;; Hide posframe when switch buffer
-      (when hide-when-switch-buffer
-        (setq posframe--buffer buffer)
-        (setq posframe--parent-buffer (window-buffer parent-window)))
+      (let* ((parent-buffer (window-buffer parent-window))
+             (parent-buffer-name (buffer-name parent-buffer)))
+        (set-frame-parameter posframe--frame 'posframe-hidehandler hidehandler)
+        (set-frame-parameter posframe--frame 'posframe-parent-buffer
+                             (cons parent-buffer-name parent-buffer)))
 
       ;; Return posframe
       posframe)))
@@ -831,20 +834,31 @@ BUFFER-OR-NAME can be a buffer or a buffer name."
                   (equal buffer-or-name (cdr buffer-info)))
           (posframe--make-frame-invisible frame))))))
 
-(defun posframe-hide-when-switch-buffer ()
-  "Hide posframe function when switch buffer, this function is
-used in `post-command-hook'."
-  (when (and posframe--buffer
-             posframe--parent-buffer
-             (not (equal (current-buffer)
-                         (get-buffer posframe--parent-buffer))))
-    (while-no-input
-      (redisplay)
-      (posframe-hide posframe--buffer)
-      (setq posframe--buffer nil)
-      (setq posframe--parent-buffer nil))))
+(defun posframe-run-hidehandler ()
+  "Run posframe hidehandler. this function is used in `post-command-hook'."
+  (while-no-input
+    (redisplay)
+    (dolist (frame (frame-list))
+      (let ((hidehandler (frame-parameter frame 'posframe-hidehandler))
+            (buffer (frame-parameter frame 'posframe-buffer))
+            (parent-buffer (frame-parameter frame 'posframe-parent-buffer)))
+        (when (and hidehandler
+                   (funcall hidehandler
+                            (list
+                             :posframe-buffer buffer
+                             :posframe-parent-buffer parent-buffer)))
+          (posframe--make-frame-invisible frame))))))
 
-(add-hook 'post-command-hook #'posframe-hide-when-switch-buffer)
+(add-hook 'post-command-hook #'posframe-run-hidehandler)
+
+(defun posframe-hidehandler-when-buffer-switch (info)
+  "Posframe hidehandler function.
+
+This function let posframe hide when user switch buffer.
+Note: This function is called in `post-command-hook'."
+  (let ((parent-buffer (cdr (plist-get info :posframe-parent-buffer))))
+    (and (buffer-live-p parent-buffer)
+         (not (equal parent-buffer (current-buffer))))))
 
 (defun posframe-delete (buffer-or-name)
   "Delete posframe pertaining to BUFFER-OR-NAME and kill the buffer.
