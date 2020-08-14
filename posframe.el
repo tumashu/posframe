@@ -836,8 +836,7 @@ BUFFER-OR-NAME can be a buffer or a buffer name."
 
 (defun posframe-run-hidehandler ()
   "Run posframe hidehandler. this function is used in `post-command-hook'."
-  (while-no-input
-    (redisplay)
+  (ignore-errors
     (dolist (frame (frame-list))
       (let ((hidehandler (frame-parameter frame 'posframe-hidehandler))
             (buffer (frame-parameter frame 'posframe-buffer))
