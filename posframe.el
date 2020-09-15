@@ -584,9 +584,6 @@ You can use `posframe-delete-all' to delete all posframes."
             (funcall func)
             (setq posframe--initialized-p t))))
 
-      ;; Move mouse to (0 . 0)
-      (posframe--mouse-banish parent-frame)
-
       ;; Create posframe
       (setq posframe
             (posframe--create-posframe
@@ -606,6 +603,9 @@ You can use `posframe-delete-all' to delete all posframes."
              :respect-tab-line respect-tab-line
              :override-parameters override-parameters
              :accept-focus accept-focus))
+
+      ;; Move mouse to (0 . 0)
+      (posframe--mouse-banish parent-frame posframe)
 
       ;; Insert string into the posframe buffer
       (posframe--insert-string string no-properties)
@@ -687,18 +687,27 @@ You can use `posframe-delete-all' to delete all posframes."
 (defun posframe--redirect-posframe-focus ()
   "Redirect focus from the posframe to the parent frame. This prevents the
 posframe from catching keyboard input if the window manager selects it."
-  (when (eq (selected-frame) posframe--frame)
+  (when (and (eq (selected-frame) posframe--frame)
+             ;; Do not redirect focus when posframe can accept focus.
+             ;; See posframe-show's accept-focus argument.
+             (frame-parameter (selected-frame) 'no-accept-focus))
     (redirect-frame-focus posframe--frame (frame-parent))))
 
 (add-hook 'focus-in-hook #'posframe--redirect-posframe-focus)
 
-(defun posframe--mouse-banish (frame)
-  "Banish mouse to the (0 . 0) of FRAME.
+(defun posframe--mouse-banish (parent-frame &optional posframe)
+  "Banish mouse to the (0 . 0) of PARENT-FRAME.
+Do not banish mouse when no-accept-focus frame parameter of POSFRAME
+is non-nil.
+
 FIXME: This is a hacky fix for the mouse focus problem, which like:
 https://github.com/tumashu/posframe/issues/4#issuecomment-357514918"
   (when (and posframe-mouse-banish
+             ;; Do not banish mouse when posframe can accept focus.
+             ;; See posframe-show's accept-focus argument.
+             (frame-parameter posframe 'no-accept-focus)
              (not (equal (cdr (mouse-position)) '(0 . 0))))
-    (set-mouse-position frame 0 0)))
+    (set-mouse-position parent-frame 0 0)))
 
 (defun posframe--insert-string (string no-properties)
   "Insert STRING to current buffer.
