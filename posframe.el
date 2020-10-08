@@ -456,6 +456,7 @@ The builtin poshandler functions are listed below:
 15. `posframe-poshandler-point-top-left-corner'
 16. `posframe-poshandler-point-bottom-left-corner'
 17. `posframe-poshandler-point-bottom-left-corner-upward'
+18. `posframe-poshandler-point-window-center'
 
 This posframe's buffer is BUFFER-OR-NAME, which can be a buffer
 or a name of a (possibly nonexistent) buffer.
@@ -965,19 +966,21 @@ of `posframe-show'."
     (cons (+ (car position) x-pixel-offset)
           (+ (cdr position) y-pixel-offset))))
 
-(defun posframe-poshandler-point-bottom-left-corner (info &optional font-height upward)
+(defun posframe-poshandler-point-bottom-left-corner (info &optional font-height upward centering)
   "Posframe's position hanlder.
 
 Get bottom-left-corner pixel position of a point,
 the structure of INFO can be found in docstring
 of `posframe-show'.
 
-Optional argument FONT-HEIGHT ."
+Optional argument FONT-HEIGHT, UPWARD, CENTERING ."
   (let* ((x-pixel-offset (plist-get info :x-pixel-offset))
          (y-pixel-offset (plist-get info :y-pixel-offset))
          (posframe-width (plist-get info :posframe-width))
          (posframe-height (plist-get info :posframe-height))
          (window (plist-get info :parent-window))
+         (window-left (plist-get info :parent-window-left))
+         (window-width (plist-get info :parent-window-width))
          (xmax (plist-get info :parent-frame-width))
          (ymax (plist-get info :parent-frame-height))
          (position-info (plist-get info :position-info))
@@ -997,12 +1000,23 @@ Optional argument FONT-HEIGHT ."
                    y-pixel-offset))
          (font-height (or font-height (plist-get info :font-height)))
          (y-bottom (+ y-top font-height)))
-    (cons (max 0 (min x (- xmax (or posframe-width 0))))
+    (cons (if centering
+              (+ window-left (/ (- window-width posframe-width) 2))
+            (max 0 (min x (- xmax (or posframe-width 0)))))
           (max 0 (if (if upward
                          (> (- y-bottom (or posframe-height 0)) 0)
                        (> (+ y-bottom (or posframe-height 0)) ymax))
                      (- y-top (or posframe-height 0))
                    y-bottom)))))
+
+(defun posframe-poshandler-point-window-center (info)
+  "Posframe's position hanlder.
+
+Get a position of a point, by which a window-centered posframe
+can be put below it, the structure of INFO can be found in
+docstring of `posframe-show'. "
+
+  (posframe-poshandler-point-bottom-left-corner info nil nil t))
 
 (defun posframe-poshandler-point-bottom-left-corner-upward (info)
   "Posframe's position hanlder.
