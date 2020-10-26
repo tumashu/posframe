@@ -252,7 +252,6 @@ effect.")
                                      override-parameters
                                      respect-header-line
                                      respect-mode-line
-                                     respect-tab-line
                                      accept-focus)
   "Create and return a posframe child frame.
 This posframe's buffer is BUFFER-OR-NAME."
@@ -273,7 +272,6 @@ This posframe's buffer is BUFFER-OR-NAME."
                     override-parameters
                     respect-header-line
                     respect-mode-line
-                    respect-tab-line
                     accept-focus)))
     (with-current-buffer buffer
       ;; Many variables take effect after call `set-window-buffer'
@@ -295,8 +293,6 @@ This posframe's buffer is BUFFER-OR-NAME."
         (setq-local mode-line-format nil))
       (unless respect-header-line
         (setq-local header-line-format nil))
-      (unless respect-tab-line
-        (setq-local tab-line-format nil))
 
       (add-hook 'kill-buffer-hook #'posframe-auto-delete nil t)
 
@@ -336,6 +332,7 @@ This posframe's buffer is BUFFER-OR-NAME."
                        (right-fringe . ,right-fringe)
                        (menu-bar-lines . 0)
                        (tool-bar-lines . 0)
+                       (tab-bar-lines . 0)
                        (line-spacing . 0)
                        (unsplittable . t)
                        (no-other-frame . t)
@@ -358,8 +355,6 @@ This posframe's buffer is BUFFER-OR-NAME."
             (set-window-parameter posframe-window 'mode-line-format 'none))
           (unless respect-header-line
             (set-window-parameter posframe-window 'header-line-format 'none))
-          (unless respect-tab-line
-            (set-window-parameter posframe-window 'tab-line-format 'none))
           (set-window-buffer posframe-window buffer)
           (set-window-dedicated-p posframe-window t)))
       posframe--frame)))
@@ -389,7 +384,6 @@ This posframe's buffer is BUFFER-OR-NAME."
                          background-color
                          respect-header-line
                          respect-mode-line
-                         respect-tab-line
                          initialize
                          no-properties
                          keep-ratio
@@ -484,8 +478,8 @@ respectively.
 
 By default, posframe will display no header-line, mode-line and
 tab-line.  In case a header-line, mode-line or tab-line is
-desired, users can set RESPECT-HEADER-LINE, RESPECT-MODE-LINE or
-RESPECT-TAB-LINE to t.
+desired, users can set RESPECT-HEADER-LINE and RESPECT-MODE-LINE
+to t.
 
 INITIALIZE is a function with no argument.  It will run when
 posframe buffer is first selected with `with-current-buffer'
@@ -536,7 +530,6 @@ You can use `posframe-delete-all' to delete all posframes."
          (background-color (funcall posframe-arghandler buffer-or-name :background-color background-color))
          (respect-header-line (funcall posframe-arghandler buffer-or-name :respect-header-line respect-header-line))
          (respect-mode-line (funcall posframe-arghandler buffer-or-name :respect-mode-line respect-mode-line))
-         (respect-tab-line (funcall posframe-arghandler buffer-or-name :respect-tab-line respect-tab-line))
          (initialize (funcall posframe-arghandler buffer-or-name :initialize initialize))
          (no-properties (funcall posframe-arghandler buffer-or-name :no-properties no-properties))
          (keep-ratio (funcall posframe-arghandler buffer-or-name :keep-ratio keep-ratio))
@@ -597,9 +590,11 @@ You can use `posframe-delete-all' to delete all posframes."
              :lines-truncate lines-truncate
              :respect-header-line respect-header-line
              :respect-mode-line respect-mode-line
-             :respect-tab-line respect-tab-line
              :override-parameters override-parameters
              :accept-focus accept-focus))
+
+      ;; Remove tab-bar always.
+      (set-frame-parameter posframe 'tab-bar-lines 0)
 
       ;; Move mouse to (0 . 0)
       (posframe--mouse-banish parent-frame posframe)
