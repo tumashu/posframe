@@ -490,9 +490,6 @@ RESPECT-TAB-LINE to t.
 INITIALIZE is a function with no argument.  It will run when
 posframe buffer is first selected with `with-current-buffer'
 in `posframe-show', and only run once (for performance reasons).
-If INITIALIZE is nil, `posframe-default-initialize-function' will
-be used as fallback; this variable can be used to set posframe
-buffer gobally.
 
 If LINES-TRUNCATE is non-nil, then lines will truncate in the
 posframe instead of wrap.
