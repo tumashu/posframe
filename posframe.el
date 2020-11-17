@@ -217,7 +217,7 @@ frame.")
   (when (and
          (> emacs-major-version 26)
          (string-match-p "GTK3" system-configuration-features)
-         (let ((value (or (getenv "XDG_CURRENT_DESKTOP") (getenv "DESKTOP_SESSION")))
+         (let ((value (or (getenv "XDG_CURRENT_DESKTOP") (getenv "DESKTOP_SESSION"))))
            (and (stringp value)
                 ;; It can be "ubuntu:GNOME".
                 (string-match-p "GNOME" value))))
