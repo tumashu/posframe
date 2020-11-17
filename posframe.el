@@ -217,7 +217,7 @@ frame.")
   (when (and
          (> emacs-major-version 26)
          (string-match-p "GTK3" system-configuration-features)
-         (let ((value (getenv "XDG_CURRENT_DESKTOP")))
+         (let ((value (or (getenv "XDG_CURRENT_DESKTOP") (getenv "DESKTOP_SESSION")))
            (and (stringp value)
                 ;; It can be "ubuntu:GNOME".
                 (string-match-p "GNOME" value))))
@@ -1085,7 +1085,8 @@ bottom center.  The structure of INFO can be found in docstring of
   (cons (/ (- (plist-get info :parent-frame-width)
               (plist-get info :posframe-width))
            2)
-        (- 0
+        (- (plist-get info :parent-frame-height)
+           (plist-get info :posframe-height)
            (plist-get info :mode-line-height)
            (plist-get info :minibuffer-height))))
 
