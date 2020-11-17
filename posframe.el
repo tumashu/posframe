@@ -1085,7 +1085,8 @@ bottom center.  The structure of INFO can be found in docstring of
   (cons (/ (- (plist-get info :parent-frame-width)
               (plist-get info :posframe-width))
            2)
-        (- 0
+        (- (plist-get info :parent-frame-height)
+           (plist-get info :posframe-height)
            (plist-get info :mode-line-height)
            (plist-get info :minibuffer-height))))
 
