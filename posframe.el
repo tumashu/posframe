@@ -685,9 +685,9 @@ posframe from catching keyboard input if the window manager selects it."
              (frame-parameter (selected-frame) 'no-accept-focus))
     (redirect-frame-focus posframe--frame (frame-parent))))
 
-(if (string> emacs-version "27.1")
-    (add-function :after after-focus-change-function #'posframe--redirect-posframe-focus)
-  (add-hook 'focus-in-hook #'posframe--redirect-posframe-focus))
+(if (version< emacs-version "27.1")
+    (add-hook 'focus-in-hook #'posframe--redirect-posframe-focus)
+  (add-function :after after-focus-change-function #'posframe--redirect-posframe-focus))
 
 (defun posframe--mouse-banish (parent-frame &optional posframe)
   "Banish mouse to the (0 . 0) of PARENT-FRAME.
