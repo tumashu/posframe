@@ -422,10 +422,10 @@ position.  Its argument is a plist of the following form:
    :parent-window xxx
    :parent-window-width  xxx
    :parent-window-height xxx
-   :minibuffer-height
-   :mode-line-height
-   :header-line-height
-   :tab-line-height
+   :minibuffer-height xxx
+   :mode-line-height  xxx
+   :header-line-height xxx
+   :tab-line-height xxx
    :x-pixel-offset xxx
    :y-pixel-offset xxx)
 
