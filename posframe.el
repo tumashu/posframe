@@ -141,7 +141,7 @@
 ;; 3. [[https://github.com/tumashu/pyim][pyim]]
 ;; 4. [[https://github.com/tumashu/ivy-posframe][ivy-posframe]]
 ;; 5. [[https://github.com/tumashu/company-posframe][company-posframe]]
-;; 6. ...
+;; 6. [[https://github.com/randomwangran/org-marginalia-posframe][org-marginalia-posframe]]
 
 ;;; Code:
 ;; * posframe's code                         :CODE:
