@@ -720,8 +720,8 @@ will be removed."
 (defun posframe--fit-frame-to-buffer (posframe height min-height width min-width)
   ;; This only has effect if the user set the latter var to `hide'.
   (let ((x-gtk-resize-child-frames posframe-gtk-resize-child-frames))
-    (fit-frame-to-buffer-1
-     posframe height min-height width min-width nil nil nil)))
+    (fit-frame-to-buffer
+     posframe height min-height width min-width)))
 
 (defun posframe--set-frame-size (posframe height min-height width min-width)
   "Set POSFRAME's size.
