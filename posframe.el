@@ -973,6 +973,75 @@ of `posframe-show'."
                  (t (error "Posframe: have no valid poshandler")))))
      info)))
 
+(cl-defun posframe-poshandler-argbuilder (&optional
+                                          child-frame
+                                          &key
+                                          position
+                                          poshandler
+                                          x-pixel-offset
+                                          y-pixel-offset)
+  "Return a info list of CHILD-FRAME, which can be used as poshandler's info argument.
+
+if CHILD-FRAME is nil, parent frame will use selected frame.  The
+documents of POSITION, POSHANDLER, X-PIXEL-OFFSET and
+Y-PIXEL-OFFSET can be found in dostring of `posframe-show'.
+
+NOTE: this function is not used by posframe itself, it just let
+poshandler easily used for other purposes."
+  (let* ((position (or position (point)))
+         (frame-width (or (and child-frame (frame-pixel-width child-frame)) 0))
+         (frame-height (or (and child-frame (frame-pixel-height child-frame)) 0))
+         (frame-buffer (and child-frame (window-buffer (frame-root-window child-frame))))
+         (parent-frame (if child-frame
+                           (frame-parent child-frame)
+                         (selected-frame)))
+         (parent-frame-width (frame-pixel-width parent-frame))
+         (parent-frame-height (frame-pixel-height parent-frame))
+         (parent-window
+          (if child-frame
+              (frame-root-window parent-frame)
+            (selected-window)))
+         (parent-window-top (window-pixel-top parent-window))
+         (parent-window-left (window-pixel-left parent-window))
+         (parent-window-width (window-pixel-width parent-window))
+         (parent-window-height (window-pixel-height parent-window))
+         (position-info
+          (if (integerp position)
+              (posn-at-point position parent-window)
+            position))
+         (font-width (default-font-width))
+         (font-height (with-current-buffer (window-buffer parent-window)
+                        (posframe--get-font-height position)))
+         (mode-line-height (window-mode-line-height parent-window))
+         (minibuffer-height (window-pixel-height (minibuffer-window)))
+         (header-line-height (window-header-line-height parent-window))
+         (tab-line-height (if (functionp 'window-tab-line-height)
+                              (window-tab-line-height parent-window)
+                            0)))
+    (list :position position
+          :position-info position-info
+          :poshandler poshandler
+          :font-height font-height
+          :font-width font-width
+          :posframe child-frame
+          :posframe-width frame-width
+          :posframe-height frame-height
+          :posframe-buffer frame-buffer
+          :parent-frame parent-frame
+          :parent-frame-width parent-frame-width
+          :parent-frame-height parent-frame-height
+          :parent-window parent-window
+          :parent-window-top parent-window-top
+          :parent-window-left parent-window-left
+          :parent-window-width parent-window-width
+          :parent-window-height parent-window-height
+          :mode-line-height mode-line-height
+          :minibuffer-height minibuffer-height
+          :header-line-height header-line-height
+          :tab-line-height tab-line-height
+          :x-pixel-offset (or x-pixel-offset 0)
+          :y-pixel-offset (or y-pixel-offset 0))))
+
 (defun posframe-poshandler-absolute-x-y (info)
   "Posframe's position hanlder.
 
