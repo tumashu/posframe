@@ -301,10 +301,6 @@ This posframe's buffer is BUFFER-OR-NAME."
       (unless respect-header-line
         (setq-local header-line-format nil))
 
-      ;; Hide tab-line.
-      (when (version< "27.0" emacs-version)
-        (setq-local tab-line-format nil))
-
       (add-hook 'kill-buffer-hook #'posframe-auto-delete nil t)
 
       ;; Create child-frame
@@ -633,6 +629,8 @@ You can use `posframe-delete-all' to delete all posframes."
 
       ;; Remove tab-bar always.
       (set-frame-parameter posframe 'tab-bar-lines 0)
+      (when (version< "27.0" emacs-version)
+        (setq-local tab-line-format nil))
 
       ;; Move mouse to (0 . 0)
       (posframe--mouse-banish parent-frame posframe)
