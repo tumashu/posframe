@@ -301,6 +301,10 @@ This posframe's buffer is BUFFER-OR-NAME."
       (unless respect-header-line
         (setq-local header-line-format nil))
 
+      ;; Hide tab-line.
+      (when (version< "27.0" emacs-version)
+        (setq-local tab-line-format nil))
+
       (add-hook 'kill-buffer-hook #'posframe-auto-delete nil t)
 
       ;; Create child-frame
