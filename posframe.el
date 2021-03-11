@@ -356,10 +356,7 @@ This posframe's buffer is BUFFER-OR-NAME."
                        (desktop-dont-save . t))))
         (when border-color
           (set-face-background 'internal-border border-color posframe--frame)
-          ;; FIXME: ignore errors on emacs version which
-          ;; have no child-frame-border face.
-          ;; maybe have other better way to do this job.
-          (ignore-errors
+          (when (facep 'child-frame-border)
             (set-face-background 'child-frame-border border-color posframe--frame)))
         (let ((posframe-window (frame-root-window posframe--frame)))
           ;; This method is more stable than 'setq mode/header-line-format nil'
