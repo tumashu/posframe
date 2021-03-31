@@ -378,6 +378,7 @@ This posframe's buffer is BUFFER-OR-NAME."
                          string
                          position
                          poshandler
+                         poshandler-extra-info
                          width
                          height
                          min-width
@@ -472,6 +473,10 @@ by the way, poshandler can be used by other packages easily
      `((left . ,(car posn))
        (top . ,(cdr posn))))
 
+POSHANDLER-EXTRA-INFO is a plist, which will prepend to the
+argument of poshandler function: 'info', it will *OVERRIDE* the
+exist key in 'info'.
+
 This posframe's buffer is BUFFER-OR-NAME, which can be a buffer
 or a name of a (possibly nonexistent) buffer.
 
@@ -542,6 +547,7 @@ The builtin hidehandler functions are listed below:
 You can use `posframe-delete-all' to delete all posframes."
   (let* ((position (or (funcall posframe-arghandler buffer-or-name :position position) (point)))
          (poshandler (funcall posframe-arghandler buffer-or-name :poshandler poshandler))
+         (poshandler-extra-info (funcall posframe-arghandler buffer-or-name :poshandler-extra-info poshandler-extra-info))
          (width (funcall posframe-arghandler buffer-or-name :width width))
          (height (funcall posframe-arghandler buffer-or-name :height height))
          (min-width (or (funcall posframe-arghandler buffer-or-name :min-width min-width) 1))
@@ -644,29 +650,30 @@ You can use `posframe-delete-all' to delete all posframes."
        posframe
        (posframe-run-poshandler
         ;; All poshandlers will get info from this plist.
-        (list :position position
-              :position-info position-info
-              :poshandler poshandler
-              :font-height font-height
-              :font-width font-width
-              :posframe posframe
-              :posframe-width (frame-pixel-width posframe)
-              :posframe-height (frame-pixel-height posframe)
-              :posframe-buffer buffer
-              :parent-frame parent-frame
-              :parent-frame-width parent-frame-width
-              :parent-frame-height parent-frame-height
-              :parent-window parent-window
-              :parent-window-top parent-window-top
-              :parent-window-left parent-window-left
-              :parent-window-width parent-window-width
-              :parent-window-height parent-window-height
-              :mode-line-height mode-line-height
-              :minibuffer-height minibuffer-height
-              :header-line-height header-line-height
-              :tab-line-height tab-line-height
-              :x-pixel-offset x-pixel-offset
-              :y-pixel-offset y-pixel-offset))
+        `(,@poshandler-extra-info
+          ,@(list :position position
+                  :position-info position-info
+                  :poshandler poshandler
+                  :font-height font-height
+                  :font-width font-width
+                  :posframe posframe
+                  :posframe-width (frame-pixel-width posframe)
+                  :posframe-height (frame-pixel-height posframe)
+                  :posframe-buffer buffer
+                  :parent-frame parent-frame
+                  :parent-frame-width parent-frame-width
+                  :parent-frame-height parent-frame-height
+                  :parent-window parent-window
+                  :parent-window-top parent-window-top
+                  :parent-window-left parent-window-left
+                  :parent-window-width parent-window-width
+                  :parent-window-height parent-window-height
+                  :mode-line-height mode-line-height
+                  :minibuffer-height minibuffer-height
+                  :header-line-height header-line-height
+                  :tab-line-height tab-line-height
+                  :x-pixel-offset x-pixel-offset
+                  :y-pixel-offset y-pixel-offset)))
        parent-frame-width parent-frame-height)
 
       ;; Delay hide posframe when timeout is a number.
