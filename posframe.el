@@ -368,6 +368,10 @@ This posframe's buffer is BUFFER-OR-NAME."
             (set-window-parameter posframe-window 'header-line-format 'none))
           (set-window-buffer posframe-window buffer)
           (set-window-dedicated-p posframe-window t)))
+      ;; If user set 'parent-frame to nil after run posframe-show.
+      ;; for cache reason, next call to posframe-show will be affected.
+      ;; so we should force set parent-frame again in this place.
+      (set-frame-parameter posframe--frame 'parent-frame parent-frame)
       posframe--frame)))
 
 (defun posframe-arghandler-default (_buffer-or-name _arg-name value)
