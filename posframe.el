@@ -368,10 +368,17 @@ This posframe's buffer is BUFFER-OR-NAME."
             (set-window-parameter posframe-window 'header-line-format 'none))
           (set-window-buffer posframe-window buffer)
           (set-window-dedicated-p posframe-window t)))
+
+      ;; Remove tab-bar always.
+      (set-frame-parameter posframe--frame 'tab-bar-lines 0)
+      (when (version< "27.0" emacs-version)
+        (setq-local tab-line-format nil))
+
       ;; If user set 'parent-frame to nil after run posframe-show.
       ;; for cache reason, next call to posframe-show will be affected.
       ;; so we should force set parent-frame again in this place.
       (set-frame-parameter posframe--frame 'parent-frame parent-frame)
+
       posframe--frame)))
 
 (defun posframe-arghandler-default (_buffer-or-name _arg-name value)
@@ -635,11 +642,6 @@ You can use `posframe-delete-all' to delete all posframes."
              :respect-mode-line respect-mode-line
              :override-parameters override-parameters
              :accept-focus accept-focus))
-
-      ;; Remove tab-bar always.
-      (set-frame-parameter posframe 'tab-bar-lines 0)
-      (when (version< "27.0" emacs-version)
-        (setq-local tab-line-format nil))
 
       ;; Move mouse to (0 . 0)
       (posframe--mouse-banish parent-frame posframe)
