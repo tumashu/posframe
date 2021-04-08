@@ -491,6 +491,10 @@ POSHANDLER-EXTRA-INFO is a plist, which will prepend to the
 argument of poshandler function: 'info', it will *OVERRIDE* the
 exist key in 'info'.
 
+Note: poshandler info include :parent-frame-position, but user
+should never use it in poshandler function.
+
+
 This posframe's buffer is BUFFER-OR-NAME, which can be a buffer
 or a name of a (possibly nonexistent) buffer.
 
