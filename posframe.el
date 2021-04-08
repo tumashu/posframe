@@ -1367,23 +1367,26 @@ bottom center.  The structure of INFO can be found in docstring of
 
 (defun posframe-parent-frame-poshandler-xwininfo ()
   "Parent frame poshander function.
-Get the position of currentframe with the help of xwininfo."
-  (with-temp-buffer
-    (let ((case-fold-search nil))
-      (call-process shell-file-name nil t nil shell-command-switch
-		    (format "xwininfo -display %s -id %s"
-			    (frame-parameter nil 'display)
-			    (frame-parameter nil 'window-id)))
-      (goto-char (point-min))
-      (search-forward "\n  Absolute")
-      (cons (string-to-number
-             (buffer-substring-no-properties
-	      (search-forward "X: ")
-	      (line-end-position)))
-	    (string-to-number
-             (buffer-substring-no-properties
-	      (search-forward "Y: ")
-	      (line-end-position)))))))
+Get the position of parent frame (current frame) with the help of
+xwininfo."
+  (when (executable-find "xwininfo")
+    (with-temp-buffer
+      (let ((case-fold-search nil)
+            (args (format "xwininfo -display %s -id %s"
+		          (frame-parameter nil 'display)
+		          (frame-parameter nil 'window-id))))
+        (call-process shell-file-name nil t nil shell-command-switch args)
+        (goto-char (point-min))
+        (search-forward "Absolute upper-left")
+        (let ((x (string-to-number
+                  (buffer-substring-no-properties
+	           (search-forward "X: ")
+	           (line-end-position))))
+              (y (string-to-number
+                  (buffer-substring-no-properties
+	           (search-forward "Y: ")
+	           (line-end-position)))))
+          (cons x y))))))
 
 
 (provide 'posframe)
