@@ -422,11 +422,15 @@ This posframe's buffer is BUFFER-OR-NAME."
                          &allow-other-keys)
   "Pop up a posframe and show STRING at POSITION.
 
+(1) POSITION
+
 POSITION can be:
 1. An integer, meaning point position.
 2. A cons of two integers, meaning absolute X and Y coordinates.
 3. Other type, in which case the corresponding POSHANDLER should be
    provided.
+
+(2) POSHANDLER
 
 POSHANDLER is a function of one argument returning an actual
 position.  Its argument is a plist of the following form:
@@ -454,6 +458,9 @@ position.  Its argument is a plist of the following form:
    :tab-line-height xxx
    :x-pixel-offset xxx
    :y-pixel-offset xxx)
+
+Note: poshandler info include :parent-frame-position, but user
+should never use it in poshandler function.
 
 By default, poshandler is auto-selected based on the type of POSITION,
 but the selection can be overridden using the POSHANDLER argument.
@@ -487,19 +494,23 @@ by the way, poshandler can be used by other packages easily
      `((left . ,(car posn))
        (top . ,(cdr posn))))
 
+(3) POSHANDLER-EXTRA-INFO
+
 POSHANDLER-EXTRA-INFO is a plist, which will prepend to the
 argument of poshandler function: 'info', it will *OVERRIDE* the
 exist key in 'info'.
 
-Note: poshandler info include :parent-frame-position, but user
-should never use it in poshandler function.
-
+(4) BUFFER-OR-NAME
 
 This posframe's buffer is BUFFER-OR-NAME, which can be a buffer
 or a name of a (possibly nonexistent) buffer.
 
+(5) NO-PROPERTIES
+
 If NO-PROPERTIES is non-nil, The STRING's properties will
 be removed before being shown in posframe.
+
+(6) WIDTH, MIN-WIDTH, HEIGHT and MIN-HEIGHT
 
 WIDTH, MIN-WIDTH, HEIGHT and MIN-HEIGHT, specify bounds on the
 new total size of posframe.  MIN-HEIGHT and MIN-WIDTH default to
@@ -507,48 +518,70 @@ the values of ‘window-min-height’ and ‘window-min-width’
 respectively.  These arguments are specified in the canonical
 character width and height of posframe.
 
+(7) LEFT-FRINGE and RIGHT-FRINGE
+
 If LEFT-FRINGE or RIGHT-FRINGE is a number, left fringe or
 right fringe with be shown with the specified width.
+
+(8) BORDER-WIDTH, BORDER-COLOR, INTERNAL-BORDER-WIDTH and INTERNAL-BORDER-COLOR
 
 By default, posframe shows no borders, but users can specify
 borders by setting BORDER-WIDTH to a positive number.  Border
 color can be specified by BORDER-COLOR.
 
 INTERNAL-BORDER-WIDTH and INTERNAL-BORDER-COLOR are same as
-BORDER-WIDTH and INTERNAL-BORDER-COLOR, but do not suggest to use
-for the reason:
+BORDER-WIDTH and BORDER-COLOR, but do not suggest to use for the
+reason:
 
    Add distinct controls for child frames' borders (Bug#45620)
    http://git.savannah.gnu.org/cgit/emacs.git/commit/?id=ff7b1a133bfa7f2614650f8551824ffaef13fadc
+
+(9) FONT, FOREGROUND-COLOR and BACKGROUND-COLOR
 
 Posframe's font as well as foreground and background colors are
 derived from the current frame by default, but can be overridden
 using the FONT, FOREGROUND-COLOR and BACKGROUND-COLOR arguments,
 respectively.
 
+(10) RESPECT-HEADER-LINE and RESPECT-MODE-LINE
+
 By default, posframe will display no header-line, mode-line and
 tab-line.  In case a header-line, mode-line or tab-line is
 desired, users can set RESPECT-HEADER-LINE and RESPECT-MODE-LINE
 to t.
 
+(11) INITIALIZE
+
 INITIALIZE is a function with no argument.  It will run when
 posframe buffer is first selected with `with-current-buffer'
 in `posframe-show', and only run once (for performance reasons).
 
+(12) LINES-TRUNCATE
+
 If LINES-TRUNCATE is non-nil, then lines will truncate in the
 posframe instead of wrap.
+
+(13) OVERRIDE-PARAMETERS
 
 OVERRIDE-PARAMETERS is very powful, *all* the frame parameters
 used by posframe's frame can be overridden by it.
 
+(14) TIMEOUT
+
 TIMEOUT can specify the number of seconds after which the posframe
 will auto-hide.
+
+(15) REFRESH
 
 If REFRESH is a number, posframe's frame-size will be re-adjusted
 every REFRESH seconds.
 
+(16) ACCEPT-FOCUS
+
 When ACCEPT-FOCUS is non-nil, posframe will accept focus.
 be careful, you may face some bugs when set it to non-nil.
+
+(17) HIDEHANDLER
 
 HIDEHANDLER is a function, when it return t, posframe will be
 hide when `post-command-hook' is executed, this function has a
@@ -561,6 +594,7 @@ The builtin hidehandler functions are listed below:
 
 1. `posframe-hidehandler-when-buffer-switch'
 
+(18) PARENT-FRAME-POSHANDLER
 
 PARENT-FRAME-POSHANDLER is a function, posframe can get current
 frame's position in screen by call this function, PLEASE NOTE:
@@ -572,7 +606,7 @@ function is:
 
 1. `posframe-parent-frame-poshandler-xwininfo'
 
-
+(19) Others
 
 You can use `posframe-delete-all' to delete all posframes."
   (let* ((position (or (funcall posframe-arghandler buffer-or-name :position position) (point)))
