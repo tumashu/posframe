@@ -1061,8 +1061,7 @@ of `posframe-show'."
                                         (integerp (cdr position)))
                                    #'posframe-poshandler-absolute-x-y)
                                   (t (error "Posframe: have no valid poshandler")))))
-                      ;; Set :ref-position to 'ignore, prevent misuse or abuse in poshandler.
-                      (plist-put info :ref-position 'ignore)))
+                      info))
            (x (car position))
            (y (cdr position)))
       (if (not ref-position)
