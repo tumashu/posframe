@@ -1050,11 +1050,7 @@ of `posframe-show'."
   (if (equal info posframe--last-poshandler-info)
       posframe--last-posframe-pixel-position
     (setq posframe--last-poshandler-info info)
-    (let* ((posframe-width (plist-get info :posframe-width))
-           (posframe-height (plist-get info :posframe-height))
-           (ref-position (plist-get info :ref-position))
-           (ref-x (or (car ref-position) 0))
-           (ref-y (or (cdr ref-position) 0))
+    (let* ((ref-position (plist-get info :ref-position))
            (position (funcall
                       (or (plist-get info :poshandler)
                           (let ((position (plist-get info :position)))
@@ -1071,12 +1067,18 @@ of `posframe-show'."
            (y (cdr position)))
       (if (not ref-position)
           position
-        (when (< x 0)
-          (setq x (+ posframe-width x)))
-        (when (< y 0)
-          (setq y (+ posframe-height y)))
-        (cons (+ ref-x x)
-              (+ ref-y y))))))
+        (let* ((parent-frame-width (plist-get info :parent-frame-width))
+               (parent-frame-height (plist-get info :parent-frame-height))
+               (posframe-width (plist-get info :posframe-width))
+               (posframe--height (plist-get info :posframe-height))
+               (ref-x (or (car ref-position) 0))
+               (ref-y (or (cdr ref-position) 0)))
+          (when (< x 0)
+            (setq x (- (+ x parent-frame-width) posframe-width)))
+          (when (< y 0)
+            (setq y (- (+ y parent-frame-height) posframe--height)))
+          (cons (+ ref-x x)
+                (+ ref-y y)))))))
 
 (cl-defun posframe-poshandler-argbuilder (&optional
                                           child-frame
