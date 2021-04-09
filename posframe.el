@@ -659,7 +659,8 @@ You can use `posframe-delete-all' to delete all posframes."
          (parent-frame-height (frame-pixel-height parent-frame))
          (ref-position
           (when (functionp refposhandler)
-            (funcall refposhandler parent-frame)))
+            (ignore-errors
+              (funcall refposhandler parent-frame))))
          (font-width (default-font-width))
          (font-height (with-current-buffer (window-buffer parent-window)
                         (posframe--get-font-height position)))
