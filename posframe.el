@@ -755,7 +755,9 @@ You can use `posframe-delete-all' to delete all posframes."
        posframe refresh height min-height width min-width)
 
       ;; Make sure not hide buffer's content for scroll down.
-      (set-window-point (frame-root-window posframe--frame) 0)
+      (let ((window (frame-root-window posframe--frame)))
+        (when (window-live-p window)
+          (set-window-point window 0)))
 
       ;; Force raise the current posframe.
       (raise-frame posframe--frame)
