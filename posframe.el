@@ -142,7 +142,8 @@
 ;; 4. [[https://github.com/tumashu/ivy-posframe][ivy-posframe]]
 ;; 5. [[https://github.com/tumashu/company-posframe][company-posframe]]
 ;; 6. [[https://github.com/randomwangran/org-marginalia-posframe][org-marginalia-posframe]]
-;; 7. ...
+;; 7. [[https://github.com/mamapanda/evil-owl][evil-owl]]
+;; 8. ...
 
 ;;; Code:
 ;; * posframe's code                         :CODE:
