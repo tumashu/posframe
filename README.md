@@ -3,26 +3,25 @@ Note: this file is auto converted from posframe.el by [el2org](https://github.co
 
 # &#30446;&#24405;
 
-1.  [Posframe README](#org2ae7aec)
-    1.  [What is posframe?](#orgaff395c)
-    2.  [Installation](#org90b3f22)
-    3.  [Usage](#orgfce7a67)
-        1.  [Create a posframe](#org4d0acfe)
-        2.  [Hide a posframe](#org17e2db2)
-        3.  [Hide all posframes](#org3e00d98)
-        4.  [Delete a posframe](#org69d6930)
-        5.  [Delete all posframes](#org0460351)
-        6.  [Customizing mouse pointer control](#org5706c29)
-        7.  [Set fallback arguments of posframe-show](#orgdf55be7)
-        8.  [Some packages which use posframe](#org51247a5)
+1.  [Posframe README](#org65b5096)
+    1.  [What is posframe?](#orgd81e50a)
+    2.  [Installation](#org25d0086)
+    3.  [Usage](#orgc43df1d)
+        1.  [Create a posframe](#org9920c17)
+        2.  [Hide a posframe](#org8f7797e)
+        3.  [Hide all posframes](#orgfd2c6ea)
+        4.  [Delete a posframe](#orgd119456)
+        5.  [Delete all posframes](#org0c7a761)
+        6.  [Customizing mouse pointer control](#org9b3f377)
+        7.  [Set fallback arguments of posframe-show](#orgc8e9887)
 
 
-<a id="org2ae7aec"></a>
+<a id="org65b5096"></a>
 
 # Posframe README
 
 
-<a id="orgaff395c"></a>
+<a id="orgd81e50a"></a>
 
 ## What is posframe?
 
@@ -49,19 +48,19 @@ NOTE:
 ![img](./snapshots/posframe-1.png)
 
 
-<a id="org90b3f22"></a>
+<a id="org25d0086"></a>
 
 ## Installation
 
     (require 'posframe)
 
 
-<a id="orgfce7a67"></a>
+<a id="orgc43df1d"></a>
 
 ## Usage
 
 
-<a id="org4d0acfe"></a>
+<a id="org9920c17"></a>
 
 ### Create a posframe
 
@@ -89,21 +88,21 @@ NOTE:
         C-h f posframe-show
 
 
-<a id="org17e2db2"></a>
+<a id="org8f7797e"></a>
 
 ### Hide a posframe
 
     (posframe-hide " *my-posframe-buffer*")
 
 
-<a id="org3e00d98"></a>
+<a id="orgfd2c6ea"></a>
 
 ### Hide all posframes
 
     M-x posframe-hide-all
 
 
-<a id="org69d6930"></a>
+<a id="orgd119456"></a>
 
 ### Delete a posframe
 
@@ -115,7 +114,7 @@ NOTE:
         (posframe-delete-frame " *my-posframe-buffer*")
 
 
-<a id="org0460351"></a>
+<a id="org0c7a761"></a>
 
 ### Delete all posframes
 
@@ -126,7 +125,7 @@ You probably shouldn't use it if you are sharing a buffer
 between posframe and other packages.
 
 
-<a id="org5706c29"></a>
+<a id="org9b3f377"></a>
 
 ### Customizing mouse pointer control
 
@@ -137,7 +136,7 @@ To disable this feature, add this to your init.el:
     (setq posframe-mouse-banish nil)
 
 
-<a id="orgdf55be7"></a>
+<a id="orgc8e9887"></a>
 
 ### Set fallback arguments of posframe-show
 
@@ -149,17 +148,4 @@ border-width to 10 and fallback background color to green.
     (defun my-posframe-arghandler (buffer-or-name arg-name value)
       (let ((info '(:internal-border-width 10 :background-color "green")))
         (or (plist-get info arg-name) value)))
-
-
-<a id="org51247a5"></a>
-
-### Some packages which use posframe
-
-1.  [which-key-posframe](https://github.com/yanghaoxie/which-key-posframe)
-2.  [ddskk-posframe](https://github.com/conao3/ddskk-posframe.el)
-3.  [pyim](https://github.com/tumashu/pyim)
-4.  [ivy-posframe](https://github.com/tumashu/ivy-posframe)
-5.  [company-posframe](https://github.com/tumashu/company-posframe)
-6.  [dap-mode](https://github.com/emacs-lsp/dap-mode)
-7.  &#x2026;
 

@@ -135,15 +135,6 @@
 ;;     (or (plist-get info arg-name) value)))
 ;; #+END_EXAMPLE
 
-;; *** Some packages which use posframe
-;; 1. [[https://github.com/yanghaoxie/which-key-posframe][which-key-posframe]]
-;; 2. [[https://github.com/conao3/ddskk-posframe.el][ddskk-posframe]]
-;; 3. [[https://github.com/tumashu/pyim][pyim]]
-;; 4. [[https://github.com/tumashu/ivy-posframe][ivy-posframe]]
-;; 5. [[https://github.com/tumashu/company-posframe][company-posframe]]
-;; 6. [[https://github.com/randomwangran/org-marginalia-posframe][org-marginalia-posframe]]
-;; 7. ...
-
 ;;; Code:
 ;; * posframe's code                         :CODE:
 (require 'cl-lib)
