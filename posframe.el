@@ -145,13 +145,18 @@
   :prefix "posframe-")
 
 (defcustom posframe-mouse-banish (not (eq system-type 'darwin))
-  "Mouse will be moved to (0 , 0) when it is non-nil.
+  "Mouse will be moved to `posframe--mouse-banish-coordinate` when it is non-nil.
 
 This option is used to solve the problem of child frame getting
 focus, with the help of `posframe--redirect-posframe-focus',
 setting this option to `nil' will work well in *most* cases."
   :group 'posframe
   :type 'boolean)
+
+(defcustom posframe--mouse-banish-coordinate '(0 . 0)
+  "Set the position to which to banish the mouse when `posframe-mouse-banish` is not nil. "
+  :group 'posframe
+  :type 'list)
 
 (defcustom posframe-inhibit-double-buffering nil
   "Set the posframe's frame-parameter: inhibit-double-buffering."
@@ -804,7 +809,9 @@ https://github.com/tumashu/posframe/issues/4#issuecomment-357514918"
              ;; See posframe-show's accept-focus argument.
              (frame-parameter posframe 'no-accept-focus)
              (not (equal (cdr (mouse-position)) '(0 . 0))))
-    (set-mouse-position parent-frame 0 0)))
+    (set-mouse-position parent-frame
+                        (car posframe--mouse-banish-coordinate)
+                        (cdr posframe--mouse-banish-coordinate))))
 
 (defun posframe--insert-string (string no-properties)
   "Insert STRING to current buffer.
