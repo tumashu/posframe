@@ -258,8 +258,7 @@ This posframe's buffer is BUFFER-OR-NAME."
         (buffer (get-buffer-create buffer-or-name))
         (after-make-frame-functions nil)
         (x-gtk-resize-child-frames posframe-gtk-resize-child-frames)
-        (args (list parent-frame
-                    foreground-color
+        (args (list foreground-color
                     background-color
                     right-fringe
                     left-fringe
