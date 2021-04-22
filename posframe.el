@@ -1422,13 +1422,10 @@ Get the position of parent frame (current frame) with the help of
 xwininfo."
   (when (executable-find "xwininfo")
     (with-temp-buffer
-      (let ((case-fold-search nil)
-            (args (format "xwininfo -display %s -id %s"
-		          (frame-parameter frame 'display)
-		          (frame-parameter frame 'window-id))))
-        ;; FIXME: how to call xwininfo successfully with call-process
-        ;; without the help of shell?
-        (call-process shell-file-name nil t nil shell-command-switch args)
+      (let ((case-fold-search nil))
+        (call-process "xwininfo" nil t nil
+                      "-display" (frame-parameter frame 'display)
+                      "-id"  (frame-parameter frame 'window-id))
         (goto-char (point-min))
         (search-forward "Absolute upper-left")
         (let ((x (string-to-number
