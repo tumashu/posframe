@@ -806,7 +806,7 @@ https://github.com/tumashu/posframe/issues/4#issuecomment-357514918"
   (let ((x-y (pcase posframe-mouse-banish
                (`(,x . ,y) (cons x y))
                ('nil nil)
-               ('t '(0 . 0)))))
+               (_ '(0 . 0)))))
     (when (and x-y
                ;; Do not banish mouse when posframe can accept focus.
                ;; See posframe-show's accept-focus argument.
