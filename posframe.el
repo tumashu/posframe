@@ -1420,6 +1420,8 @@ xwininfo."
             (args (format "xwininfo -display %s -id %s"
 		          (frame-parameter frame 'display)
 		          (frame-parameter frame 'window-id))))
+        ;; FIXME: how to call xwininfo successfully with call-process
+        ;; without the help of shell?
         (call-process shell-file-name nil t nil shell-command-switch args)
         (goto-char (point-min))
         (search-forward "Absolute upper-left")
