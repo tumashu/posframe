@@ -496,6 +496,9 @@ exist key in 'info'.
 This posframe's buffer is BUFFER-OR-NAME, which can be a buffer
 or a name of a (possibly nonexistent) buffer.
 
+buffer name can prefix with space, for example ' *mybuffer*', so
+the buffer name will hide for ibuffer and list-buffers.
+
 (5) NO-PROPERTIES
 
 If NO-PROPERTIES is non-nil, The STRING's properties will
