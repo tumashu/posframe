@@ -1091,6 +1091,7 @@ of `posframe-show'."
                                           &key
                                           position
                                           poshandler
+                                          refposhandler
                                           x-pixel-offset
                                           y-pixel-offset)
   "Return a info list of CHILD-FRAME, which can be used as poshandler's info argument.
@@ -1130,7 +1131,11 @@ poshandler easily used for other purposes."
          (header-line-height (window-header-line-height parent-window))
          (tab-line-height (if (functionp 'window-tab-line-height)
                               (window-tab-line-height parent-window)
-                            0)))
+                            0))
+         (ref-position
+          (when (functionp refposhandler)
+            (ignore-errors
+              (funcall refposhandler parent-frame)))))
     (list :position position
           :position-info position-info
           :poshandler poshandler
@@ -1143,6 +1148,7 @@ poshandler easily used for other purposes."
           :parent-frame parent-frame
           :parent-frame-width parent-frame-width
           :parent-frame-height parent-frame-height
+          :ref-position ref-position
           :parent-window parent-window
           :parent-window-top parent-window-top
           :parent-window-left parent-window-left
