@@ -145,7 +145,11 @@
   :prefix "posframe-")
 
 (defcustom posframe-mouse-banish (not (eq system-type 'darwin))
-  "Mouse will be moved to (0 , 0) when it is non-nil.
+  "Mouse banish.
+
+when this variable is t, mouse will be moved to (0 , 0).
+when this variable is a cons like (x . y), mouse will be moved
+to (x , y).
 
 This option is used to solve the problem of child frame getting
 focus, with the help of `posframe--redirect-posframe-focus',
@@ -799,12 +803,16 @@ is non-nil.
 
 FIXME: This is a hacky fix for the mouse focus problem, which like:
 https://github.com/tumashu/posframe/issues/4#issuecomment-357514918"
-  (when (and posframe-mouse-banish
-             ;; Do not banish mouse when posframe can accept focus.
-             ;; See posframe-show's accept-focus argument.
-             (frame-parameter posframe 'no-accept-focus)
-             (not (equal (cdr (mouse-position)) '(0 . 0))))
-    (set-mouse-position parent-frame 0 0)))
+  (let ((x-y (pcase posframe-mouse-banish
+               (`(,x . ,y) (cons x y))
+               ('nil nil)
+               ('t '(0 . 0)))))
+    (when (and x-y
+               ;; Do not banish mouse when posframe can accept focus.
+               ;; See posframe-show's accept-focus argument.
+               (frame-parameter posframe 'no-accept-focus)
+               (not (equal (cdr (mouse-position)) (cons (car x-y) (cdr x-y)))))
+      (set-mouse-position parent-frame (car x-y) (cdr x-y)))))
 
 (defun posframe--insert-string (string no-properties)
   "Insert STRING to current buffer.
