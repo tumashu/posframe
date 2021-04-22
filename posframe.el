@@ -980,7 +980,10 @@ Note: This function is called in `post-command-hook'."
 
 (defun posframe-delete (buffer-or-name)
   "Delete posframe pertaining to BUFFER-OR-NAME and kill the buffer.
-BUFFER-OR-NAME can be a buffer or a buffer name."
+BUFFER-OR-NAME can be a buffer or a buffer name.
+
+This function is not commonly used, for delete and recreate
+posframe is very very slowly, `posframe-hide' is more useful."
   (posframe-delete-frame buffer-or-name)
   (posframe--kill-buffer buffer-or-name))
 
