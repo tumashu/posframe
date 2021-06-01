@@ -28,6 +28,9 @@
 ;;; Commentary:
 
 ;; * Posframe README                                :README:
+
+;; #+html: <a href="http://elpa.gnu.org/packages/posframe.html"><img alt="GNU ELPA" src="https://elpa.gnu.org/packages/posframe.svg"/></a>
+
 ;; ** What is posframe?
 ;; Posframe can pop up a frame at point, this *posframe* is a
 ;; child-frame connected to its root window's buffer.
