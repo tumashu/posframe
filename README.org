@@ -4,9 +4,7 @@
 
 #+html: <a href="http://elpa.gnu.org/packages/posframe.html"><img alt="GNU ELPA" src="https://elpa.gnu.org/packages/posframe.svg"/></a>
 
-* Posframe README
-
-** What is posframe?
+* What is posframe?
 Posframe can pop up a frame at point, this *posframe* is a
 child-frame connected to its root window's buffer.
 
@@ -26,17 +24,17 @@ NOTE:
 
 [[file:./snapshots/posframe-1.png]]
 
-** Installation
+* Installation
 
 #+begin_example
 (require 'posframe)
 #+end_example
 
-** Usage
+* Usage
 
-*** Create a posframe
+** Create a posframe
 
-**** Simple way
+*** Simple way
 #+begin_example
 (when (posframe-workable-p)
   (posframe-show " *my-posframe-buffer*"
@@ -44,7 +42,7 @@ NOTE:
                  :position (point)))
 #+end_example
 
-**** Advanced way
+*** Advanced way
 #+begin_example
 (defvar my-posframe-buffer " *my-posframe-buffer*")
 
@@ -57,23 +55,23 @@ NOTE:
                  :position (point)))
 #+end_example
 
-**** Arguments
+*** Arguments
 
 #+begin_example
 C-h f posframe-show
 #+end_example
 
-*** Hide a posframe
+** Hide a posframe
 #+begin_example
 (posframe-hide " *my-posframe-buffer*")
 #+end_example
 
-*** Hide all posframes
+** Hide all posframes
 #+begin_example
 M-x posframe-hide-all
 #+end_example
 
-*** Delete a posframe
+** Delete a posframe
 1. Delete posframe and its buffer
    #+begin_example
    (posframe-delete " *my-posframe-buffer*")
@@ -82,7 +80,7 @@ M-x posframe-hide-all
    #+begin_example
    (posframe-delete-frame " *my-posframe-buffer*")
    #+end_example
-*** Delete all posframes
+** Delete all posframes
 #+begin_example
 M-x posframe-delete-all
 #+end_example
@@ -91,7 +89,7 @@ Note: this command will delete all posframe buffers.
 You probably shouldn't use it if you are sharing a buffer
 between posframe and other packages.
 
-*** Customizing mouse pointer control
+** Customizing mouse pointer control
 
 By default, posframe moves the pointer to point (0,0) in
 the frame, as a way to address an issue with mouse focus.
@@ -100,7 +98,7 @@ To disable this feature, add this to your init.el:
 (setq posframe-mouse-banish nil)
 #+end_example
 
-*** Set fallback arguments of posframe-show
+** Set fallback arguments of posframe-show
 
 Users can set fallback values of posframe-show's arguments with the
 help of `posframe-arghandler'.  The example below sets fallback
