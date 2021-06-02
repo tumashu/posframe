@@ -3,6 +3,8 @@
 #+AUTHOR: Feng Shu
 
 #+html: <a href="http://elpa.gnu.org/packages/posframe.html"><img alt="GNU ELPA" src="https://elpa.gnu.org/packages/posframe.svg"/></a>
+#+html: <a href="http://elpa.gnu.org/devel/posframe.html"><img alt="GNU-devel ELPA" src="https://elpa.gnu.org/devel/posframe.svg"/></a>
+#+html: <a href="https://melpa.org/#/posframe"><img alt="MELPA" src="https://melpa.org/packages/posframe-badge.svg"/></a>
 
 * What is posframe?
 Posframe can pop up a frame at point, this *posframe* is a
