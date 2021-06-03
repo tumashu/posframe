@@ -51,6 +51,8 @@
        (posframe--get-font-height (point-min)))
       (posframe--mouse-banish
        (posframe--mouse-banish (window-frame)))
+      (frame-parameter
+       (frame-parameter (window-frame) 'no-accept-focus))
       (set-mouse-position
        (set-mouse-position (window-frame) 0 0)))))
 
