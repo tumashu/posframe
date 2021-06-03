@@ -34,9 +34,7 @@
   (let ((str (with-temp-buffer
                (insert-file-contents (locate-library "posframe.el"))
                (buffer-string))))
-    `((raise-frame
-       (raise-frame (window-frame)))
-      (font-at
+    `((font-at
        (font-at (point-min)))
       (redraw-display
        (redraw-display))
@@ -57,8 +55,12 @@
        (frame-parameter (window-frame) 'no-accept-focus))
       (set-mouse-position
        (set-mouse-position (window-frame) 0 0))
+      (posn-at-point
+       (posn-at-point))
       (set-frame-parameter
-       (set-frame-parameter (window-frame) 'test 1)))))
+       (set-frame-parameter (window-frame) 'test 1))
+      (raise-frame
+       (raise-frame (window-frame))))))
 
 (defun posframe-benchmark ()
   "Benchmark tool for posframe."
