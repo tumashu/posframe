@@ -107,6 +107,9 @@ frame.")
 (defvar-local posframe--initialized-p nil
   "Record initialize status of `posframe-show'.")
 
+(defvar-local posframe--accept-focus nil
+  "Record accept focus status of `posframe-show'.")
+
 ;; Avoid compilation warnings on Emacs < 27.
 (defvar x-gtk-resize-child-frames)
 
@@ -191,6 +194,7 @@ This posframe's buffer is BUFFER-OR-NAME."
       (setq-local cursor-type nil)
       (setq-local cursor-in-non-selected-windows nil)
       (setq-local show-trailing-whitespace nil)
+      (setq-local posframe--accept-focus accept-focus)
       (unless respect-mode-line
         (setq-local mode-line-format nil))
       (unless respect-header-line
@@ -693,7 +697,7 @@ posframe from catching keyboard input if the window manager selects it."
   (when (and (eq (selected-frame) posframe--frame)
              ;; Do not redirect focus when posframe can accept focus.
              ;; See posframe-show's accept-focus argument.
-             (frame-parameter (selected-frame) 'no-accept-focus))
+             (not posframe--accept-focus))
     (redirect-frame-focus posframe--frame (frame-parent))))
 
 (if (version< emacs-version "27.1")
@@ -715,8 +719,7 @@ https://github.com/tumashu/posframe/issues/4#issuecomment-357514918"
     (when (and x-y
                ;; Do not banish mouse when posframe can accept focus.
                ;; See posframe-show's accept-focus argument.
-               (frame-parameter posframe 'no-accept-focus)
-               (not (equal (cdr (mouse-position)) (cons (car x-y) (cdr x-y)))))
+               (not posframe--accept-focus))
       (set-mouse-position parent-frame (car x-y) (cdr x-y)))))
 
 (defun posframe--insert-string (string no-properties)
