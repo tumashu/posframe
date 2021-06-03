@@ -30,34 +30,35 @@
 (require 'cl-lib)
 (require 'posframe)
 
+(defvar posframe-benchmark-alist
+  (let ((str (with-temp-buffer
+               (insert-file-contents (locate-library "posframe.el"))
+               (buffer-string))))
+    `((font-at
+       (font-at (point-min)))
+      (redraw-display
+       (redraw-display))
+      (remove-text-properties
+       (let ((string ,str)))
+       (remove-text-properties
+        0 (length string) '(read-only t)
+        string))
+      (mouse-position
+       (mouse-position))
+      (default-font-width
+        (default-font-width))
+      (posframe--get-font-height
+       (posframe--get-font-height (point-min)))
+      (posframe--mouse-banish
+       (posframe--mouse-banish (window-frame))))))
+
 (defun posframe-benchmark ()
   "Benchmark tool for posframe."
   (interactive)
-  (let ((str (with-temp-buffer
-               (insert-file-contents (locate-library "posframe.el"))
-               (buffer-string)))
-        (n 10000))
-
-    (message "\n* Benchmark `font-at' %s times ..." n)
-    (benchmark n '(font-at (point-min)))
-
-    (message "\n* Benchmark `redraw-display' %s times ..." n)
-    (benchmark n '(redraw-display))
-
-    (message "\n* Benchmark `remove-text-properties' %s times ..." n)
-    (benchmark n `(remove-text-properties
-                   0 (length str) '(read-only t)
-                   ,str))
-
-    (message "\n* Benchmark `posframe--mouse-banish' %s times ..." n)
-    (benchmark n `(posframe--mouse-banish (window-frame)))
-
-    (message "\n* Benchmark `mouse-position' %s times ..." n)
-    (benchmark n '(mouse-position))
-
-    (message "\n* Benchmark `default-font-width' %s times ..." n)
-    (benchmark n '(default-font-width))
-
+  (let ((n 10000))
+    (dolist (x posframe-benchmark-alist)
+      (message "\n* Benchmark `%S' %s times ..." (car x) n)
+      (benchmark n (car (cdr x))))
     (message "\n Finished.")))
 
 
