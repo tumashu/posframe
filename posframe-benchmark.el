@@ -55,6 +55,8 @@
        (frame-parameter (window-frame) 'no-accept-focus))
       (set-mouse-position
        (set-mouse-position (window-frame) 0 0))
+      (posframe-run-hidehandler
+       (posframe-run-hidehandler))
       (set-frame-parameter
        (set-frame-parameter (window-frame) 'test 1)))))
 
