@@ -861,8 +861,6 @@ BUFFER-OR-NAME can be a buffer or a buffer name."
           (posframe--make-frame-invisible frame))))))
 
 ;; Remove in the future.
-(defalias 'posframe-run-hidehandler #'ignore)
-
 (defun posframe-hidehandler-daemon ()
   "Run posframe hidehandler."
   (when posframe-hidehandler-timer
@@ -884,6 +882,7 @@ BUFFER-OR-NAME can be a buffer or a buffer name."
                    (posframe--make-frame-invisible frame)))))))))
 
 (posframe-hidehandler-daemon)
+(remove-hook 'post-command-hook #'posframe-run-hidehandler)
 
 (defun posframe-hidehandler-when-buffer-switch (info)
   "Posframe hidehandler function.
