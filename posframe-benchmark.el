@@ -54,7 +54,9 @@
       (frame-parameter
        (frame-parameter (window-frame) 'no-accept-focus))
       (set-mouse-position
-       (set-mouse-position (window-frame) 0 0)))))
+       (set-mouse-position (window-frame) 0 0))
+      (set-frame-parameter
+       (set-frame-parameter (window-frame) 'test 1)))))
 
 (defun posframe-benchmark ()
   "Benchmark tool for posframe."
