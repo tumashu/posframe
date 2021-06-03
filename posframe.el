@@ -338,7 +338,6 @@ POSHANDLER is a function of one argument returning an actual
 position.  Its argument is a plist of the following form:
 
   (:position xxx
-   :position-info xxx
    :poshandler xxx
    :font-height xxx
    :font-width xxx
@@ -554,10 +553,6 @@ You can use `posframe-delete-all' to delete all posframes."
          (parent-window-left (window-pixel-left parent-window))
          (parent-window-width (window-pixel-width parent-window))
          (parent-window-height (window-pixel-height parent-window))
-         (position-info
-          (if (integerp position)
-              (posn-at-point position parent-window)
-            position))
          (parent-frame (window-frame parent-window))
          (parent-frame-width (frame-pixel-width parent-frame))
          (parent-frame-height (frame-pixel-height parent-frame))
@@ -626,7 +621,6 @@ You can use `posframe-delete-all' to delete all posframes."
         ;; All poshandlers will get info from this plist.
         `(,@poshandler-extra-info
           ,@(list :position position
-                  :position-info position-info
                   :poshandler poshandler
                   :font-height font-height
                   :font-width font-width
@@ -1031,10 +1025,6 @@ poshandler easily used for other purposes."
          (parent-window-left (window-pixel-left parent-window))
          (parent-window-width (window-pixel-width parent-window))
          (parent-window-height (window-pixel-height parent-window))
-         (position-info
-          (if (integerp position)
-              (posn-at-point position parent-window)
-            position))
          (font-width (default-font-width))
          (font-height (with-current-buffer (window-buffer parent-window)
                         (posframe--get-font-height position)))
@@ -1049,7 +1039,6 @@ poshandler easily used for other purposes."
             (ignore-errors
               (funcall refposhandler parent-frame)))))
     (list :position position
-          :position-info position-info
           :poshandler poshandler
           :font-height font-height
           :font-width font-width
@@ -1102,7 +1091,11 @@ Optional argument FONT-HEIGHT, UPWARD, CENTERING ."
          (window-width (plist-get info :parent-window-width))
          (xmax (plist-get info :parent-frame-width))
          (ymax (plist-get info :parent-frame-height))
-         (position-info (plist-get info :position-info))
+         (position (plist-get info :position))
+         (position-info
+          (if (integerp position)
+              (posn-at-point position window)
+            position))
          (header-line-height (plist-get info :header-line-height))
          (tab-line-height (plist-get info :tab-line-height))
          (x (+ (car (window-inside-pixel-edges window))
