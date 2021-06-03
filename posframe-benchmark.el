@@ -39,10 +39,10 @@
       (redraw-display
        (redraw-display))
       (remove-text-properties
-       (let ((string ,str)))
-       (remove-text-properties
-        0 (length string) '(read-only t)
-        string))
+       (let ((string ,str))
+         (remove-text-properties
+          0 (length string) '(read-only t)
+          string)))
       (mouse-position
        (mouse-position))
       (default-font-width
