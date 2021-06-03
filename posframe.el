@@ -663,9 +663,6 @@ You can use `posframe-delete-all' to delete all posframes."
         (when (window-live-p window)
           (set-window-point window 0)))
 
-      ;; Force raise the current posframe.
-      (raise-frame posframe--frame)
-
       ;; Hide posframe when switch buffer
       (let* ((parent-buffer (window-buffer parent-window))
              (parent-buffer-name (buffer-name parent-buffer)))
