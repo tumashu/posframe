@@ -50,7 +50,9 @@
       (posframe--get-font-height
        (posframe--get-font-height (point-min)))
       (posframe--mouse-banish
-       (posframe--mouse-banish (window-frame))))))
+       (posframe--mouse-banish (window-frame)))
+      (set-mouse-position
+       (set-mouse-position (window-frame) 0 0)))))
 
 (defun posframe-benchmark ()
   "Benchmark tool for posframe."
