@@ -66,7 +66,7 @@
 (defun posframe-benchmark ()
   "Benchmark tool for posframe."
   (interactive)
-  (let ((n 10000))
+  (let ((n 1000))
     (message "\n* Posframe Benchmark")
     (dolist (x posframe-benchmark-alist)
       (message "\n** Benchmark `%S' %s times ..." (car x) n)
