@@ -110,6 +110,9 @@ frame.")
 (defvar-local posframe--accept-focus nil
   "Record accept focus status of `posframe-show'.")
 
+(defvar posframe-hidehandler-timer nil
+  "Timer used by hidehandler function.")
+
 ;; Avoid compilation warnings on Emacs < 27.
 (defvar x-gtk-resize-child-frames)
 
@@ -483,8 +486,7 @@ be careful, you may face some bugs when set it to non-nil.
 (17) HIDEHANDLER
 
 HIDEHANDLER is a function, when it return t, posframe will be
-hide when `post-command-hook' is executed, this function has a
-plist argument:
+hide, this function has a plist argument:
 
   (:posframe-buffer xxx
    :posframe-parent-buffer xxx)
@@ -861,21 +863,30 @@ BUFFER-OR-NAME can be a buffer or a buffer name."
                   (equal buffer-or-name (cdr buffer-info)))
           (posframe--make-frame-invisible frame))))))
 
-(defun posframe-run-hidehandler ()
-  "Run posframe hidehandler. this function is used in `post-command-hook'."
-  (ignore-errors
-    (dolist (frame (frame-list))
-      (let ((hidehandler (frame-parameter frame 'posframe-hidehandler))
-            (buffer (frame-parameter frame 'posframe-buffer))
-            (parent-buffer (frame-parameter frame 'posframe-parent-buffer)))
-        (when (and hidehandler
-                   (funcall hidehandler
-                            (list
-                             :posframe-buffer buffer
-                             :posframe-parent-buffer parent-buffer)))
-          (posframe--make-frame-invisible frame))))))
+;; Remove in the future.
+(defalias 'posframe-run-hidehandler #'ignore)
 
-(add-hook 'post-command-hook #'posframe-run-hidehandler)
+(defun posframe-hidehandler-daemon ()
+  "Run posframe hidehandler."
+  (when posframe-hidehandler-timer
+    (cancel-timer posframe-hidehandler-timer))
+  (setq posframe-hidehandler-timer
+        (run-with-idle-timer
+         1 t
+         (lambda ()
+           (ignore-errors
+             (dolist (frame (frame-list))
+               (let ((hidehandler (frame-parameter frame 'posframe-hidehandler))
+                     (buffer (frame-parameter frame 'posframe-buffer))
+                     (parent-buffer (frame-parameter frame 'posframe-parent-buffer)))
+                 (when (and hidehandler
+                            (funcall hidehandler
+                                     (list
+                                      :posframe-buffer buffer
+                                      :posframe-parent-buffer parent-buffer)))
+                   (posframe--make-frame-invisible frame)))))))))
+
+(posframe-hidehandler-daemon)
 
 (defun posframe-hidehandler-when-buffer-switch (info)
   "Posframe hidehandler function.
