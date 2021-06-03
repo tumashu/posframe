@@ -62,6 +62,7 @@
       (raise-frame
        (raise-frame (window-frame))))))
 
+;;;###autoload
 (defun posframe-benchmark ()
   "Benchmark tool for posframe."
   (interactive)
