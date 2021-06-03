@@ -38,6 +38,8 @@
        (font-at (point-min)))
       (redraw-display
        (redraw-display))
+      (redraw-frame
+       (redraw-frame (window-frame)))
       (remove-text-properties
        (let ((string ,str))
          (remove-text-properties
