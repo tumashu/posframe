@@ -59,6 +59,10 @@
        (set-mouse-position (window-frame) 0 0))
       (posn-at-point
        (posn-at-point))
+      (posn-x-y
+       (posn-x-y (posn-at-point)))
+      (posn-object-x-y
+       (posn-object-x-y (posn-at-point)))
       (set-frame-parameter
        (set-frame-parameter (window-frame) 'test 1))
       (raise-frame
