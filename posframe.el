@@ -1091,11 +1091,16 @@ Optional argument FONT-HEIGHT, UPWARD, CENTERING ."
          (window-width (plist-get info :parent-window-width))
          (xmax (plist-get info :parent-frame-width))
          (ymax (plist-get info :parent-frame-height))
-         (position (plist-get info :position))
          (position-info
-          (if (integerp position)
-              (posn-at-point position window)
-            position))
+          (or
+           ;; :position-info has been removed, this line
+           ;; is used for compatible.
+           (plist-get info :position-info)
+           (plist-get info :position)))
+         (position-info
+          (if (integerp position-info)
+              (posn-at-point position-info window)
+            position-info))
          (header-line-height (plist-get info :header-line-height))
          (tab-line-height (plist-get info :tab-line-height))
          (x (+ (car (window-inside-pixel-edges window))
