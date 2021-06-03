@@ -34,7 +34,9 @@
   (let ((str (with-temp-buffer
                (insert-file-contents (locate-library "posframe.el"))
                (buffer-string))))
-    `((font-at
+    `((raise-frame
+       (raise-frame (window-frame)))
+      (font-at
        (font-at (point-min)))
       (redraw-display
        (redraw-display))
