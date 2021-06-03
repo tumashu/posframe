@@ -56,10 +56,11 @@
   "Benchmark tool for posframe."
   (interactive)
   (let ((n 10000))
+    (message "\n* Posframe Benchmark")
     (dolist (x posframe-benchmark-alist)
-      (message "\n* Benchmark `%S' %s times ..." (car x) n)
+      (message "\n** Benchmark `%S' %s times ..." (car x) n)
       (benchmark n (car (cdr x))))
-    (message "\n Finished.")))
+    (message "\n* Finished.")))
 
 
 (provide 'posframe-benchmark)
