@@ -857,7 +857,7 @@ BUFFER-OR-NAME can be a buffer or a buffer name."
 ;; Remove in the future.
 (defun posframe-hidehandler-daemon ()
   "Run posframe hidehandler daemon."
-  (when posframe-hidehandler-timer
+  (when (timerp posframe-hidehandler-timer)
     (cancel-timer posframe-hidehandler-timer))
   (setq posframe-hidehandler-timer
         (run-with-idle-timer 0.5 t #'posframe-hidehandler-daemon-function)))
