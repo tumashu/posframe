@@ -856,24 +856,25 @@ BUFFER-OR-NAME can be a buffer or a buffer name."
 
 ;; Remove in the future.
 (defun posframe-hidehandler-daemon ()
-  "Run posframe hidehandler."
+  "Run posframe hidehandler daemon."
   (when posframe-hidehandler-timer
     (cancel-timer posframe-hidehandler-timer))
   (setq posframe-hidehandler-timer
-        (run-with-idle-timer
-         1 t
-         (lambda ()
-           (ignore-errors
-             (dolist (frame (frame-list))
-               (let ((hidehandler (frame-parameter frame 'posframe-hidehandler))
-                     (buffer (frame-parameter frame 'posframe-buffer))
-                     (parent-buffer (frame-parameter frame 'posframe-parent-buffer)))
-                 (when (and hidehandler
-                            (funcall hidehandler
-                                     (list
-                                      :posframe-buffer buffer
-                                      :posframe-parent-buffer parent-buffer)))
-                   (posframe--make-frame-invisible frame)))))))))
+        (run-with-idle-timer 0.5 t #'posframe-hidehandler-daemon-function)))
+
+(defun posframe-hidehandler-daemon-function ()
+  "Posframe hidehandler daemon function."
+  (ignore-errors
+    (dolist (frame (frame-list))
+      (let ((hidehandler (frame-parameter frame 'posframe-hidehandler))
+            (buffer (frame-parameter frame 'posframe-buffer))
+            (parent-buffer (frame-parameter frame 'posframe-parent-buffer)))
+        (when (and hidehandler
+                   (funcall hidehandler
+                            (list
+                             :posframe-buffer buffer
+                             :posframe-parent-buffer parent-buffer)))
+          (posframe--make-frame-invisible frame))))))
 
 (posframe-hidehandler-daemon)
 (remove-hook 'post-command-hook #'posframe-run-hidehandler)
