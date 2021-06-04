@@ -854,7 +854,6 @@ BUFFER-OR-NAME can be a buffer or a buffer name."
                   (equal buffer-or-name (cdr buffer-info)))
           (posframe--make-frame-invisible frame))))))
 
-;; Remove in the future.
 (defun posframe-hidehandler-daemon ()
   "Run posframe hidehandler daemon."
   (when (timerp posframe-hidehandler-timer)
@@ -877,6 +876,7 @@ BUFFER-OR-NAME can be a buffer or a buffer name."
           (posframe--make-frame-invisible frame))))))
 
 (posframe-hidehandler-daemon)
+;; For compatibility, remove In the future.
 (remove-hook 'post-command-hook #'posframe-run-hidehandler)
 
 (defun posframe-hidehandler-when-buffer-switch (info)
