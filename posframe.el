@@ -1345,12 +1345,12 @@ xwininfo."
         (search-forward "Absolute upper-left")
         (let ((x (string-to-number
                   (buffer-substring-no-properties
-	           (search-forward "X: ")
-	           (line-end-position))))
+                   (search-forward "X: ")
+                   (line-end-position))))
               (y (string-to-number
                   (buffer-substring-no-properties
-	           (search-forward "Y: ")
-	           (line-end-position)))))
+                   (search-forward "Y: ")
+                   (line-end-position)))))
           (cons x y))))))
 
 
