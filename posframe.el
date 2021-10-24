@@ -1085,15 +1085,13 @@ of `posframe-show'."
     (cons (+ (car position) x-pixel-offset)
           (+ (cdr position) y-pixel-offset))))
 
-(defun posframe-poshandler-point-1 (info &optional font-height upward centering)
+(defun posframe-poshandler-point-1 (info &optional font-height upward)
   "The internal function used to deal with point-poshandler."
   (let* ((x-pixel-offset (plist-get info :x-pixel-offset))
          (y-pixel-offset (plist-get info :y-pixel-offset))
          (posframe-width (plist-get info :posframe-width))
          (posframe-height (plist-get info :posframe-height))
          (window (plist-get info :parent-window))
-         (window-left (plist-get info :parent-window-left))
-         (window-width (plist-get info :parent-window-width))
          (xmax (plist-get info :parent-frame-width))
          (ymax (plist-get info :parent-frame-height))
          (position-info
@@ -1122,9 +1120,7 @@ of `posframe-show'."
                    y-pixel-offset))
          (font-height (or font-height (plist-get info :font-height)))
          (y-bottom (+ y-top font-height)))
-    (cons (if centering
-              (+ window-left (/ (- window-width posframe-width) 2))
-            (max 0 (min x (- xmax (or posframe-width 0)))))
+    (cons (max 0 (min x (- xmax (or posframe-width 0))))
           (max 0 (if (if upward
                          (> (- y-bottom (or posframe-height 0)) 0)
                        (> (+ y-bottom (or posframe-height 0)) ymax))
@@ -1148,7 +1144,9 @@ point(0, 1). The structure of INFO can be found in docstring of
 Get a posframe position, which let posframe(0.5, 0) align to a
 position, which x = x of window(0.5, 0) and y = y of point(0, 1). The
 structure of INFO can be found in docstring of `posframe-show'. "
-  (posframe-poshandler-point-1 info nil nil t))
+  (let ((x (car (posframe-poshandler-p0.5p0-to-w0.5w0 info)))
+        (y (cdr (posframe-poshandler-point-1 info))))
+    (cons x y)))
 
 (defalias 'posframe-poshandler-point-bottom-left-corner-upward #'posframe-poshandler-p0p1-to-p0p1)
 (defun posframe-poshandler-p0p1-to-p0p1 (info)
