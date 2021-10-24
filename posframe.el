@@ -1129,13 +1129,13 @@ point(0, 1). The structure of INFO can be found in docstring of
 ."
   (posframe-poshandler-point-1 info))
 
-(defalias 'posframe-poshandler-point-window-center #'posframe-poshandler-p0.5p0.5-to-p0p0)
-(defun posframe-poshandler-p0.5p0.5-to-p0p0 (info)
+(defalias 'posframe-poshandler-point-window-center #'posframe-poshandler-p0.5p0-to-w0.5p1)
+(defun posframe-poshandler-p0.5p0-to-w0.5p1 (info)
   "Posframe's position hanlder.
 
-Get a posframe position, which let posframe(0.5, 0.5) align to
-point(0, 0). The structure of INFO can be found in docstring of
-`posframe-show'. "
+Get a posframe position, which let posframe(0.5, 0) align to a
+position, which x = x of window(0.5, 0) and y = y of point(0, 1). The
+structure of INFO can be found in docstring of `posframe-show'. "
   (posframe-poshandler-point-1 info nil nil t))
 
 (defalias 'posframe-poshandler-point-bottom-left-corner-upward #'posframe-poshandler-p0p1-to-p0p1)
