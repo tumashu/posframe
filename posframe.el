@@ -1086,7 +1086,7 @@ poshandler easily used for other purposes."
           :y-pixel-offset (or y-pixel-offset 0))))
 
 (defun posframe-poshandler-absolute-x-y (info)
-  "Posframe's position hanlder.
+  "Posframe's position handler.
 
 Deal with (integer . integer) style position,
 the structure of INFO can be found in docstring
@@ -1141,7 +1141,7 @@ of `posframe-show'."
 
 (defalias 'posframe-poshandler-point-bottom-left-corner #'posframe-poshandler-p0p0-to-p0p1)
 (defun posframe-poshandler-p0p0-to-p0p1 (info)
-  "Posframe's position hanlder.
+  "Posframe's position handler.
 
 Get a posframe position, which let posframe(0, 0) align to
 point(0, 1). The structure of INFO can be found in docstring of
@@ -1151,7 +1151,7 @@ point(0, 1). The structure of INFO can be found in docstring of
 
 (defalias 'posframe-poshandler-point-window-center #'posframe-poshandler-p0.5p0-to-w0.5p1)
 (defun posframe-poshandler-p0.5p0-to-w0.5p1 (info)
-  "Posframe's position hanlder.
+  "Posframe's position handler.
 
 Get a posframe position, which let posframe(0.5, 0) align to a
 position, which x = x of window(0.5, 0) and y = y of point(0, 1). The
@@ -1161,7 +1161,7 @@ structure of INFO can be found in docstring of `posframe-show'. "
     (cons x y)))
 
 (defun posframe-poshandler-p0.5p0-to-f0.5p1 (info)
-  "Posframe's position hanlder.
+  "Posframe's position handler.
 
 Get a posframe position, which let posframe(0.5, 0) align to a
 position, which x = x of frame(0.5, 0) and y = y of point(0, 1). The
@@ -1172,7 +1172,7 @@ structure of INFO can be found in docstring of `posframe-show'. "
 
 (defalias 'posframe-poshandler-point-bottom-left-corner-upward #'posframe-poshandler-p0p1-to-p0p1)
 (defun posframe-poshandler-p0p1-to-p0p1 (info)
-  "Posframe's position hanlder.
+  "Posframe's position handler.
 
 Get a posframe position, which let posframe(0, 1) align to
 point(0, 1). The structure of INFO can be found in docstring of
@@ -1181,7 +1181,7 @@ point(0, 1). The structure of INFO can be found in docstring of
 
 (defalias 'posframe-poshandler-point-top-left-corner #'posframe-poshandler-p0p0-to-p0p0)
 (defun posframe-poshandler-p0p0-to-p0p0 (info)
-  "Posframe's position hanlder.
+  "Posframe's position handler.
 
 Get a posframe position, which let posframe(0, 0) align to
 point(0, 0). The structure of INFO can be found in docstring of
