@@ -363,16 +363,28 @@ position.  Its argument is a plist of the following form:
 By default, poshandler is auto-selected based on the type of POSITION,
 but the selection can be overridden using the POSHANDLER argument.
 
-The name of poshandler function is like:
+The names of poshandler functions are like:
 
    posframe-poshandler-p0.5p0-to-w0.5p1
 
-which mean is that posframe(a, b) align to a position(c, d):
+which mean align posframe(0.5, 0) to a position(a, b)
 
-1. a = 0.5 * posframe-width
-2. b = 0   * posframe-height
-3. c = 0.5 * window-width
-4. d = 1   * point-height
+1. a = x of window(0.5, 0)
+2. b = y of point(1, 1)
+
+    posframe(p), frame(f), window(w), point(p)
+
+        (0,0)      (0.5,0)      (1,0)
+         +------------+-----------+
+         |                        |
+         |                        |
+         |                        |
+(0, 0.5) +                        + (1, 0.5)
+         |                        |
+         |                        |
+         |                        |
+         +------------+-----------+
+        (0,1)      (0.5,1)      (1,1)
 
 The alias of builtin poshandler functions are listed below:
 
