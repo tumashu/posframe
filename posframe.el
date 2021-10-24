@@ -367,7 +367,7 @@ The name of poshandler function is like:
 
    posframe-poshandler-p0.5p0-to-w0.5p1
 
-which mean is that posframe(a, b) align to a position(a, b):
+which mean is that posframe(a, b) align to a position(c, d):
 
 1. a = 0.5 * posframe-width
 2. b = 0   * posframe-height
