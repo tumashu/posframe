@@ -1145,7 +1145,7 @@ Get a posframe position, which let posframe(0.5, 0) align to a
 position, which x = x of window(0.5, 0) and y = y of point(0, 1). The
 structure of INFO can be found in docstring of `posframe-show'. "
   (let ((x (car (posframe-poshandler-p0.5p0-to-w0.5w0 info)))
-        (y (cdr (posframe-poshandler-point-1 info))))
+        (y (cdr (posframe-poshandler-p0p0-to-p0p1 info))))
     (cons x y)))
 
 (defalias 'posframe-poshandler-point-bottom-left-corner-upward #'posframe-poshandler-p0p1-to-p0p1)
