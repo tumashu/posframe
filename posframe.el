@@ -1073,14 +1073,8 @@ of `posframe-show'."
     (cons (+ (car position) x-pixel-offset)
           (+ (cdr position) y-pixel-offset))))
 
-(defalias 'posframe-poshandler-point-bottom-left-corner #'posframe-poshandler-p0p0-to-p0p1)
-(defun posframe-poshandler-p0p0-to-p0p1 (info &optional font-height upward centering)
-  "Posframe's position hanlder.
-
-Get a posframe position, which let posframe(0, 0) align to
-point(0, 1). The structure of INFO can be found in docstring of
-`posframe-show'. Optional argument FONT-HEIGHT, UPWARD, CENTERING
-."
+(defun posframe-poshandler-point-1 (info &optional font-height upward centering)
+  "The internal function used to deal with point-poshandler."
   (let* ((x-pixel-offset (plist-get info :x-pixel-offset))
          (y-pixel-offset (plist-get info :y-pixel-offset))
          (posframe-width (plist-get info :posframe-width))
@@ -1125,6 +1119,16 @@ point(0, 1). The structure of INFO can be found in docstring of
                      (- y-top (or posframe-height 0))
                    y-bottom)))))
 
+(defalias 'posframe-poshandler-point-bottom-left-corner #'posframe-poshandler-p0p0-to-p0p1)
+(defun posframe-poshandler-p0p0-to-p0p1 (info &optional font-height upward centering)
+  "Posframe's position hanlder.
+
+Get a posframe position, which let posframe(0, 0) align to
+point(0, 1). The structure of INFO can be found in docstring of
+`posframe-show'. Optional argument FONT-HEIGHT, UPWARD, CENTERING
+."
+  (posframe-poshandler-point-1 info))
+
 (defalias 'posframe-poshandler-point-window-center #'posframe-poshandler-p0.5p0.5-to-p0p0)
 (defun posframe-poshandler-p0.5p0.5-to-p0p0 (info)
   "Posframe's position hanlder.
@@ -1132,7 +1136,7 @@ point(0, 1). The structure of INFO can be found in docstring of
 Get a posframe position, which let posframe(0.5, 0.5) align to
 point(0, 0). The structure of INFO can be found in docstring of
 `posframe-show'. "
-  (posframe-poshandler-point-bottom-left-corner info nil nil t))
+  (posframe-poshandler-point-1 info nil nil t))
 
 (defalias 'posframe-poshandler-point-bottom-left-corner-upward #'posframe-poshandler-p0p1-to-p0p1)
 (defun posframe-poshandler-p0p1-to-p0p1 (info)
@@ -1141,7 +1145,7 @@ point(0, 0). The structure of INFO can be found in docstring of
 Get a posframe position, which let posframe(0, 1) align to
 point(0, 1). The structure of INFO can be found in docstring of
 `posframe-show'."
-  (posframe-poshandler-point-bottom-left-corner info nil t))
+  (posframe-poshandler-point-1 info nil t))
 
 (defalias 'posframe-poshandler-point-top-left-corner #'posframe-poshandler-p0p0-to-p0p0)
 (defun posframe-poshandler-p0p0-to-p0p0 (info)
@@ -1151,7 +1155,7 @@ Get a posframe position, which let posframe(0, 0) align to
 point(0, 0). The structure of INFO can be found in docstring of
 `posframe-show'."
   (let ((font-height 0))
-    (posframe-poshandler-point-bottom-left-corner info font-height)))
+    (posframe-poshandler-point-1 info font-height)))
 
 (defalias 'posframe-poshandler-frame-center #'posframe-poshandler-p0.5p0.5-to-f0.5f0.5)
 (defun posframe-poshandler-p0.5p0.5-to-f0.5f0.5 (info)
