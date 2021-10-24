@@ -1120,7 +1120,7 @@ of `posframe-show'."
                    y-bottom)))))
 
 (defalias 'posframe-poshandler-point-bottom-left-corner #'posframe-poshandler-p0p0-to-p0p1)
-(defun posframe-poshandler-p0p0-to-p0p1 (info &optional font-height upward centering)
+(defun posframe-poshandler-p0p0-to-p0p1 (info)
   "Posframe's position hanlder.
 
 Get a posframe position, which let posframe(0, 0) align to
