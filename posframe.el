@@ -1143,19 +1143,18 @@ of `posframe-show'."
 (defun posframe-poshandler-p0p0-to-p0p1 (info)
   "Posframe's position handler.
 
-Get a posframe position, which let posframe(0, 0) align to
-point(0, 1). The structure of INFO can be found in docstring of
-`posframe-show'. Optional argument FONT-HEIGHT, UPWARD, CENTERING
-."
+Let posframe(0, 0) align to point(0, 1). The structure of INFO
+can be found in docstring of `posframe-show'. Optional argument
+FONT-HEIGHT, UPWARD, CENTERING ."
   (posframe-poshandler-point-1 info))
 
 (defalias 'posframe-poshandler-point-window-center #'posframe-poshandler-p0.5p0-to-w0.5p1)
 (defun posframe-poshandler-p0.5p0-to-w0.5p1 (info)
   "Posframe's position handler.
 
-Get a posframe position, which let posframe(0.5, 0) align to a
-position, which x = x of window(0.5, 0) and y = y of point(0, 1). The
-structure of INFO can be found in docstring of `posframe-show'. "
+Let posframe(0.5, 0) align to a position, which x = x of
+window(0.5, 0) and y = y of point(0, 1). The structure of INFO
+can be found in docstring of `posframe-show'. "
   (let ((x (car (posframe-poshandler-p0.5p0-to-w0.5w0 info)))
         (y (cdr (posframe-poshandler-p0p0-to-p0p1 info))))
     (cons x y)))
@@ -1163,9 +1162,9 @@ structure of INFO can be found in docstring of `posframe-show'. "
 (defun posframe-poshandler-p0.5p0-to-f0.5p1 (info)
   "Posframe's position handler.
 
-Get a posframe position, which let posframe(0.5, 0) align to a
-position, which x = x of frame(0.5, 0) and y = y of point(0, 1). The
-structure of INFO can be found in docstring of `posframe-show'. "
+Let posframe(0.5, 0) align to a position, which x = x of
+frame(0.5, 0) and y = y of point(0, 1). The structure of INFO can
+be found in docstring of `posframe-show'. "
   (let ((x (car (posframe-poshandler-p0.5p0-to-f0.5f0 info)))
         (y (cdr (posframe-poshandler-p0p0-to-p0p1 info))))
     (cons x y)))
@@ -1174,18 +1173,16 @@ structure of INFO can be found in docstring of `posframe-show'. "
 (defun posframe-poshandler-p0p1-to-p0p1 (info)
   "Posframe's position handler.
 
-Get a posframe position, which let posframe(0, 1) align to
-point(0, 1). The structure of INFO can be found in docstring of
-`posframe-show'."
+Let posframe(0, 1) align to point(0, 1). The structure of INFO
+can be found in docstring of `posframe-show'."
   (posframe-poshandler-point-1 info nil t))
 
 (defalias 'posframe-poshandler-point-top-left-corner #'posframe-poshandler-p0p0-to-p0p0)
 (defun posframe-poshandler-p0p0-to-p0p0 (info)
   "Posframe's position handler.
 
-Get a posframe position, which let posframe(0, 0) align to
-point(0, 0). The structure of INFO can be found in docstring of
-`posframe-show'."
+Let posframe(0, 0) align to point(0, 0). The structure of INFO
+can be found in docstring of `posframe-show'."
   (let ((font-height 0))
     (posframe-poshandler-point-1 info font-height)))
 
@@ -1193,9 +1190,8 @@ point(0, 0). The structure of INFO can be found in docstring of
 (defun posframe-poshandler-p0.5p0.5-to-f0.5f0.5 (info)
   "Posframe's position handler.
 
-Get a posframe position, which let posframe(0.5, 0.5) align to
-frame(0.5, 0.5). The structure of INFO can be found in docstring
-of `posframe-show'."
+Let posframe(0.5, 0.5) align to frame(0.5, 0.5). The structure of
+INFO can be found in docstring of `posframe-show'."
   (cons (/ (- (plist-get info :parent-frame-width)
               (plist-get info :posframe-width))
            2)
@@ -1207,9 +1203,8 @@ of `posframe-show'."
 (defun posframe-poshandler-p0.5p0-to-f0.5f0 (info)
   "Posframe's position handler.
 
-Get a posframe position, which let posframe(0.5, 0) align to
-frame(0.5, 0). The structure of INFO can be found in docstring of
-`posframe-show'."
+Let posframe(0.5, 0) align to frame(0.5, 0). The structure of
+INFO can be found in docstring of `posframe-show'."
   (cons (/ (- (plist-get info :parent-frame-width)
               (plist-get info :posframe-width))
            2)
@@ -1219,27 +1214,24 @@ frame(0.5, 0). The structure of INFO can be found in docstring of
 (defun posframe-poshandler-p0p0-to-f0f0 (_info)
   "Posframe's position handler.
 
-Get a posframe position, which let posframe(0, 0) align to
-frame(0, 0). The structure of INFO can be found in docstring of
-`posframe-show'."
+Let posframe(0, 0) align to frame(0, 0). The structure of INFO
+can be found in docstring of `posframe-show'."
   '(0 . 0))
 
 (defalias 'posframe-poshandler-frame-top-right-corner #'posframe-poshandler-p1p0-to-f1f0)
 (defun posframe-poshandler-p1p0-to-f1f0 (_info)
   "Posframe's position handler.
 
-Get a posframe position, which let posframe(1, 0) align to
-frame(1, 0). The structure of INFO can be found in docstring of
-`posframe-show'."
+Let posframe(1, 0) align to frame(1, 0). The structure of INFO
+can be found in docstring of `posframe-show'."
   '(-1 . 0))
 
 (defalias 'posframe-poshandler-frame-bottom-left-corner #'posframe-poshandler-p0p1-to-f0f1)
 (defun posframe-poshandler-p0p1-to-f0f1 (info)
   "Posframe's position handler.
 
-Get a posframe position, which let posframe(0, 1) align to
-frame(0, 1). The structure of INFO can be found in docstring of
-`posframe-show'."
+Let posframe(0, 1) align to frame(0, 1). The structure of INFO
+can be found in docstring of `posframe-show'."
   (cons 0 (- 0
              (plist-get info :mode-line-height)
              (plist-get info :minibuffer-height))))
@@ -1248,9 +1240,8 @@ frame(0, 1). The structure of INFO can be found in docstring of
 (defun posframe-poshandler-p1p1-to-f1f1 (info)
   "Posframe's position handler.
 
-Get a posframe position, which let posframe(1, 1) align to
-frame(1, 1). The structure of INFO can be found in docstring of
-`posframe-show'."
+Let posframe(1, 1) align to frame(1, 1). The structure of INFO
+can be found in docstring of `posframe-show'."
   (cons -1 (- 0
               (plist-get info :mode-line-height)
               (plist-get info :minibuffer-height))))
@@ -1259,9 +1250,8 @@ frame(1, 1). The structure of INFO can be found in docstring of
 (defun posframe-poshandler-p0.5p1-to-f0.5f1 (info)
   "Posframe's position handler.
 
-Get a posframe position, which let posframe(0.5, 1) align to
-frame(0.5, 1). The structure of INFO can be found in docstring of
-`posframe-show'."
+Let posframe(0.5, 1) align to frame(0.5, 1). The structure of
+INFO can be found in docstring of `posframe-show'."
   (cons (/ (- (plist-get info :parent-frame-width)
               (plist-get info :posframe-width))
            2)
@@ -1274,9 +1264,8 @@ frame(0.5, 1). The structure of INFO can be found in docstring of
 (defun posframe-poshandler-p0.5p0.5-to-w0.5w0.5 (info)
   "Posframe's position handler.
 
-Get a posframe position, which let posframe(0.5, 0.5) align to
-window(0.5, 0.5). The structure of INFO can be found in docstring
-of `posframe-show'."
+Let posframe(0.5, 0.5) align to window(0.5, 0.5). The structure
+of INFO can be found in docstring of `posframe-show'."
   (let* ((window-left (plist-get info :parent-window-left))
          (window-top (plist-get info :parent-window-top))
          (window-width (plist-get info :parent-window-width))
@@ -1290,9 +1279,8 @@ of `posframe-show'."
 (defun posframe-poshandler-p0p0-to-w0w0 (info)
   "Posframe's position handler.
 
-Get a posframe position, which let posframe(0, 0) align to
-window(0, 0). The structure of INFO can be found in docstring of
-`posframe-show'."
+Let posframe(0, 0) align to window(0, 0). The structure of INFO
+can be found in docstring of `posframe-show'."
   (let* ((window-left (plist-get info :parent-window-left))
          (window-top (plist-get info :parent-window-top)))
     (cons window-left
@@ -1302,9 +1290,8 @@ window(0, 0). The structure of INFO can be found in docstring of
 (defun posframe-poshandler-p1p0-to-w1w0 (info)
   "Posframe's position handler.
 
-Get a posframe position, which let posframe(1, 0) align to
-window(1, 0). The structure of INFO can be found in docstring of
-`posframe-show'."
+Let posframe(1, 0) align to window(1, 0). The structure of INFO
+can be found in docstring of `posframe-show'."
   (let* ((window-left (plist-get info :parent-window-left))
          (window-top (plist-get info :parent-window-top))
          (window-width (plist-get info :parent-window-width))
@@ -1317,9 +1304,8 @@ window(1, 0). The structure of INFO can be found in docstring of
 (defun posframe-poshandler-p0.5p0-to-w0.5w0 (info)
   "Posframe's position handler.
 
-Get a posframe position, which let posframe(0.5, 0) align to
-window(0.5, 0). The structure of INFO can be found in docstring
-of `posframe-show'."
+Let posframe(0.5, 0) align to window(0.5, 0). The structure of
+INFO can be found in docstring of `posframe-show'."
   (let* ((window-left (plist-get info :parent-window-left))
          (window-top (plist-get info :parent-window-top))
          (window-width (plist-get info :parent-window-width))
@@ -1331,9 +1317,8 @@ of `posframe-show'."
 (defun posframe-poshandler-p0p1-to-w0w1 (info)
   "Posframe's position handler.
 
-Get a posframe position, which let posframe(0, 1) align to
-window(0, 1). The structure of INFO can be found in docstring of
-`posframe-show'."
+Let posframe(0, 1) align to window(0, 1). The structure of INFO
+can be found in docstring of `posframe-show'."
   (let* ((window-left (plist-get info :parent-window-left))
          (window-top (plist-get info :parent-window-top))
          (window-height (plist-get info :parent-window-height))
@@ -1347,9 +1332,8 @@ window(0, 1). The structure of INFO can be found in docstring of
 (defun posframe-poshandler-p1p1-to-w1w1 (info)
   "Posframe's position handler.
 
-Get a posframe position, which let posframe(1, 1) align to
-window(1, 1). The structure of INFO can be found in docstring of
-`posframe-show'."
+Let posframe(1, 1) align to window(1, 1). The structure of INFO
+can be found in docstring of `posframe-show'."
   (let* ((window-left (plist-get info :parent-window-left))
          (window-top (plist-get info :parent-window-top))
          (window-width (plist-get info :parent-window-width))
@@ -1366,9 +1350,8 @@ window(1, 1). The structure of INFO can be found in docstring of
 (defun posframe-poshandler-p0.5p1-to-w0.5w1 (info)
   "Posframe's position handler.
 
-Get a posframe position, which let posframe(0.5, 1) align to
-window(0.5, 1). The structure of INFO can be found in docstring
-of `posframe-show'."
+Let posframe(0.5, 1) align to window(0.5, 1). The structure of
+INFO can be found in docstring of `posframe-show'."
   (let* ((window-left (plist-get info :parent-window-left))
          (window-top (plist-get info :parent-window-top))
          (window-width (plist-get info :parent-window-width))
