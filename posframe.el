@@ -1035,15 +1035,10 @@ poshandler easily used for other purposes."
          (frame-width (or (and child-frame (frame-pixel-width child-frame)) 0))
          (frame-height (or (and child-frame (frame-pixel-height child-frame)) 0))
          (frame-buffer (and child-frame (window-buffer (frame-root-window child-frame))))
-         (parent-frame (if child-frame
-                           (frame-parent child-frame)
-                         (selected-frame)))
+         (parent-frame (selected-frame))
          (parent-frame-width (frame-pixel-width parent-frame))
          (parent-frame-height (frame-pixel-height parent-frame))
-         (parent-window
-          (if child-frame
-              (frame-root-window parent-frame)
-            (selected-window)))
+         (parent-window (selected-window))
          (parent-window-top (window-pixel-top parent-window))
          (parent-window-left (window-pixel-left parent-window))
          (parent-window-width (window-pixel-width parent-window))
