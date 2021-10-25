@@ -174,7 +174,9 @@ This posframe's buffer is BUFFER-OR-NAME."
                     right-fringe
                     left-fringe
                     border-width
+                    border-color
                     internal-border-width
+                    internal-border-color
                     font
                     keep-ratio
                     override-parameters
