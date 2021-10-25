@@ -1271,8 +1271,8 @@ of INFO can be found in docstring of `posframe-show'."
          (window-height (plist-get info :parent-window-height))
          (posframe-width (plist-get info :posframe-width))
          (posframe-height (plist-get info :posframe-height)))
-    (cons (+ window-left (/ (- window-width posframe-width) 2))
-          (+ window-top (/ (- window-height posframe-height) 2)))))
+    (cons (max 0 (+ window-left (/ (- window-width posframe-width) 2)))
+          (max 0 (+ window-top (/ (- window-height posframe-height) 2))))))
 
 (defalias 'posframe-poshandler-window-top-left-corner #'posframe-poshandler-p0p0-to-w0w0)
 (defun posframe-poshandler-p0p0-to-w0w0 (info)
@@ -1309,7 +1309,7 @@ INFO can be found in docstring of `posframe-show'."
          (window-top (plist-get info :parent-window-top))
          (window-width (plist-get info :parent-window-width))
          (posframe-width (plist-get info :posframe-width)))
-    (cons (+ window-left (/ (- window-width posframe-width) 2))
+    (cons (max 0 (+ window-left (/ (- window-width posframe-width) 2)))
           window-top)))
 
 (defalias 'posframe-poshandler-window-bottom-left-corner #'posframe-poshandler-p0p1-to-w0w1)
@@ -1358,7 +1358,7 @@ INFO can be found in docstring of `posframe-show'."
          (posframe-width (plist-get info :posframe-width))
          (posframe-height (plist-get info :posframe-height))
          (mode-line-height (plist-get info :mode-line-height)))
-    (cons (+ window-left (/ (- window-width posframe-width) 2))
+    (cons (max 0 (+ window-left (/ (- window-width posframe-width) 2)))
           (+ window-top window-height
              (- 0 mode-line-height posframe-height)))))
 
