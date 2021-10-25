@@ -1030,7 +1030,11 @@ documents of POSITION, POSHANDLER, X-PIXEL-OFFSET and
 Y-PIXEL-OFFSET can be found in dostring of `posframe-show'.
 
 NOTE: this function is not used by posframe itself, it just let
-poshandler easily used for other purposes."
+poshandler easily used for other purposes.
+
+WARN: In some situation, this function will return wrong info,
+user should manual adjust returned info before use in poshandler
+function."
   (let* ((position (or position (point)))
          (frame-width (or (and child-frame (frame-pixel-width child-frame)) 0))
          (frame-height (or (and child-frame (frame-pixel-height child-frame)) 0))
