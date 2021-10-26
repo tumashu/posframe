@@ -41,7 +41,7 @@
 (require 'cl-lib)
 
 (defgroup posframe nil
-  "Pop a posframe (just a frame) at point"
+  "Pop a posframe (just a frame) at point."
   :group 'lisp
   :prefix "posframe-")
 
@@ -54,7 +54,7 @@ to (x , y).
 
 This option is used to solve the problem of child frame getting
 focus, with the help of `posframe--redirect-posframe-focus',
-setting this option to `nil' will work well in *most* cases."
+setting this option to nil will work well in *most* cases."
   :group 'posframe
   :type 'boolean)
 
@@ -159,7 +159,14 @@ effect.")
                                      respect-mode-line
                                      accept-focus)
   "Create and return a posframe child frame.
-This posframe's buffer is BUFFER-OR-NAME."
+This posframe's buffer is BUFFER-OR-NAME.
+
+The below optional arguments are similar to `posframe-show''s:
+PARENT-FRAME, FOREGROUND-COLOR, BACKGROUND-COLOR, LEFT-FRINGE,
+RIGHT-FRINGE, BORDER-WIDTH, BORDER-COLOR, INTERNAL-BORDER-WIDTH,
+INTERNAL-BORDER-COLOR, FONT, KEEP-RATIO, LINES-TRUNCATE,
+OVERRIDE-PARAMETERS, RESPECT-HEADER-LINE, RESPECT-MODE-LINE,
+ACCEPT-FOCUS."
   (let ((left-fringe (or left-fringe 0))
         (right-fringe (or right-fringe 0))
         ;; See emacs.git:  Add distinct controls for child frames' borders (Bug#45620)
@@ -324,9 +331,9 @@ This posframe's buffer is BUFFER-OR-NAME."
                          hidehandler
                          refposhandler
                          &allow-other-keys)
-  "Pop up a posframe and show STRING at POSITION.
+  "Pop up a posframe to show STRING at POSITION.
 
-(1) POSITION
+ (1) POSITION
 
 POSITION can be:
 1. An integer, meaning point position.
@@ -334,7 +341,7 @@ POSITION can be:
 3. Other type, in which case the corresponding POSHANDLER should be
    provided.
 
-(2) POSHANDLER
+ (2) POSHANDLER
 
 POSHANDLER is a function of one argument returning an actual
 position.  Its argument is a plist of the following form:
@@ -367,7 +374,7 @@ but the selection can be overridden using the POSHANDLER argument.
 
 The names of poshandler functions are like:
 
-   posframe-poshandler-p0.5p0-to-w0.5p1
+   `posframe-poshandler-p0.5p0-to-w0.5p1'
 
 which mean align posframe(0.5, 0) to a position(a, b)
 
@@ -376,17 +383,17 @@ which mean align posframe(0.5, 0) to a position(a, b)
 
     posframe(p), frame(f), window(w), point(p)
 
-        (0,0)      (0.5,0)      (1,0)
-         +------------+-----------+
-         |                        |
-         |                        |
-         |                        |
-(0, 0.5) +                        + (1, 0.5)
-         |                        |
-         |                        |
-         |                        |
-         +------------+-----------+
-        (0,1)      (0.5,1)      (1,1)
+         (0,0)      (0.5,0)      (1,0)
+          +------------+-----------+
+          |                        |
+          |                        |
+          |                        |
+ (0, 0.5) +                        + (1, 0.5)
+          |                        |
+          |                        |
+          |                        |
+          +------------+-----------+
+         (0,1)      (0.5,1)      (1,1)
 
 The alias of builtin poshandler functions are listed below:
 
@@ -409,35 +416,35 @@ The alias of builtin poshandler functions are listed below:
 17. `posframe-poshandler-point-bottom-left-corner-upward'
 18. `posframe-poshandler-point-window-center'
 
-by the way, poshandler can be used by other packages easily
-(for example: mini-frame) with the help of function
-`posframe-poshandler-argbuilder'. like:
+by the way, poshandler can be used by other packages easily with
+the help of function `posframe-poshandler-argbuilder'.  like:
 
-   (let* ((info (posframe-poshandler-argbuilder child-frame))
-          (posn (posframe-poshandler-window-center info)))
+   (let* ((info (posframe-poshandler-argbuilder *MY-CHILD-FRAME*))
+          (posn (posframe-poshandler-window-center
+                 `(:posframe-width 800 :posframe-height 400 ,@info))))
      `((left . ,(car posn))
        (top . ,(cdr posn))))
 
-(3) POSHANDLER-EXTRA-INFO
+ (3) POSHANDLER-EXTRA-INFO
 
 POSHANDLER-EXTRA-INFO is a plist, which will prepend to the
 argument of poshandler function: 'info', it will *OVERRIDE* the
 exist key in 'info'.
 
-(4) BUFFER-OR-NAME
+ (4) BUFFER-OR-NAME
 
 This posframe's buffer is BUFFER-OR-NAME, which can be a buffer
 or a name of a (possibly nonexistent) buffer.
 
 buffer name can prefix with space, for example ' *mybuffer*', so
-the buffer name will hide for ibuffer and list-buffers.
+the buffer name will hide for ibuffer and `list-buffers'.
 
-(5) NO-PROPERTIES
+ (5) NO-PROPERTIES
 
 If NO-PROPERTIES is non-nil, The STRING's properties will
 be removed before being shown in posframe.
 
-(6) WIDTH, MIN-WIDTH, HEIGHT and MIN-HEIGHT
+ (6) WIDTH, MIN-WIDTH, HEIGHT and MIN-HEIGHT
 
 WIDTH, MIN-WIDTH, HEIGHT and MIN-HEIGHT, specify bounds on the
 new total size of posframe.  MIN-HEIGHT and MIN-WIDTH default to
@@ -445,12 +452,12 @@ the values of ‘window-min-height’ and ‘window-min-width’
 respectively.  These arguments are specified in the canonical
 character width and height of posframe.
 
-(7) LEFT-FRINGE and RIGHT-FRINGE
+ (7) LEFT-FRINGE and RIGHT-FRINGE
 
 If LEFT-FRINGE or RIGHT-FRINGE is a number, left fringe or
 right fringe with be shown with the specified width.
 
-(8) BORDER-WIDTH, BORDER-COLOR, INTERNAL-BORDER-WIDTH and INTERNAL-BORDER-COLOR
+ (8) BORDER-WIDTH, BORDER-COLOR, INTERNAL-BORDER-WIDTH and INTERNAL-BORDER-COLOR
 
 By default, posframe shows no borders, but users can specify
 borders by setting BORDER-WIDTH to a positive number.  Border
@@ -463,52 +470,52 @@ reason:
    Add distinct controls for child frames' borders (Bug#45620)
    http://git.savannah.gnu.org/cgit/emacs.git/commit/?id=ff7b1a133bfa7f2614650f8551824ffaef13fadc
 
-(9) FONT, FOREGROUND-COLOR and BACKGROUND-COLOR
+ (9) FONT, FOREGROUND-COLOR and BACKGROUND-COLOR
 
 Posframe's font as well as foreground and background colors are
 derived from the current frame by default, but can be overridden
 using the FONT, FOREGROUND-COLOR and BACKGROUND-COLOR arguments,
 respectively.
 
-(10) RESPECT-HEADER-LINE and RESPECT-MODE-LINE
+ (10) RESPECT-HEADER-LINE and RESPECT-MODE-LINE
 
 By default, posframe will display no header-line, mode-line and
 tab-line.  In case a header-line, mode-line or tab-line is
 desired, users can set RESPECT-HEADER-LINE and RESPECT-MODE-LINE
 to t.
 
-(11) INITIALIZE
+ (11) INITIALIZE
 
 INITIALIZE is a function with no argument.  It will run when
 posframe buffer is first selected with `with-current-buffer'
 in `posframe-show', and only run once (for performance reasons).
 
-(12) LINES-TRUNCATE
+ (12) LINES-TRUNCATE
 
 If LINES-TRUNCATE is non-nil, then lines will truncate in the
 posframe instead of wrap.
 
-(13) OVERRIDE-PARAMETERS
+ (13) OVERRIDE-PARAMETERS
 
 OVERRIDE-PARAMETERS is very powful, *all* the frame parameters
 used by posframe's frame can be overridden by it.
 
-(14) TIMEOUT
+ (14) TIMEOUT
 
 TIMEOUT can specify the number of seconds after which the posframe
 will auto-hide.
 
-(15) REFRESH
+ (15) REFRESH
 
 If REFRESH is a number, posframe's frame-size will be re-adjusted
 every REFRESH seconds.
 
-(16) ACCEPT-FOCUS
+ (16) ACCEPT-FOCUS
 
 When ACCEPT-FOCUS is non-nil, posframe will accept focus.
 be careful, you may face some bugs when set it to non-nil.
 
-(17) HIDEHANDLER
+ (17) HIDEHANDLER
 
 HIDEHANDLER is a function, when it return t, posframe will be
 hide, this function has a plist argument:
@@ -520,14 +527,14 @@ The builtin hidehandler functions are listed below:
 
 1. `posframe-hidehandler-when-buffer-switch'
 
-(18) REFPOSHANDLER
+ (18) REFPOSHANDLER
 
 REFPOSHANDLER is a function, a reference position (most is
 top-left of current frame) will be returned when call this
 function.
 
 when it is nil or it return nil, child-frame feature will be used
-and reference position will be deal with in emacs.
+and reference position will be deal with in Emacs.
 
 The user case I know at the moment is let ivy-posframe work well
 in EXWM environment (let posframe show on the other appliction
@@ -539,7 +546,7 @@ An example parent frame poshandler function is:
 
 1. `posframe-refposhandler-xwininfo'
 
-(19) Others
+ (19) Others
 
 You can use `posframe-delete-all' to delete all posframes."
   (let* ((position (or (funcall posframe-arghandler buffer-or-name :position position) (point)))
@@ -711,8 +718,9 @@ You can use `posframe-delete-all' to delete all posframes."
       height)))
 
 (defun posframe--redirect-posframe-focus ()
-  "Redirect focus from the posframe to the parent frame. This prevents the
-posframe from catching keyboard input if the window manager selects it."
+  "Redirect focus from the posframe to the parent frame.
+This prevents the posframe from catching keyboard input if the
+window manager selects it."
   (when (and (eq (selected-frame) posframe--frame)
              ;; Do not redirect focus when posframe can accept focus.
              ;; See posframe-show's accept-focus argument.
@@ -753,6 +761,8 @@ will be removed."
       (insert str))))
 
 (defun posframe--fit-frame-to-buffer (posframe height min-height width min-width)
+  "POSFRAME version of function `fit-frame-to-buffer'.
+Arguments HEIGHT, MIN-HEIGHT, WIDTH, MIN-WIDTH are similar function `fit-frame-to-buffer''s."
   ;; This only has effect if the user set the latter var to `hide'.
   (let ((x-gtk-resize-child-frames posframe-gtk-resize-child-frames))
     ;; More info: Don't skip empty lines when fitting mini frame to buffer (Bug#44080)
@@ -907,7 +917,8 @@ BUFFER-OR-NAME can be a buffer or a buffer name."
   "Posframe hidehandler function.
 
 This function let posframe hide when user switch buffer.
-Note: This function is called in `post-command-hook'."
+Note: This function is called in `post-command-hook'.
+Argument INFO ."
   (let ((parent-buffer (cdr (plist-get info :posframe-parent-buffer))))
     (and (buffer-live-p parent-buffer)
          (not (equal parent-buffer (current-buffer))))))
@@ -1025,7 +1036,7 @@ of `posframe-show'."
                                           refposhandler
                                           x-pixel-offset
                                           y-pixel-offset)
-  "Return a info list of CHILD-FRAME, which can be used as poshandler's info argument.
+  "Return a info list of CHILD-FRAME, used as poshandler's info argument.
 
 if CHILD-FRAME is nil, parent frame will use selected frame.  The
 documents of POSITION, POSHANDLER, X-PIXEL-OFFSET and
@@ -1036,7 +1047,9 @@ poshandler easily used for other purposes.
 
 WARN: In some situation, this function will return wrong info,
 user should manual adjust returned info before use in poshandler
-function."
+function.
+
+Optional argument: REFPOSHANDLER."
   (let* ((position (or position (point)))
          (frame-width (or (and child-frame (frame-pixel-width child-frame)) 0))
          (frame-height (or (and child-frame (frame-pixel-height child-frame)) 0))
@@ -1099,7 +1112,10 @@ of `posframe-show'."
           (+ (cdr position) y-pixel-offset))))
 
 (defun posframe-poshandler-point-1 (info &optional font-height upward)
-  "The internal function used to deal with point-poshandler."
+  "The internal function used to deal with point-poshandler.
+Argument INFO .
+
+Optional arguments: FONT-HEIGHT and UPWARD."
   (let* ((x-pixel-offset (plist-get info :x-pixel-offset))
          (y-pixel-offset (plist-get info :y-pixel-offset))
          (posframe-width (plist-get info :posframe-width))
@@ -1144,9 +1160,10 @@ of `posframe-show'."
 (defun posframe-poshandler-p0p0-to-p0p1 (info)
   "Posframe's position handler.
 
-Let posframe(0, 0) align to point(0, 1). The structure of INFO
-can be found in docstring of `posframe-show'. Optional argument
-FONT-HEIGHT, UPWARD, CENTERING ."
+Let posframe(0, 0) align to point(0, 1).  The structure of INFO
+can be found in docstring of `posframe-show'.
+
+Optional arguments: FONT-HEIGHT, UPWARD and CENTERING."
   (posframe-poshandler-point-1 info))
 
 (defalias 'posframe-poshandler-point-window-center #'posframe-poshandler-p0.5p0-to-w0.5p1)
@@ -1154,8 +1171,8 @@ FONT-HEIGHT, UPWARD, CENTERING ."
   "Posframe's position handler.
 
 Let posframe(0.5, 0) align to a position, which x = x of
-window(0.5, 0) and y = y of point(0, 1). The structure of INFO
-can be found in docstring of `posframe-show'. "
+window(0.5, 0) and y = y of point(0, 1).  The structure of INFO
+can be found in docstring of `posframe-show'."
   (let ((x (car (posframe-poshandler-p0.5p0-to-w0.5w0 info)))
         (y (cdr (posframe-poshandler-p0p0-to-p0p1 info))))
     (cons x y)))
@@ -1164,8 +1181,8 @@ can be found in docstring of `posframe-show'. "
   "Posframe's position handler.
 
 Let posframe(0.5, 0) align to a position, which x = x of
-frame(0.5, 0) and y = y of point(0, 1). The structure of INFO can
-be found in docstring of `posframe-show'. "
+frame(0.5, 0) and y = y of point(0, 1).  The structure of INFO can
+be found in docstring of `posframe-show'."
   (let ((x (car (posframe-poshandler-p0.5p0-to-f0.5f0 info)))
         (y (cdr (posframe-poshandler-p0p0-to-p0p1 info))))
     (cons x y)))
@@ -1174,7 +1191,7 @@ be found in docstring of `posframe-show'. "
 (defun posframe-poshandler-p0p1-to-p0p1 (info)
   "Posframe's position handler.
 
-Let posframe(0, 1) align to point(0, 1). The structure of INFO
+Let posframe(0, 1) align to point(0, 1).  The structure of INFO
 can be found in docstring of `posframe-show'."
   (posframe-poshandler-point-1 info nil t))
 
@@ -1182,7 +1199,7 @@ can be found in docstring of `posframe-show'."
 (defun posframe-poshandler-p0p0-to-p0p0 (info)
   "Posframe's position handler.
 
-Let posframe(0, 0) align to point(0, 0). The structure of INFO
+Let posframe(0, 0) align to point(0, 0).  The structure of INFO
 can be found in docstring of `posframe-show'."
   (let ((font-height 0))
     (posframe-poshandler-point-1 info font-height)))
@@ -1191,7 +1208,7 @@ can be found in docstring of `posframe-show'."
 (defun posframe-poshandler-p0.5p0.5-to-f0.5f0.5 (info)
   "Posframe's position handler.
 
-Let posframe(0.5, 0.5) align to frame(0.5, 0.5). The structure of
+Let posframe(0.5, 0.5) align to frame(0.5, 0.5).  The structure of
 INFO can be found in docstring of `posframe-show'."
   (cons (/ (- (plist-get info :parent-frame-width)
               (plist-get info :posframe-width))
@@ -1204,7 +1221,7 @@ INFO can be found in docstring of `posframe-show'."
 (defun posframe-poshandler-p0.5p0-to-f0.5f0 (info)
   "Posframe's position handler.
 
-Let posframe(0.5, 0) align to frame(0.5, 0). The structure of
+Let posframe(0.5, 0) align to frame(0.5, 0).  The structure of
 INFO can be found in docstring of `posframe-show'."
   (cons (/ (- (plist-get info :parent-frame-width)
               (plist-get info :posframe-width))
@@ -1215,7 +1232,7 @@ INFO can be found in docstring of `posframe-show'."
 (defun posframe-poshandler-p0p0-to-f0f0 (_info)
   "Posframe's position handler.
 
-Let posframe(0, 0) align to frame(0, 0). The structure of INFO
+Let posframe(0, 0) align to frame(0, 0).  The structure of INFO
 can be found in docstring of `posframe-show'."
   '(0 . 0))
 
@@ -1223,7 +1240,7 @@ can be found in docstring of `posframe-show'."
 (defun posframe-poshandler-p1p0-to-f1f0 (_info)
   "Posframe's position handler.
 
-Let posframe(1, 0) align to frame(1, 0). The structure of INFO
+Let posframe(1, 0) align to frame(1, 0).  The structure of INFO
 can be found in docstring of `posframe-show'."
   '(-1 . 0))
 
@@ -1231,7 +1248,7 @@ can be found in docstring of `posframe-show'."
 (defun posframe-poshandler-p0p1-to-f0f1 (info)
   "Posframe's position handler.
 
-Let posframe(0, 1) align to frame(0, 1). The structure of INFO
+Let posframe(0, 1) align to frame(0, 1).  The structure of INFO
 can be found in docstring of `posframe-show'."
   (cons 0 (- 0
              (plist-get info :mode-line-height)
@@ -1241,7 +1258,7 @@ can be found in docstring of `posframe-show'."
 (defun posframe-poshandler-p1p1-to-f1f1 (info)
   "Posframe's position handler.
 
-Let posframe(1, 1) align to frame(1, 1). The structure of INFO
+Let posframe(1, 1) align to frame(1, 1).  The structure of INFO
 can be found in docstring of `posframe-show'."
   (cons -1 (- 0
               (plist-get info :mode-line-height)
@@ -1251,7 +1268,7 @@ can be found in docstring of `posframe-show'."
 (defun posframe-poshandler-p0.5p1-to-f0.5f1 (info)
   "Posframe's position handler.
 
-Let posframe(0.5, 1) align to frame(0.5, 1). The structure of
+Let posframe(0.5, 1) align to frame(0.5, 1).  The structure of
 INFO can be found in docstring of `posframe-show'."
   (cons (/ (- (plist-get info :parent-frame-width)
               (plist-get info :posframe-width))
@@ -1265,7 +1282,7 @@ INFO can be found in docstring of `posframe-show'."
 (defun posframe-poshandler-p0.5p0.5-to-w0.5w0.5 (info)
   "Posframe's position handler.
 
-Let posframe(0.5, 0.5) align to window(0.5, 0.5). The structure
+Let posframe(0.5, 0.5) align to window(0.5, 0.5).  The structure
 of INFO can be found in docstring of `posframe-show'."
   (let* ((window-left (plist-get info :parent-window-left))
          (window-top (plist-get info :parent-window-top))
@@ -1280,7 +1297,7 @@ of INFO can be found in docstring of `posframe-show'."
 (defun posframe-poshandler-p0p0-to-w0w0 (info)
   "Posframe's position handler.
 
-Let posframe(0, 0) align to window(0, 0). The structure of INFO
+Let posframe(0, 0) align to window(0, 0).  The structure of INFO
 can be found in docstring of `posframe-show'."
   (let* ((window-left (plist-get info :parent-window-left))
          (window-top (plist-get info :parent-window-top)))
@@ -1291,7 +1308,7 @@ can be found in docstring of `posframe-show'."
 (defun posframe-poshandler-p1p0-to-w1w0 (info)
   "Posframe's position handler.
 
-Let posframe(1, 0) align to window(1, 0). The structure of INFO
+Let posframe(1, 0) align to window(1, 0).  The structure of INFO
 can be found in docstring of `posframe-show'."
   (let* ((window-left (plist-get info :parent-window-left))
          (window-top (plist-get info :parent-window-top))
@@ -1305,7 +1322,7 @@ can be found in docstring of `posframe-show'."
 (defun posframe-poshandler-p0.5p0-to-w0.5w0 (info)
   "Posframe's position handler.
 
-Let posframe(0.5, 0) align to window(0.5, 0). The structure of
+Let posframe(0.5, 0) align to window(0.5, 0).  The structure of
 INFO can be found in docstring of `posframe-show'."
   (let* ((window-left (plist-get info :parent-window-left))
          (window-top (plist-get info :parent-window-top))
@@ -1318,7 +1335,7 @@ INFO can be found in docstring of `posframe-show'."
 (defun posframe-poshandler-p0p1-to-w0w1 (info)
   "Posframe's position handler.
 
-Let posframe(0, 1) align to window(0, 1). The structure of INFO
+Let posframe(0, 1) align to window(0, 1).  The structure of INFO
 can be found in docstring of `posframe-show'."
   (let* ((window-left (plist-get info :parent-window-left))
          (window-top (plist-get info :parent-window-top))
@@ -1333,7 +1350,7 @@ can be found in docstring of `posframe-show'."
 (defun posframe-poshandler-p1p1-to-w1w1 (info)
   "Posframe's position handler.
 
-Let posframe(1, 1) align to window(1, 1). The structure of INFO
+Let posframe(1, 1) align to window(1, 1).  The structure of INFO
 can be found in docstring of `posframe-show'."
   (let* ((window-left (plist-get info :parent-window-left))
          (window-top (plist-get info :parent-window-top))
@@ -1351,7 +1368,7 @@ can be found in docstring of `posframe-show'."
 (defun posframe-poshandler-p0.5p1-to-w0.5w1 (info)
   "Posframe's position handler.
 
-Let posframe(0.5, 1) align to window(0.5, 1). The structure of
+Let posframe(0.5, 1) align to window(0.5, 1).  The structure of
 INFO can be found in docstring of `posframe-show'."
   (let* ((window-left (plist-get info :parent-window-left))
          (window-top (plist-get info :parent-window-top))
@@ -1365,7 +1382,7 @@ INFO can be found in docstring of `posframe-show'."
              (- 0 mode-line-height posframe-height)))))
 
 (defun posframe-refposhandler-xwininfo (&optional frame)
-  "Parent frame poshander function.
+  "Parent FRAME poshander function.
 Get the position of parent frame (current frame) with the help of
 xwininfo."
   (when (executable-find "xwininfo")
