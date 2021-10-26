@@ -267,10 +267,19 @@ ACCEPT-FOCUS."
                        (inhibit-double-buffering . ,posframe-inhibit-double-buffering)
                        ;; Do not save child-frame when use desktop.el
                        (desktop-dont-save . t))))
+        ;; HACK: Setting the same frame-parameter/face-background is
+        ;; not a nop (BUG!).  Check explicitly before applying the
+        ;; setting.  Without the check, the frame flickers on Mac.
         (when border-color
-          (set-face-background 'internal-border border-color posframe--frame)
-          (when (facep 'child-frame-border)
-            (set-face-background 'child-frame-border border-color posframe--frame)))
+          (let ((face (if (facep 'child-frame-border) 'child-frame-border 'internal-border)))
+            (unless (equal (color-values (face-attribute face :background posframe--frame 'default))
+                           (color-values border-color))
+	      (set-face-background face border-color posframe--frame))))
+        ;; HACK: We have to apply the face background before adjusting
+        ;; the frame parameter, otherwise the border is not updated
+        ;; (BUG!).
+	(set-frame-parameter posframe--frame 'background-color
+                             (face-attribute 'default :background posframe--frame))
         (let ((posframe-window (frame-root-window posframe--frame)))
           ;; This method is more stable than 'setq mode/header-line-format nil'
           (unless respect-mode-line
