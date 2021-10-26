@@ -7,7 +7,7 @@
 ;; URL: https://github.com/tumashu/posframe
 ;; Version: 1.0.4
 ;; Keywords: convenience, tooltip
-;; Package-Requires: ((emacs "26"))
+;; Package-Requires: ((emacs "26.1"))
 
 ;; This file is part of GNU Emacs.
 
