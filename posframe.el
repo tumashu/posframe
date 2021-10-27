@@ -757,7 +757,8 @@ will be removed."
 
 (defun posframe--fit-frame-to-buffer (posframe height min-height width min-width)
   "POSFRAME version of function `fit-frame-to-buffer'.
-Arguments HEIGHT, MIN-HEIGHT, WIDTH, MIN-WIDTH are similar function `fit-frame-to-buffer''s."
+Arguments HEIGHT, MIN-HEIGHT, WIDTH, MIN-WIDTH are similar
+function `fit-frame-to-buffer''s."
   ;; This only has effect if the user set the latter var to `hide'.
   (let ((x-gtk-resize-child-frames posframe-gtk-resize-child-frames))
     ;; More info: Don't skip empty lines when fitting mini frame to buffer (Bug#44080)
