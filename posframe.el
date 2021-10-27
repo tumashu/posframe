@@ -742,6 +742,21 @@ https://github.com/tumashu/posframe/issues/4#issuecomment-357514918"
                (< m-y (+ y h)))
       (set-mouse-pixel-position parent-frame (- x 5) (- y 10)))))
 
+(defun posframe--redirect-posframe-focus ()
+  "Redirect focus from the posframe to the parent frame.
+This prevents the posframe from catching keyboard input if the
+window manager selects it."
+  (when (and (eq (selected-frame) posframe--frame)
+             ;; Do not redirect focus when posframe can accept focus.
+             ;; See posframe-show's accept-focus argument.
+             (not posframe--accept-focus))
+    (redirect-frame-focus posframe--frame (frame-parent))))
+
+(if (version< emacs-version "27.1")
+    (with-no-warnings
+      (add-hook 'focus-in-hook #'posframe--redirect-posframe-focus))
+  (add-function :after after-focus-change-function #'posframe--redirect-posframe-focus))
+
 (defun posframe--insert-string (string no-properties)
   "Insert STRING to current buffer.
 If NO-PROPERTIES is non-nil, all properties of STRING
