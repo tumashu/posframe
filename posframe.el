@@ -45,19 +45,6 @@
   :group 'lisp
   :prefix "posframe-")
 
-(defcustom posframe-mouse-banish (not (eq system-type 'darwin))
-  "Mouse banish.
-
-when this variable is t, mouse will be moved to (0 , 0).
-when this variable is a cons like (x . y), mouse will be moved
-to (x , y).
-
-This option is used to solve the problem of child frame getting
-focus, with the help of `posframe--redirect-posframe-focus',
-setting this option to nil will work well in *most* cases."
-  :group 'posframe
-  :type 'boolean)
-
 (defcustom posframe-inhibit-double-buffering nil
   "Set the posframe's frame-parameter: inhibit-double-buffering."
   :group 'posframe
@@ -610,6 +597,7 @@ You can use `posframe-delete-all' to delete all posframes."
          (tab-line-height (if (functionp 'window-tab-line-height)
                               (window-tab-line-height)
                             0))
+         (mouse-position (cdr (mouse-pixel-position)))
          (frame-resize-pixelwise t)
          posframe)
 
@@ -645,9 +633,6 @@ You can use `posframe-delete-all' to delete all posframes."
              :override-parameters override-parameters
              :accept-focus accept-focus))
 
-      ;; Move mouse to (0 . 0)
-      (posframe--mouse-banish parent-frame)
-
       ;; Insert string into the posframe buffer
       (posframe--insert-string string no-properties)
 
@@ -655,36 +640,38 @@ You can use `posframe-delete-all' to delete all posframes."
       (posframe--set-frame-size
        posframe height min-height width min-width)
 
+      ;; Get new position of posframe.
+      (setq position
+            (posframe-run-poshandler
+             ;; All poshandlers will get info from this plist.
+             `(,@poshandler-extra-info
+               ,@(list :position position
+                       :poshandler poshandler
+                       :font-height font-height
+                       :font-width font-width
+                       :posframe posframe
+                       :posframe-width (frame-pixel-width posframe)
+                       :posframe-height (frame-pixel-height posframe)
+                       :posframe-buffer buffer
+                       :parent-frame parent-frame
+                       :parent-frame-width parent-frame-width
+                       :parent-frame-height parent-frame-height
+                       :ref-position ref-position
+                       :parent-window parent-window
+                       :parent-window-top parent-window-top
+                       :parent-window-left parent-window-left
+                       :parent-window-width parent-window-width
+                       :parent-window-height parent-window-height
+                       :mode-line-height mode-line-height
+                       :minibuffer-height minibuffer-height
+                       :header-line-height header-line-height
+                       :tab-line-height tab-line-height
+                       :x-pixel-offset x-pixel-offset
+                       :y-pixel-offset y-pixel-offset))))
+
       ;; Move posframe
       (posframe--set-frame-position
-       posframe
-       (posframe-run-poshandler
-        ;; All poshandlers will get info from this plist.
-        `(,@poshandler-extra-info
-          ,@(list :position position
-                  :poshandler poshandler
-                  :font-height font-height
-                  :font-width font-width
-                  :posframe posframe
-                  :posframe-width (frame-pixel-width posframe)
-                  :posframe-height (frame-pixel-height posframe)
-                  :posframe-buffer buffer
-                  :parent-frame parent-frame
-                  :parent-frame-width parent-frame-width
-                  :parent-frame-height parent-frame-height
-                  :ref-position ref-position
-                  :parent-window parent-window
-                  :parent-window-top parent-window-top
-                  :parent-window-left parent-window-left
-                  :parent-window-width parent-window-width
-                  :parent-window-height parent-window-height
-                  :mode-line-height mode-line-height
-                  :minibuffer-height minibuffer-height
-                  :header-line-height header-line-height
-                  :tab-line-height tab-line-height
-                  :x-pixel-offset x-pixel-offset
-                  :y-pixel-offset y-pixel-offset)))
-       parent-frame-width parent-frame-height)
+       posframe position parent-frame-width parent-frame-height)
 
       ;; Delay hide posframe when timeout is a number.
       (posframe--run-timeout-timer posframe timeout)
@@ -704,6 +691,18 @@ You can use `posframe-delete-all' to delete all posframes."
         (set-frame-parameter posframe--frame 'posframe-hidehandler hidehandler)
         (set-frame-parameter posframe--frame 'posframe-parent-buffer
                              (cons parent-buffer-name parent-buffer)))
+
+      ;; Mouse banish
+      (posframe--mouse-banish
+       (list :parent-frame parent-frame
+             :mouse-x (+ (car mouse-position)
+                         (car (frame-position parent-frame)))
+             :mouse-y (+ (cdr mouse-position)
+                         (cdr (frame-position parent-frame)))
+             :posframe-x (car position)
+             :posframe-y (cdr position)
+             :posframe-width (frame-pixel-width posframe)
+             :posframe-height (frame-pixel-height posframe)))
 
       ;; Return posframe
       posframe)))
@@ -725,35 +724,23 @@ You can use `posframe-delete-all' to delete all posframes."
             (cons position height))
       height)))
 
-(defun posframe--redirect-posframe-focus ()
-  "Redirect focus from the posframe to the parent frame.
-This prevents the posframe from catching keyboard input if the
-window manager selects it."
-  (when (and (eq (selected-frame) posframe--frame)
-             ;; Do not redirect focus when posframe can accept focus.
-             ;; See posframe-show's accept-focus argument.
-             (not posframe--accept-focus))
-    (redirect-frame-focus posframe--frame (frame-parent))))
-
-(if (version< emacs-version "27.1")
-    (with-no-warnings
-      (add-hook 'focus-in-hook #'posframe--redirect-posframe-focus))
-  (add-function :after after-focus-change-function #'posframe--redirect-posframe-focus))
-
-(defun posframe--mouse-banish (parent-frame)
-  "Banish mouse to the (0 . 0) of PARENT-FRAME.
+(defun posframe--mouse-banish (info)
+  "Banish mouse base on INFO.
 
 FIXME: This is a hacky fix for the mouse focus problem, which like:
 https://github.com/tumashu/posframe/issues/4#issuecomment-357514918"
-  (let ((x-y (pcase posframe-mouse-banish
-               (`(,x . ,y) (cons x y))
-               ('nil nil)
-               (_ '(0 . 0)))))
-    (when (and x-y
-               ;; Do not banish mouse when posframe can accept focus.
-               ;; See posframe-show's accept-focus argument.
-               (not posframe--accept-focus))
-      (set-mouse-position parent-frame (car x-y) (cdr x-y)))))
+  (let* ((parent-frame (plist-get info :parent-frame))
+         (m-x (plist-get info :mouse-x))
+         (m-y (plist-get info :mouse-y))
+         (x (plist-get info :posframe-x))
+         (y (plist-get info :posframe-y))
+         (w (plist-get info :posframe-width))
+         (h (plist-get info :posframe-height)))
+    (when (and (> m-x x)
+               (< m-x (+ x w))
+               (> m-y y)
+               (< m-y (+ y h)))
+      (set-mouse-pixel-position parent-frame (- x 5) (- y 10)))))
 
 (defun posframe--insert-string (string no-properties)
   "Insert STRING to current buffer.
