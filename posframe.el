@@ -699,8 +699,10 @@ You can use `posframe-delete-all' to delete all posframes."
       ;; Mouse banish
       (posframe--mouse-banish
        (list :parent-frame parent-frame
-             :mouse-x (car mouse-position)
-             :mouse-y (cdr mouse-position)
+             :mouse-x (+ (or (car ref-position) 0)
+                         (car mouse-position))
+             :mouse-y (+ (or (cdr ref-position) 0)
+                         (cdr mouse-position))
              :posframe-x (car position)
              :posframe-y (cdr position)
              :posframe-width (frame-pixel-width posframe)
