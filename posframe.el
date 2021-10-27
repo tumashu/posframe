@@ -357,6 +357,8 @@ position.  Its argument is a plist of the following form:
    :parent-window xxx
    :parent-window-width  xxx
    :parent-window-height xxx
+   :mouse-x xxx
+   ;mouse-y xxx
    :minibuffer-height xxx
    :mode-line-height  xxx
    :header-line-height xxx
@@ -376,7 +378,7 @@ which mean align posframe(0.5, 0) to a position(a, b)
 1. a = x of window(0.5, 0)
 2. b = y of point(1, 1)
 
-    posframe(p), frame(f), window(w), point(p)
+    posframe(p), frame(f), window(w), point(p), mouse(m)
 
          (0,0)      (0.5,0)      (1,0)
           +------------+-----------+
@@ -662,6 +664,8 @@ You can use `posframe-delete-all' to delete all posframes."
                        :parent-window-left parent-window-left
                        :parent-window-width parent-window-width
                        :parent-window-height parent-window-height
+                       :mouse-x (car mouse-position)
+                       :mouse-y (cdr mouse-position)
                        :mode-line-height mode-line-height
                        :minibuffer-height minibuffer-height
                        :header-line-height header-line-height
