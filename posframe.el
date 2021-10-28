@@ -708,13 +708,13 @@ You can use `posframe-delete-all' to delete all posframes."
                                                  (or (car mouse-position) 0))
                                      :mouse-y (+ (or (cdr ref-position) 0)
                                                  (or (cdr mouse-position) 0))
-                                     ;; Whenever posframe position is
-                                     ;; set to negative value
+                                     ;; Whenever posframe position is set to negative
+                                     ;; value
                                      ;; `posframe-poshandler-frame-top-right-corner`
                                      ;; pass actual calculated
                                      ;; posframe position within
                                      ;; parent-frame so mouse pointer
-                                     ;; posigin can be correctly
+                                     ;; position can be correctly
                                      ;; recognized within posframe
                                      ;; window.
                                      :posframe-x (if (>= (car position) 0)
@@ -725,7 +725,7 @@ You can use `posframe-delete-all' to delete all posframes."
                                      :posframe-y (if (>= (cdr position) 0)
                                                              (cdr position)
                                                            (- (frame-pixel-height parent-frame)
-                                                              (frame-pixel-width posframe)))
+                                                              (frame-pixel-height posframe)))
                                      :posframe-width (frame-pixel-width posframe)
                                      :posframe-height (frame-pixel-height posframe))))
         (posframe--mouse-banish mouse-banish-args)
