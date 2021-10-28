@@ -599,7 +599,13 @@ You can use `posframe-delete-all' to delete all posframes."
          (tab-line-height (if (functionp 'window-tab-line-height)
                               (window-tab-line-height)
                             0))
-         (mouse-position (cdr (mouse-pixel-position)))
+         ; mouse-pixel-position returns nil when mouse is outside of
+         ; emacs window (Win10). Set it here to (-2 . -2) so
+         ; posframe--mouse-banish don't complain that it's nil. Also
+         ; posframe--mouse-banish doesn't need to call
+         ; set-mouse-pixel-position when mouse is outsid of emacs
+         ; window.
+         (mouse-position (or (cdr (mouse-pixel-position)) (-2 . -2))) 
          (frame-resize-pixelwise t)
          posframe)
 
@@ -697,16 +703,33 @@ You can use `posframe-delete-all' to delete all posframes."
                              (cons parent-buffer-name parent-buffer)))
 
       ;; Mouse banish
-      (posframe--mouse-banish
-       (list :parent-frame parent-frame
-             :mouse-x (+ (or (car ref-position) 0)
-                         (car mouse-position))
-             :mouse-y (+ (or (cdr ref-position) 0)
-                         (cdr mouse-position))
-             :posframe-x (car position)
-             :posframe-y (cdr position)
-             :posframe-width (frame-pixel-width posframe)
-             :posframe-height (frame-pixel-height posframe)))
+      (let ((mouse-banish-args (list :parent-frame parent-frame
+                                     :mouse-x (+ (or (car ref-position) 0)
+                                                 (or (car mouse-position) 0))
+                                     :mouse-y (+ (or (cdr ref-position) 0)
+                                                 (or (cdr mouse-position) 0))
+                                     ;; Whenever posframe position is
+                                     ;; set to negative value
+                                     ;; `posframe-poshandler-frame-top-right-corner`
+                                     ;; pass actual calculated
+                                     ;; posframe position within
+                                     ;; parent-frame so mouse pointer
+                                     ;; posigin can be correctly
+                                     ;; recognized within posframe
+                                     ;; window.
+                                     :posframe-x (if (>= (car position) 0)
+                                                             (car position)
+                                                           (-
+                                                            (frame-pixel-width parent-frame)
+                                                            (frame-pixel-width posframe)))
+                                     :posframe-y (if (>= (cdr position) 0)
+                                                             (cdr position)
+                                                           (- (frame-pixel-height parent-frame)
+                                                              (frame-pixel-width posframe)))
+                                     :posframe-width (frame-pixel-width posframe)
+                                     :posframe-height (frame-pixel-height posframe))))
+        (posframe--mouse-banish mouse-banish-args)
+	)
 
       ;; Return posframe
       posframe)))
