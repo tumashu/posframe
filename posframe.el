@@ -705,8 +705,16 @@ You can use `posframe-delete-all' to delete all posframes."
                            (car mouse-position))
                :mouse-y (+ (or (cdr ref-position) 0)
                            (cdr mouse-position))
-               :posframe-x (car position)
-               :posframe-y (cdr position)
+               :posframe-x
+               (if (>= (car position) 0)
+                   (car position)
+                 (- (frame-pixel-width parent-frame)
+                    (frame-pixel-width posframe)))
+               :posframe-y
+               (if (>= (cdr position) 0)
+                   (cdr position)
+                 (- (frame-pixel-height parent-frame)
+                    (frame-pixel-height posframe)))
                :posframe-width (frame-pixel-width posframe)
                :posframe-height (frame-pixel-height posframe))))
 
