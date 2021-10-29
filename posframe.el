@@ -754,7 +754,13 @@ https://github.com/tumashu/posframe/issues/4#issuecomment-357514918"
                (<= m-x (+ x w))
                (>= m-y y)
                (<= m-y (+ y h)))
-      (set-mouse-pixel-position parent-frame (max 0 (- x 5)) (max 0 (- y 10))))))
+      (set-mouse-pixel-position parent-frame
+				(if (= x 0)
+				    (min (frame-pixel-width parent-frame) (+ w 5))
+				  (max 0 (- x 5)))
+				(if (= y 0)
+				    (min (frame-pixel-height parent-frame) (+ h 5))
+				  (max 0 (- y 10)))))))
 
 (defun posframe--redirect-posframe-focus ()
   "Redirect focus from the posframe to the parent frame.
