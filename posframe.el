@@ -764,7 +764,7 @@ https://github.com/tumashu/posframe/issues/4#issuecomment-357514918"
            (min p-w (+ w 5))
          (max 0 (- x 5)))
        (if (= y 0)
-           (min p-h (+ y 10))
+           (min p-h (+ h 10))
          (max 0 (- y 10)))))))
 
 (defun posframe--redirect-posframe-focus ()
