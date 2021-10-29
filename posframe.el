@@ -716,7 +716,9 @@ You can use `posframe-delete-all' to delete all posframes."
                  (- (frame-pixel-height parent-frame)
                     (frame-pixel-height posframe)))
                :posframe-width (frame-pixel-width posframe)
-               :posframe-height (frame-pixel-height posframe))))
+               :posframe-height (frame-pixel-height posframe)
+               :parent-frame-width parent-frame-width
+               :parent-frame-height parent-frame-height)))
 
       ;; Return posframe
       posframe)))
@@ -749,12 +751,21 @@ https://github.com/tumashu/posframe/issues/4#issuecomment-357514918"
          (x (plist-get info :posframe-x))
          (y (plist-get info :posframe-y))
          (w (plist-get info :posframe-width))
-         (h (plist-get info :posframe-height)))
+         (h (plist-get info :posframe-height))
+         (p-w (plist-get info :parent-frame-width))
+         (p-h (plist-get info :parent-frame-height)))
     (when (and (>= m-x x)
                (<= m-x (+ x w))
                (>= m-y y)
                (<= m-y (+ y h)))
-      (set-mouse-pixel-position parent-frame (max 0 (- x 5)) (max 0 (- y 10))))))
+      (set-mouse-pixel-position
+       parent-frame
+       (if (= x 0)
+           (min p-w (+ w 5))
+         (max 0 (- x 5)))
+       (if (= y 0)
+           (min p-h (+ y 10))
+         (max 0 (- y 10)))))))
 
 (defun posframe--redirect-posframe-focus ()
   "Redirect focus from the posframe to the parent frame.
