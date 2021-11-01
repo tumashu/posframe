@@ -100,15 +100,7 @@ To disable this feature, add this to your init.el:
 (setq posframe-mouse-banish nil)
 #+end_example
 
-** Set fallback arguments of posframe-show
+** posframe-arghandler
 
-Users can set fallback values of posframe-show's arguments with the
-help of `posframe-arghandler'.  The example below sets fallback
-border-width to 10 and fallback background color to green.
-
-#+begin_example
-(setq posframe-arghandler #'my-posframe-arghandler)
-(defun my-posframe-arghandler (buffer-or-name arg-name value)
-  (let ((info '(:internal-border-width 10 :background-color "green")))
-    (or (plist-get info arg-name) value)))
-#+end_example
+posframe-arghandler feature has been removed from posframe-1.1, 
+user can use advice feature instead.

@@ -50,14 +50,6 @@
   :group 'posframe
   :type 'boolean)
 
-(defcustom posframe-arghandler #'posframe-arghandler-default
-  "A function used to handle posframe-show's argument.
-
-Users can use this feature to set the default value of
-posframe-show's arguments."
-  :group 'posframe
-  :type 'function)
-
 (defvar-local posframe--frame nil
   "Record posframe's frame.")
 
@@ -286,10 +278,6 @@ ACCEPT-FOCUS."
       (set-frame-parameter posframe--frame 'parent-frame parent-frame)
 
       posframe--frame)))
-
-(defun posframe-arghandler-default (_buffer-or-name _arg-name value)
-  "The default value of `posframe-arghandler'.  Return VALUE."
-  value)
 
 ;;;###autoload
 (cl-defun posframe-show (buffer-or-name
@@ -546,36 +534,11 @@ An example parent frame poshandler function is:
  (19) Others
 
 You can use `posframe-delete-all' to delete all posframes."
-  (let* ((position (or (funcall posframe-arghandler buffer-or-name :position position) (point)))
-         (poshandler (funcall posframe-arghandler buffer-or-name :poshandler poshandler))
-         (poshandler-extra-info (funcall posframe-arghandler buffer-or-name :poshandler-extra-info poshandler-extra-info))
-         (width (funcall posframe-arghandler buffer-or-name :width width))
-         (height (funcall posframe-arghandler buffer-or-name :height height))
-         (min-width (or (funcall posframe-arghandler buffer-or-name :min-width min-width) 1))
-         (min-height (or (funcall posframe-arghandler buffer-or-name :min-height min-height) 1))
-         (x-pixel-offset (or (funcall posframe-arghandler buffer-or-name :x-pixel-offset x-pixel-offset) 0))
-         (y-pixel-offset (or (funcall posframe-arghandler buffer-or-name :y-pixel-offset y-pixel-offset) 0))
-         (left-fringe (funcall posframe-arghandler buffer-or-name :left-fringe left-fringe))
-         (right-fringe (funcall posframe-arghandler buffer-or-name :right-fringe right-fringe))
-         (border-width (funcall posframe-arghandler buffer-or-name :border-width border-width))
-         (border-color (funcall posframe-arghandler buffer-or-name :border-color border-color))
-         (internal-border-width (funcall posframe-arghandler buffer-or-name :internal-border-width internal-border-width))
-         (internal-border-color (funcall posframe-arghandler buffer-or-name :internal-border-color internal-border-color))
-         (font (funcall posframe-arghandler buffer-or-name :font font))
-         (foreground-color (funcall posframe-arghandler buffer-or-name :foreground-color foreground-color))
-         (background-color (funcall posframe-arghandler buffer-or-name :background-color background-color))
-         (respect-header-line (funcall posframe-arghandler buffer-or-name :respect-header-line respect-header-line))
-         (respect-mode-line (funcall posframe-arghandler buffer-or-name :respect-mode-line respect-mode-line))
-         (initialize (funcall posframe-arghandler buffer-or-name :initialize initialize))
-         (no-properties (funcall posframe-arghandler buffer-or-name :no-properties no-properties))
-         (keep-ratio (funcall posframe-arghandler buffer-or-name :keep-ratio keep-ratio))
-         (lines-truncate (funcall posframe-arghandler buffer-or-name :lines-truncate lines-truncate))
-         (override-parameters (funcall posframe-arghandler buffer-or-name :override-parameters override-parameters))
-         (timeout (funcall posframe-arghandler buffer-or-name :timeout timeout))
-         (refresh (funcall posframe-arghandler buffer-or-name :refresh refresh))
-         (accept-focus (funcall posframe-arghandler buffer-or-name :accept-focus accept-focus))
-         (hidehandler (funcall posframe-arghandler buffer-or-name :hidehandler hidehandler))
-         (refposhandler (funcall posframe-arghandler buffer-or-name :refposhandler refposhandler))
+  (let* ((position (or position (point)))
+         (min-width (or min-width 1))
+         (min-height (or min-height 1))
+         (x-pixel-offset (or x-pixel-offset 0))
+         (y-pixel-offset (or y-pixel-offset 0))
          ;;-----------------------------------------------------
          (buffer (get-buffer-create buffer-or-name))
          (parent-window (selected-window))
