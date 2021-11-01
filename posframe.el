@@ -265,7 +265,7 @@ ACCEPT-FOCUS."
           (when (version< emacs-version "28.0")
             (set-frame-parameter
              posframe--frame 'background-color
-             (face-attribute 'default :background posframe--frame))))
+             (or background-color (face-attribute 'default :background)))))
         (let ((posframe-window (frame-root-window posframe--frame)))
           ;; This method is more stable than 'setq mode/header-line-format nil'
           (unless respect-mode-line
