@@ -482,8 +482,11 @@ posframe instead of wrap.
 
  (13) OVERRIDE-PARAMETERS
 
-OVERRIDE-PARAMETERS is very powful, *all* the frame parameters
+OVERRIDE-PARAMETERS is very powful, *all* the valid frame parameters
 used by posframe's frame can be overridden by it.
+
+NOTE: some posframe-show arguments are not frame parameters, so they
+can not be overrided by this argument.
 
  (14) TIMEOUT
 
