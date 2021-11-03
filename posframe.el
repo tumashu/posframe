@@ -178,6 +178,7 @@ ACCEPT-FOCUS."
       (setq-local left-fringe-width nil)
       (setq-local right-fringe-width nil)
       (setq-local fringes-outside-margins 0)
+      (setq-local fringe-indicator-alist nil)
       ;; Need to use `lines-truncate' as our keyword variable instead of
       ;; `truncate-lines' so we don't shadow the variable that we are trying to
       ;; set.
