@@ -859,11 +859,11 @@ WIDTH MAX-WIDTH and MIN-WIDTH."
       (setq-local posframe--refresh-timer
                   (run-with-timer
                    nil repeat
-                   #'(lambda (frame height min-height width min-width)
-                       (let ((frame-resize-pixelwise t))
-                         (when (and frame (frame-live-p frame))
-                           (posframe--set-frame-size
-                            frame height max-height min-height width max-width min-width))))
+                   (lambda (frame height max-height min-height width max-width min-width)
+                     (let ((frame-resize-pixelwise t))
+                       (when (and frame (frame-live-p frame))
+                         (posframe--set-frame-size
+                          frame height max-height min-height width max-width min-width))))
                    posframe height max-height min-height width max-width min-width)))))
 
 (defun posframe-refresh (buffer-or-name)
