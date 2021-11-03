@@ -771,7 +771,7 @@ will be removed."
       (erase-buffer)
       (insert str))))
 
-(defun posframe--fit-frame-to-buffer (posframe max-height min-height max-width min-width)
+(defun posframe--fit-frame-to-buffer (posframe max-height min-height max-width min-width only)
   "POSFRAME version of function `fit-frame-to-buffer'.
 Arguments HEIGHT, MIN-HEIGHT, WIDTH, MIN-WIDTH are similar
 function `fit-frame-to-buffer''s."
@@ -781,18 +781,21 @@ function `fit-frame-to-buffer''s."
     ;; http://git.savannah.gnu.org/cgit/emacs.git/commit/?id=e0de9f3295b4c46cb7198ec0b9634809d7b7a36d
     (if (functionp 'fit-frame-to-buffer-1)
         (fit-frame-to-buffer-1
-         posframe max-height min-height max-width min-width nil nil nil)
+         posframe max-height min-height max-width min-width only nil nil)
       (fit-frame-to-buffer
-       posframe max-height min-height max-width min-width))))
+       posframe max-height min-height max-width min-width only))))
 
 (defun posframe--set-frame-size (posframe height max-height min-height width max-width min-width)
   "Set POSFRAME's size.
 It will set the size by the POSFRAME's HEIGHT, MIN-HEIGHT
 WIDTH and MIN-WIDTH."
-  (posframe--fit-frame-to-buffer
-   posframe max-height min-height max-width min-width)
   (when height (set-frame-height posframe height))
   (when width (set-frame-width posframe width))
+  (unless (and height width)
+    (posframe--fit-frame-to-buffer
+     posframe max-height min-height max-width min-width
+     (cond (width 'vertically)
+           (height 'horizontally))))
   (setq-local posframe--last-posframe-size
               (list height max-height min-height width max-width min-width)))
 
