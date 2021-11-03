@@ -789,9 +789,8 @@ function `fit-frame-to-buffer''s."
   "Set POSFRAME's size.
 It will set the size by the POSFRAME's HEIGHT, MIN-HEIGHT
 WIDTH and MIN-WIDTH."
-  (unless (and width height)
-    (posframe--fit-frame-to-buffer
-     posframe max-height min-height max-width min-width))
+  (posframe--fit-frame-to-buffer
+   posframe max-height min-height max-width min-width)
   (when height (set-frame-height posframe height))
   (when width (set-frame-width posframe width))
   (setq-local posframe--last-posframe-size
