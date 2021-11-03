@@ -550,7 +550,7 @@ You can use `posframe-delete-all' to delete all posframes."
          (height (when height
                    (min (max min-height
                              (if (numberp max-height)
-                                 (min height max-height (frame-height))
+                                 (min height max-height)
                                height))
                         (frame-height))))
          (x-pixel-offset (or x-pixel-offset 0))
