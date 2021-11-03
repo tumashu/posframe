@@ -539,20 +539,18 @@ An example parent frame poshandler function is:
 
 You can use `posframe-delete-all' to delete all posframes."
   (let* ((position (or position (point)))
-         (min-width (or min-width 1))
-         (min-height (or min-height 1))
+         (max-width (if (numberp max-width)
+                        (min max-width (frame-width))
+                      (frame-width)))
+         (max-height (if (numberp max-height)
+                         (min max-height (frame-height))
+                       (frame-height)))
+         (min-width (min (or min-width 1) max-width))
+         (min-height (min (or min-height 1) max-height))
          (width (when width
-                  (min (max min-width
-                            (if (numberp max-width)
-                                (min width max-width)
-                              width))
-                       (frame-width))))
+                  (min (max width min-width) max-width)))
          (height (when height
-                   (min (max min-height
-                             (if (numberp max-height)
-                                 (min height max-height)
-                               height))
-                        (frame-height))))
+                   (min (max height min-height) max-height)))
          (x-pixel-offset (or x-pixel-offset 0))
          (y-pixel-offset (or y-pixel-offset 0))
          ;;-----------------------------------------------------
