@@ -615,9 +615,18 @@ You can use `posframe-delete-all' to delete all posframes."
       ;; Insert string into the posframe buffer
       (posframe--insert-string string no-properties)
 
-      ;; Set posframe's size
-      (posframe--set-frame-size
-       posframe height max-height min-height width max-width min-width)
+      (let ((size-info
+             (list :posframe posframe
+                   :width width
+                   :height height
+                   :max-width max-width
+                   :max-height max-height
+                   :min-width min-width
+                   :min-height min-height)))
+        ;; Set posframe's size
+        (posframe--set-frame-size size-info)
+        ;; Re-adjust posframe's size when buffer's content has changed.
+        (posframe--run-refresh-timer refresh size-info))
 
       ;; Get new position of posframe.
       (setq position
@@ -656,10 +665,6 @@ You can use `posframe-delete-all' to delete all posframes."
 
       ;; Delay hide posframe when timeout is a number.
       (posframe--run-timeout-timer posframe timeout)
-
-      ;; Re-adjust posframe's size when buffer's content has changed.
-      (posframe--run-refresh-timer
-       posframe refresh height max-height min-height width max-width min-width)
 
       ;; Make sure not hide buffer's content for scroll down.
       (let ((window (frame-root-window posframe--frame)))
@@ -786,19 +791,23 @@ function `fit-frame-to-buffer''s."
       (fit-frame-to-buffer
        posframe max-height min-height max-width min-width only))))
 
-(defun posframe--set-frame-size (posframe height max-height min-height width max-width min-width)
-  "Set POSFRAME's size.
-It will set the size by the POSFRAME's HEIGHT, MIN-HEIGHT
-WIDTH and MIN-WIDTH."
-  (when height (set-frame-height posframe height))
-  (when width (set-frame-width posframe width))
-  (unless (and height width)
-    (posframe--fit-frame-to-buffer
-     posframe max-height min-height max-width min-width
-     (cond (width 'vertically)
-           (height 'horizontally))))
-  (setq-local posframe--last-posframe-size
-              (list height max-height min-height width max-width min-width)))
+(defun posframe--set-frame-size (size-info)
+  "Set POSFRAME's size based on SIZE-INFO."
+  (let ((posframe (plist-get size-info :posframe))
+        (width (plist-get size-info :width))
+        (height (plist-get size-info :height))
+        (max-width (plist-get size-info :max-width))
+        (max-height (plist-get size-info :max-height))
+        (min-width (plist-get size-info :min-width))
+        (min-height (plist-get size-info :min-height)))
+    (when height (set-frame-height posframe height))
+    (when width (set-frame-width posframe width))
+    (unless (and height width)
+      (posframe--fit-frame-to-buffer
+       posframe max-height min-height max-width min-width
+       (cond (width 'vertically)
+             (height 'horizontally))))
+    (setq-local posframe--last-posframe-size size-info)))
 
 (defun posframe--set-frame-position (posframe position
                                               parent-frame-width
@@ -840,31 +849,25 @@ This need PARENT-FRAME-WIDTH and PARENT-FRAME-HEIGHT"
   (when (frame-live-p frame)
     (make-frame-invisible frame)))
 
-(defun posframe--run-refresh-timer (posframe
-                                    repeat
-                                    height
-                                    max-height
-                                    min-height
-                                    width
-                                    max-width
-                                    min-width)
+(defun posframe--run-refresh-timer (repeat size-info)
   "Refresh POSFRAME every REPEAT seconds.
 
-It will set POSFRAME's size by the posframe's HEIGHT, MAX-HEIGHT, MIN-HEIGHT,
-WIDTH MAX-WIDTH and MIN-WIDTH."
-  (when (and (numberp repeat) (> repeat 0))
-    (unless (and width height)
-      (when (timerp posframe--refresh-timer)
-        (cancel-timer posframe--refresh-timer))
-      (setq-local posframe--refresh-timer
-                  (run-with-timer
-                   nil repeat
-                   (lambda (frame height max-height min-height width max-width min-width)
-                     (let ((frame-resize-pixelwise t))
-                       (when (and frame (frame-live-p frame))
-                         (posframe--set-frame-size
-                          frame height max-height min-height width max-width min-width))))
-                   posframe height max-height min-height width max-width min-width)))))
+It will set POSFRAME's size by SIZE-INFO."
+  (let ((posframe (plist-get size-info :posframe))
+        (width (plist-get size-info :width))
+        (height (plist-get size-info :height)))
+    (when (and (numberp repeat) (> repeat 0))
+      (unless (and width height)
+        (when (timerp posframe--refresh-timer)
+          (cancel-timer posframe--refresh-timer))
+        (setq-local posframe--refresh-timer
+                    (run-with-timer
+                     nil repeat
+                     (lambda (size-info)
+                       (let ((frame-resize-pixelwise t))
+                         (when (and posframe (frame-live-p posframe))
+                           (posframe--set-frame-size size-info))))
+                     size-info))))))
 
 (defun posframe-refresh (buffer-or-name)
   "Refresh posframe pertaining to BUFFER-OR-NAME.
