@@ -436,7 +436,7 @@ be removed before being shown in posframe.
 
 These arguments are specified in the canonical character width
 and height of posframe, more details can be found in docstring of
-`fit-frame-to-buffer',
+function `fit-frame-to-buffer',
 
  (7) LEFT-FRINGE and RIGHT-FRINGE
 
@@ -486,7 +486,7 @@ posframe instead of wrap.
 OVERRIDE-PARAMETERS is very powful, *all* the valid frame parameters
 used by posframe's frame can be overridden by it.
 
-NOTE: some posframe-show arguments are not frame parameters, so they
+NOTE: some `posframe-show' arguments are not frame parameters, so they
 can not be overrided by this argument.
 
  (14) TIMEOUT
@@ -779,8 +779,8 @@ will be removed."
 
 (defun posframe--fit-frame-to-buffer (posframe max-height min-height max-width min-width only)
   "POSFRAME version of function `fit-frame-to-buffer'.
-Arguments HEIGHT, MIN-HEIGHT, WIDTH, MIN-WIDTH are similar
-function `fit-frame-to-buffer''s."
+Arguments HEIGHT, MAX-HEIGHT, MIN-HEIGHT, WIDTH, MAX-WIDTH,
+MIN-WIDTH and ONLY are similar function `fit-frame-to-buffer''s."
   ;; This only has effect if the user set the latter var to `hide'.
   (let ((x-gtk-resize-child-frames posframe-gtk-resize-child-frames))
     ;; More info: Don't skip empty lines when fitting mini frame to buffer (Bug#44080)
