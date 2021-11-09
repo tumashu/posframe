@@ -732,6 +732,13 @@ You can use `posframe-delete-all' to delete all posframes."
   (let ((parent-frame (plist-get info :parent-frame)))
     (set-mouse-pixel-position parent-frame 0 0)))
 
+(defun posframe-mouse-banish-simple-inside (info)
+  "Banish mouse to the top-left corner of the posframe."
+  (let ((parent-frame (plist-get info :parent-frame))
+         (x (plist-get info :posframe-x))
+         (y (plist-get info :posframe-y)))
+    (set-mouse-pixel-position parent-frame x y)))
+
 (defun posframe-mouse-banish-default (info)
   "Banish mouse base on INFO.
 
