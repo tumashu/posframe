@@ -679,28 +679,28 @@ You can use `posframe-delete-all' to delete all posframes."
                              (cons parent-buffer-name parent-buffer)))
 
       ;; Mouse banish
-      (when (and (car mouse-position)
-                 (cdr mouse-position))
-        (posframe--mouse-banish
-         (list :parent-frame parent-frame
-               :mouse-x (+ (or (car ref-position) 0)
-                           (car mouse-position))
-               :mouse-y (+ (or (cdr ref-position) 0)
-                           (cdr mouse-position))
-               :posframe-x
-               (if (>= (car position) 0)
-                   (car position)
-                 (- (frame-pixel-width parent-frame)
-                    (frame-pixel-width posframe)))
-               :posframe-y
-               (if (>= (cdr position) 0)
-                   (cdr position)
-                 (- (frame-pixel-height parent-frame)
-                    (frame-pixel-height posframe)))
-               :posframe-width (frame-pixel-width posframe)
-               :posframe-height (frame-pixel-height posframe)
-               :parent-frame-width parent-frame-width
-               :parent-frame-height parent-frame-height)))
+      (posframe--mouse-banish
+       (list :parent-frame parent-frame
+             :mouse-x (when (car mouse-position)
+                        (+ (or (car ref-position) 0)
+                           (car mouse-position)))
+             :mouse-y (when (cdr mouse-position)
+                        (+ (or (cdr ref-position) 0)
+                           (cdr mouse-position)))
+             :posframe-x
+             (if (>= (car position) 0)
+                 (car position)
+               (- (frame-pixel-width parent-frame)
+                  (frame-pixel-width posframe)))
+             :posframe-y
+             (if (>= (cdr position) 0)
+                 (cdr position)
+               (- (frame-pixel-height parent-frame)
+                  (frame-pixel-height posframe)))
+             :posframe-width (frame-pixel-width posframe)
+             :posframe-height (frame-pixel-height posframe)
+             :parent-frame-width parent-frame-width
+             :parent-frame-height parent-frame-height))
 
       ;; Return posframe
       posframe)))
@@ -736,7 +736,8 @@ https://github.com/tumashu/posframe/issues/4#issuecomment-357514918"
          (h (plist-get info :posframe-height))
          (p-w (plist-get info :parent-frame-width))
          (p-h (plist-get info :parent-frame-height)))
-    (when (and (>= m-x x)
+    (when (and m-x m-y
+               (>= m-x x)
                (<= m-x (+ x w))
                (>= m-y y)
                (<= m-y (+ y h)))
