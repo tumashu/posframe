@@ -50,6 +50,10 @@
   :group 'posframe
   :type 'boolean)
 
+(defcustom posframe-mouse-banish-function #'posframe-mouse-banish-default
+  "The function used to banish mouse."
+  :type 'function)
+
 (defvar-local posframe--frame nil
   "Record posframe's frame.")
 
@@ -679,7 +683,8 @@ You can use `posframe-delete-all' to delete all posframes."
                              (cons parent-buffer-name parent-buffer)))
 
       ;; Mouse banish
-      (posframe--mouse-banish
+      (funcall
+       posframe-mouse-banish-function
        (list :parent-frame parent-frame
              :mouse-x (when (car mouse-position)
                         (+ (or (car ref-position) 0)
@@ -722,7 +727,12 @@ You can use `posframe-delete-all' to delete all posframes."
             (cons position height))
       height)))
 
-(defun posframe--mouse-banish (info)
+(defun posframe-mouse-banish-simple (info)
+  "Banish mouse to (0, 0)."
+  (let ((parent-frame (plist-get info :parent-frame)))
+    (set-mouse-pixel-position parent-frame 0 0)))
+
+(defun posframe-mouse-banish-default (info)
   "Banish mouse base on INFO.
 
 FIXME: This is a hacky fix for the mouse focus problem, which like:
