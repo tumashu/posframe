@@ -722,6 +722,8 @@ You can use `posframe-delete-all' to delete all posframes."
             (cons position height))
       height)))
 
+(defvar exwm--connection)
+
 (defun posframe--mouse-banish (info)
   "Banish mouse base on INFO.
 
@@ -736,19 +738,22 @@ https://github.com/tumashu/posframe/issues/4#issuecomment-357514918"
          (h (plist-get info :posframe-height))
          (p-w (plist-get info :parent-frame-width))
          (p-h (plist-get info :parent-frame-height)))
-    (when (and m-x m-y
-               (>= m-x x)
-               (<= m-x (+ x w))
-               (>= m-y y)
-               (<= m-y (+ y h)))
-      (set-mouse-pixel-position
-       parent-frame
-       (if (= x 0)
-           (min p-w (+ w 5))
-         (max 0 (- x 5)))
-       (if (= y 0)
-           (min p-h (+ h 10))
-         (max 0 (- y 10)))))))
+    (cond ((or (and m-x m-y
+                    (>= m-x x)
+                    (<= m-x (+ x w))
+                    (>= m-y y)
+                    (<= m-y (+ y h)))
+               ;; EXWM environment
+               (bound-and-true-p exwm--connection))
+           (set-mouse-pixel-position
+            parent-frame
+            (if (= x 0)
+                (min p-w (+ w 5))
+              (max 0 (- x 5)))
+            (if (= y 0)
+                (min p-h (+ h 10))
+              (max 0 (- y 10)))))
+          (t nil))))
 
 (defun posframe--redirect-posframe-focus ()
   "Redirect focus from the posframe to the parent frame.
