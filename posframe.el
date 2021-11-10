@@ -51,7 +51,11 @@
   :type 'boolean)
 
 (defcustom posframe-mouse-banish-function #'posframe-mouse-banish-default
-  "The function used to banish mouse."
+  "The function used to banish mouse.
+
+Function `posframe-mouse-banish-default' will work well in most
+case, but suggest use function `posframe-mouse-banish-simple' or
+custom function for EXWM users."
   :type 'function)
 
 (defvar-local posframe--frame nil

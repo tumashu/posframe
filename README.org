@@ -95,3 +95,11 @@ between posframe and other packages.
 
 posframe-arghandler feature has been removed from posframe-1.1, 
 user can use advice feature instead.
+
+** Mouse banish
+Default setting will work well in most case, but for EXWM user,
+suggest use the below config.
+
+#+begin_src emacs-lisp
+(setq posframe-mouse-banish-function #'posframe-mouse-banish-simple)
+#+end_src
