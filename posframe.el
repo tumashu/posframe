@@ -874,7 +874,8 @@ This need PARENT-FRAME-WIDTH and PARENT-FRAME-HEIGHT"
 
 (defun posframe--make-frame-invisible (frame)
   "`make-frame-invisible' replacement to hide FRAME safely."
-  (when (frame-live-p frame)
+  (when (and (frame-live-p frame)
+             (frame-visible-p frame))
     (make-frame-invisible frame)))
 
 (defun posframe--run-refresh-timer (repeat size-info)
