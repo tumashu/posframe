@@ -201,8 +201,8 @@ ACCEPT-FOCUS."
       (unless respect-header-line
         (setq-local header-line-format nil))
 
-      ;; Find existing posframe: Sometimes, the buffer of posframe
-      ;; will be recreated by other packages, so we should find
+      ;; Find existing posframe: buffer-local variables used by
+      ;; posframe can be cleaned by other packages, so we should find
       ;; existing posframe first if possible.
       (unless (or posframe--frame posframe--last-args)
         (setq-local posframe--frame
@@ -283,6 +283,8 @@ ACCEPT-FOCUS."
           (unless respect-header-line
             (set-window-parameter posframe-window 'header-line-format 'none))
           (set-window-buffer posframe-window buffer)
+          ;; When the buffer of posframe is killed, the child-frame of
+          ;; this posframe will be deleted too.
           (set-window-dedicated-p posframe-window t)))
 
       ;; Remove tab-bar always.
