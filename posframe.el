@@ -207,7 +207,8 @@ ACCEPT-FOCUS."
       ;; existing posframe first if possible.
       (unless (or posframe--frame posframe--last-args)
         (setq-local posframe--frame
-                    (posframe--find-existing-posframe buffer-or-name))
+                    (posframe--find-existing-posframe
+                     buffer-or-name args))
         (setq-local posframe--last-args args))
 
       ;; Create child-frame
@@ -264,6 +265,7 @@ ACCEPT-FOCUS."
                        (inhibit-double-buffering . ,posframe-inhibit-double-buffering)
                        ;; Do not save child-frame when use desktop.el
                        (desktop-dont-save . t))))
+        (set-frame-parameter posframe--frame 'last-args args)
         (when border-color
 	  (set-face-background
            (if (facep 'child-frame-border)
@@ -1014,13 +1016,18 @@ BUFFER-OR-NAME can be a buffer or a buffer name."
               (cancel-timer timer)))))
       (delete-frame posframe))))
 
-(defun posframe--find-existing-posframe (buffer-or-name)
-  "Find existing posframe of BUFFER-OR-NAME."
+(defun posframe--find-existing-posframe (buffer-or-name &optional last-args)
+  "Find existing posframe with BUFFER-OR-NAME and LAST-ARGS."
   (cl-find-if
    (lambda (frame)
-     (let ((buffer-info (frame-parameter frame 'posframe-buffer)))
-       (or (equal buffer-or-name (car buffer-info))
-           (equal buffer-or-name (cdr buffer-info)))))
+     (let* ((buffer-info (frame-parameter frame 'posframe-buffer))
+            (buffer-equal-p
+             (or (equal buffer-or-name (car buffer-info))
+                 (equal buffer-or-name (cdr buffer-info)))))
+       (if last-args
+           (and buffer-equal-p
+                (equal last-args (frame-parameter frame 'last-args)))
+         buffer-equal-p)))
    (frame-list)))
 
 (defun posframe--kill-buffer (buffer-or-name)
