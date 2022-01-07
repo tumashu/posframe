@@ -200,7 +200,10 @@ ACCEPT-FOCUS."
       (unless respect-header-line
         (setq-local header-line-format nil))
 
-      (add-hook 'kill-buffer-hook #'posframe-auto-delete nil t)
+      ;; When buffer is killed, posframe will be hided instead of
+      ;; deleted, the reason is that the hide posframe can be re-used
+      ;; when the buffer is created again.
+      (add-hook 'kill-buffer-hook #'posframe-auto-hide nil t)
 
       ;; Find existing posframe: Sometimes, the buffer of posframe
       ;; will be recreated by other packages, so we should find
@@ -1065,8 +1068,8 @@ BUFFER-OR-NAME can be a buffer or a buffer name."
       (when posframe--frame
         (posframe--kill-buffer buffer)))))
 
-(defun posframe-auto-delete ()
-  "Auto delete posframe when its buffer is killed.
+(defun posframe-auto-hide ()
+  "Auto hide posframe when its buffer is killed.
 
 This function is used by `kill-buffer-hook'."
   (posframe-delete-frame (current-buffer)))
