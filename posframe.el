@@ -163,7 +163,8 @@ ACCEPT-FOCUS."
         (buffer (get-buffer-create buffer-or-name))
         (after-make-frame-functions nil)
         (x-gtk-resize-child-frames posframe-gtk-resize-child-frames)
-        (args (list foreground-color
+        (args (list "args"
+                    foreground-color
                     background-color
                     right-fringe
                     left-fringe
@@ -200,18 +201,12 @@ ACCEPT-FOCUS."
       (unless respect-header-line
         (setq-local header-line-format nil))
 
-      ;; When buffer is killed, posframe will be hided instead of
-      ;; deleted, the reason is that the hide posframe can be re-used
-      ;; when the buffer is created again.
-      (add-hook 'kill-buffer-hook #'posframe-auto-hide nil t)
-
       ;; Find existing posframe: Sometimes, the buffer of posframe
       ;; will be recreated by other packages, so we should find
       ;; existing posframe first if possible.
       (unless (or posframe--frame posframe--last-args)
         (setq-local posframe--frame
-                    (posframe--find-existing-posframe
-                     buffer-or-name args))
+                    (posframe--find-existing-posframe buffer args))
         (setq-local posframe--last-args args))
 
       ;; Create child-frame
@@ -1017,14 +1012,14 @@ BUFFER-OR-NAME can be a buffer or a buffer name."
               (cancel-timer timer)))))
       (delete-frame posframe))))
 
-(defun posframe--find-existing-posframe (buffer-or-name &optional last-args)
-  "Find existing posframe with BUFFER-OR-NAME and LAST-ARGS."
+(defun posframe--find-existing-posframe (buffer &optional last-args)
+  "Find existing posframe with BUFFER and LAST-ARGS."
   (cl-find-if
    (lambda (frame)
      (let* ((buffer-info (frame-parameter frame 'posframe-buffer))
             (buffer-equal-p
-             (or (equal buffer-or-name (car buffer-info))
-                 (equal buffer-or-name (cdr buffer-info)))))
+             (or (equal (buffer-name buffer) (car buffer-info))
+                 (equal buffer (cdr buffer-info)))))
        (if last-args
            (and buffer-equal-p
                 (equal last-args (frame-parameter frame 'last-args)))
@@ -1067,12 +1062,6 @@ BUFFER-OR-NAME can be a buffer or a buffer name."
     (with-current-buffer buffer
       (when posframe--frame
         (posframe--kill-buffer buffer)))))
-
-(defun posframe-auto-hide ()
-  "Auto hide posframe when its buffer is killed.
-
-This function is used by `kill-buffer-hook'."
-  (posframe-delete-frame (current-buffer)))
 
 ;; Posframe's position handler
 (defun posframe-run-poshandler (info)
