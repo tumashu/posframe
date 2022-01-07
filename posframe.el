@@ -202,13 +202,17 @@ ACCEPT-FOCUS."
 
       (add-hook 'kill-buffer-hook #'posframe-auto-delete nil t)
 
+      ;; Find existing posframe: Sometimes, the buffer of posframe
+      ;; will be recreated by other packages, so we should find
+      ;; existing posframe first if possible.
+      (unless (or posframe--frame posframe--last-args)
+        (setq-local posframe--frame
+                    (posframe--find-existing-posframe buffer-or-name))
+        (setq-local posframe--last-args args))
+
       ;; Create child-frame
-      (unless (and (frame-live-p (or posframe--frame
-                                     ;; Sometimes, the buffer of posframe will be
-                                     ;; recreated by other packages,
-                                     ;; so we should reuse exist
-                                     ;; posframe as far as possible.
-                                     (posframe--find-existing-posframe buffer-or-name)))
+      (unless (and posframe--frame
+                   (frame-live-p posframe--frame)
                    ;; For speed reason, posframe will reuse
                    ;; existing frame at possible, but when
                    ;; user change args, recreating frame
