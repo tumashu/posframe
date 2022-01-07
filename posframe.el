@@ -203,7 +203,12 @@ ACCEPT-FOCUS."
       (add-hook 'kill-buffer-hook #'posframe-auto-delete nil t)
 
       ;; Create child-frame
-      (unless (and (frame-live-p posframe--frame)
+      (unless (and (frame-live-p (or posframe--frame
+                                     ;; Sometimes, the buffer of posframe will be
+                                     ;; recreated by other packages,
+                                     ;; so we should reuse exist
+                                     ;; posframe as far as possible.
+                                     (posframe--find-existing-posframe buffer-or-name)))
                    ;; For speed reason, posframe will reuse
                    ;; existing frame at possible, but when
                    ;; user change args, recreating frame
@@ -989,18 +994,30 @@ posframe is very very slowly, `posframe-hide' is more useful."
 (defun posframe-delete-frame (buffer-or-name)
   "Delete posframe pertaining to BUFFER-OR-NAME.
 BUFFER-OR-NAME can be a buffer or a buffer name."
-  (dolist (frame (frame-list))
-    (let ((buffer-info (frame-parameter frame 'posframe-buffer))
-          (buffer (get-buffer buffer-or-name)))
-      (when (or (equal buffer-or-name (car buffer-info))
-                (equal buffer-or-name (cdr buffer-info)))
-        (when buffer
-          (with-current-buffer buffer
-            (dolist (timer '(posframe--refresh-timer
-                             posframe--timeout-timer))
-              (when (timerp timer)
-                (cancel-timer timer)))))
-        (delete-frame frame)))))
+  (let* ((buffer (get-buffer buffer-or-name))
+         (posframe (posframe--find-existing-posframe buffer))
+         ;; NOTE: `delete-frame' runs ‘delete-frame-functions’ before
+         ;; actually deleting the frame, unless the frame is a
+         ;; tooltip, posframe is a child-frame, but its function like
+         ;; a tooltip.
+         (delete-frame-functions nil))
+    (when posframe
+      (when (buffer-live-p buffer)
+        (with-current-buffer buffer
+          (dolist (timer '(posframe--refresh-timer
+                           posframe--timeout-timer))
+            (when (timerp timer)
+              (cancel-timer timer)))))
+      (delete-frame posframe))))
+
+(defun posframe--find-existing-posframe (buffer-or-name)
+  "Find existing posframe of BUFFER-OR-NAME."
+  (cl-find-if
+   (lambda (frame)
+     (let ((buffer-info (frame-parameter frame 'posframe-buffer)))
+       (or (equal buffer-or-name (car buffer-info))
+           (equal buffer-or-name (cdr buffer-info)))))
+   (frame-list)))
 
 (defun posframe--kill-buffer (buffer-or-name)
   "Kill posframe's buffer: BUFFER-OR-NAME.
