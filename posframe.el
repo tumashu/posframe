@@ -1049,7 +1049,8 @@ BUFFER-OR-NAME can be a buffer or a buffer name."
   (interactive)
   (dolist (frame (frame-list))
     (when (frame-parameter frame 'posframe-buffer)
-      (delete-frame frame)))
+      (let ((delete-frame-functions nil))
+        (delete-frame frame))))
   (dolist (buffer (buffer-list))
     (with-current-buffer buffer
       (when posframe--frame
