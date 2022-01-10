@@ -288,7 +288,11 @@ ACCEPT-FOCUS."
           (set-window-dedicated-p posframe-window t)))
 
       ;; Remove tab-bar always.
-      (set-frame-parameter posframe--frame 'tab-bar-lines 0)
+      ;; NOTE: if we do not test the value of frame parameter
+      ;; 'tab-bar-lines before set it, posframe will flicker when
+      ;; scroll.
+      (unless (equal (frame-parameter posframe--frame 'tab-bar-lines) 0)
+        (set-frame-parameter posframe--frame 'tab-bar-lines 0))
       (when (version< "27.0" emacs-version)
         (setq-local tab-line-format nil))
 
