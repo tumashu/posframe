@@ -1003,7 +1003,8 @@ posframe is very very slowly, `posframe-hide' is more useful."
   "Delete posframe pertaining to BUFFER-OR-NAME.
 BUFFER-OR-NAME can be a buffer or a buffer name."
   (let* ((buffer (get-buffer buffer-or-name))
-         (posframe (posframe--find-existing-posframe buffer))
+         (posframe (when buffer
+                     (posframe--find-existing-posframe buffer)))
          ;; NOTE: `delete-frame' runs ‘delete-frame-functions’ before
          ;; actually deleting the frame, unless the frame is a
          ;; tooltip, posframe is a child-frame, but its function like
