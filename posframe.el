@@ -439,15 +439,15 @@ the help of function `posframe-poshandler-argbuilder'.  like:
  (3) POSHANDLER-EXTRA-INFO
 
 POSHANDLER-EXTRA-INFO is a plist, which will prepend to the
-argument of poshandler function: 'info', it will *OVERRIDE* the
-exist key in 'info'.
+argument of poshandler function: `info', it will *OVERRIDE* the
+exist key in `info'.
 
  (4) BUFFER-OR-NAME
 
 This posframe's buffer is BUFFER-OR-NAME, which can be a buffer
 or a name of a (possibly nonexistent) buffer.
 
-buffer name can prefix with space, for example ' *mybuffer*', so
+buffer name can prefix with space, for example \" *mybuffer*\", so
 the buffer name will hide for ibuffer and `list-buffers'.
 
  (5) NO-PROPERTIES
