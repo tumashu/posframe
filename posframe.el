@@ -207,6 +207,7 @@ ACCEPT-FOCUS."
       (unless (or posframe--frame posframe--last-args)
         (setq-local posframe--frame
                     (posframe--find-existing-posframe buffer args))
+        (set-frame-parameter posframe--frame 'reuse-existing-posframe t)
         (setq-local posframe--last-args args))
 
       ;; Create child-frame
@@ -876,7 +877,8 @@ This need PARENT-FRAME-WIDTH and PARENT-FRAME-HEIGHT"
   (unless (frame-visible-p posframe)
     (make-frame-visible posframe)
     ;; Fix issue: https://github.com/tumashu/ivy-posframe/pull/30
-    (redraw-frame posframe)))
+    (when (frame-parameter posframe 'reuse-existing-posframe)
+      (redraw-frame posframe))))
 
 (defun posframe--run-timeout-timer (posframe secs)
   "Hide POSFRAME after a delay of SECS seconds."
