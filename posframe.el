@@ -1162,9 +1162,11 @@ Optional argument: REFPOSHANDLER."
 (defun posframe-poshandler-absolute-x-y (info)
   "Posframe's position handler.
 
-Deal with (integer . integer) style position,
-the structure of INFO can be found in docstring
-of `posframe-show'."
+This poshandler function deal with (integer . integer) style
+position.
+
+The structure of INFO can be found in docstring of
+`posframe-show'."
   (let ((position (plist-get info :position))
         (x-pixel-offset (plist-get info :x-pixel-offset))
         (y-pixel-offset (plist-get info :y-pixel-offset)))
