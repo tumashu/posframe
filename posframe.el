@@ -384,30 +384,7 @@ position.  Its argument is a plist of the following form:
 By default, poshandler is auto-selected based on the type of POSITION,
 but the selection can be overridden using the POSHANDLER argument.
 
-The names of poshandler functions are like:
-
-   `posframe-poshandler-p0.5p0-to-w0.5p1'
-
-which mean align posframe(0.5, 0) to a position(a, b)
-
-1. a = x of window(0.5, 0)
-2. b = y of point(1, 1)
-
-    posframe(p), frame(f), window(w), point(p), mouse(m)
-
-         (0,0)      (0.5,0)      (1,0)
-          +------------+-----------+
-          |                        |
-          |                        |
-          |                        |
- (0, 0.5) +                        + (1, 0.5)
-          |                        |
-          |                        |
-          |                        |
-          +------------+-----------+
-         (0,1)      (0.5,1)      (1,1)
-
-The alias of builtin poshandler functions are listed below:
+The builtin poshandler functions are listed below:
 
 1.  `posframe-poshandler-frame-center'
 2.  `posframe-poshandler-frame-top-center'
@@ -1238,60 +1215,69 @@ Optional arguments: FONT-HEIGHT and UPWARD."
                      (- y-top (or posframe-height 0))
                    y-bottom)))))
 
-(defalias 'posframe-poshandler-point-bottom-left-corner #'posframe-poshandler-p0p0-to-p0p1)
-(defun posframe-poshandler-p0p0-to-p0p1 (info)
+(defun posframe-poshandler-point-bottom-left-corner (info)
   "Posframe's position handler.
 
-Let posframe(0, 0) align to point(0, 1).  The structure of INFO
-can be found in docstring of `posframe-show'.
+This poshandler function let top left corner of posframe align to
+bottom left corner of point.
 
-Optional arguments: FONT-HEIGHT, UPWARD and CENTERING."
+The structure of INFO can be found in docstring of
+`posframe-show'."
   (posframe-poshandler-point-1 info))
 
-(defalias 'posframe-poshandler-point-window-center #'posframe-poshandler-p0.5p0-to-w0.5p1)
-(defun posframe-poshandler-p0.5p0-to-w0.5p1 (info)
+(defun posframe-poshandler-point-window-center (info)
   "Posframe's position handler.
 
-Let posframe(0.5, 0) align to a position, which x = x of
-window(0.5, 0) and y = y of point(0, 1).  The structure of INFO
-can be found in docstring of `posframe-show'."
-  (let ((x (car (posframe-poshandler-p0.5p0-to-w0.5w0 info)))
-        (y (cdr (posframe-poshandler-p0p0-to-p0p1 info))))
+This poshandler function let top edge center of posframe align to
+center of window line at point.
+
+The structure of INFO can be found in docstring of
+`posframe-show'."
+  (let ((x (car (posframe-poshandler-window-top-center info)))
+        (y (cdr (posframe-poshandler-point-bottom-left-corner info))))
     (cons x y)))
 
-(defun posframe-poshandler-p0.5p0-to-f0.5p1 (info)
+(defun posframe-poshandler-point-frame-center (info)
   "Posframe's position handler.
 
-Let posframe(0.5, 0) align to a position, which x = x of
-frame(0.5, 0) and y = y of point(0, 1).  The structure of INFO can
-be found in docstring of `posframe-show'."
-  (let ((x (car (posframe-poshandler-p0.5p0-to-f0.5f0 info)))
-        (y (cdr (posframe-poshandler-p0p0-to-p0p1 info))))
+This poshandler function let top edge center of posframe align to
+center of frame line at point.
+
+The structure of INFO can be found in docstring of
+`posframe-show'."
+  (let ((x (car (posframe-poshandler-frame-top-center info)))
+        (y (cdr (posframe-poshandler-point-bottom-left-corner info))))
     (cons x y)))
 
-(defalias 'posframe-poshandler-point-bottom-left-corner-upward #'posframe-poshandler-p0p1-to-p0p1)
-(defun posframe-poshandler-p0p1-to-p0p1 (info)
+(defun posframe-poshandler-point-bottom-left-corner-upward (info)
   "Posframe's position handler.
 
-Let posframe(0, 1) align to point(0, 1).  The structure of INFO
-can be found in docstring of `posframe-show'."
+This poshandler function let bottom left corner of posframe align
+to bottom left corner of point.
+
+The structure of INFO can be found in docstring of
+`posframe-show'."
   (posframe-poshandler-point-1 info nil t))
 
-(defalias 'posframe-poshandler-point-top-left-corner #'posframe-poshandler-p0p0-to-p0p0)
-(defun posframe-poshandler-p0p0-to-p0p0 (info)
+(defun posframe-poshandler-point-top-left-corner (info)
   "Posframe's position handler.
 
-Let posframe(0, 0) align to point(0, 0).  The structure of INFO
-can be found in docstring of `posframe-show'."
+This poshandler function let top left corner of posframe align to
+top left corner of point.
+
+The structure of INFO can be found in docstring of
+`posframe-show'."
   (let ((font-height 0))
     (posframe-poshandler-point-1 info font-height)))
 
-(defalias 'posframe-poshandler-frame-center #'posframe-poshandler-p0.5p0.5-to-f0.5f0.5)
-(defun posframe-poshandler-p0.5p0.5-to-f0.5f0.5 (info)
+(defun posframe-poshandler-frame-center (info)
   "Posframe's position handler.
 
-Let posframe(0.5, 0.5) align to frame(0.5, 0.5).  The structure of
-INFO can be found in docstring of `posframe-show'."
+This poshandler function let center of posframe align to center
+of frame.
+
+The structure of INFO can be found in docstring of
+`posframe-show'."
   (cons (/ (- (plist-get info :parent-frame-width)
               (plist-get info :posframe-width))
            2)
@@ -1299,59 +1285,71 @@ INFO can be found in docstring of `posframe-show'."
               (plist-get info :posframe-height))
            2)))
 
-(defalias 'posframe-poshandler-frame-top-center #'posframe-poshandler-p0.5p0-to-f0.5f0)
-(defun posframe-poshandler-p0.5p0-to-f0.5f0 (info)
+(defun posframe-poshandler-frame-top-center (info)
   "Posframe's position handler.
 
-Let posframe(0.5, 0) align to frame(0.5, 0).  The structure of
-INFO can be found in docstring of `posframe-show'."
+This poshandler function let top edge center of posframe align
+to top edge center of frame.
+
+The structure of INFO can be found in docstring of
+`posframe-show'."
   (cons (/ (- (plist-get info :parent-frame-width)
               (plist-get info :posframe-width))
            2)
         0))
 
-(defalias 'posframe-poshandler-frame-top-left-corner #'posframe-poshandler-p0p0-to-f0f0)
-(defun posframe-poshandler-p0p0-to-f0f0 (_info)
+(defun posframe-poshandler-frame-top-left-corner (_info)
   "Posframe's position handler.
 
-Let posframe(0, 0) align to frame(0, 0).  The structure of INFO
-can be found in docstring of `posframe-show'."
+This poshandler function let top left corner of posframe align to
+top left corner of frame.
+
+The structure of INFO can be found in docstring of
+`posframe-show'."
   '(0 . 0))
 
-(defalias 'posframe-poshandler-frame-top-right-corner #'posframe-poshandler-p1p0-to-f1f0)
-(defun posframe-poshandler-p1p0-to-f1f0 (_info)
+(defun posframe-poshandler-frame-top-right-corner (_info)
   "Posframe's position handler.
 
-Let posframe(1, 0) align to frame(1, 0).  The structure of INFO
-can be found in docstring of `posframe-show'."
+This poshandler function let top right corner of posframe align to
+top right corner of frame.
+
+The structure of INFO can be found in docstring of
+`posframe-show'."
   '(-1 . 0))
 
-(defalias 'posframe-poshandler-frame-bottom-left-corner #'posframe-poshandler-p0p1-to-f0f1)
-(defun posframe-poshandler-p0p1-to-f0f1 (info)
+(defun posframe-poshandler-frame-bottom-left-corner (info)
   "Posframe's position handler.
 
-Let posframe(0, 1) align to frame(0, 1).  The structure of INFO
-can be found in docstring of `posframe-show'."
+This poshandler function let bottom left corner of posframe align
+to buttom left corner of frame.
+
+The structure of INFO can be found in docstring of
+`posframe-show'."
   (cons 0 (- 0
              (plist-get info :mode-line-height)
              (plist-get info :minibuffer-height))))
 
-(defalias 'posframe-poshandler-frame-bottom-right-corner #'posframe-poshandler-p1p1-to-f1f1)
-(defun posframe-poshandler-p1p1-to-f1f1 (info)
+(defun posframe-poshandler-frame-bottom-right-corner (info)
   "Posframe's position handler.
 
-Let posframe(1, 1) align to frame(1, 1).  The structure of INFO
-can be found in docstring of `posframe-show'."
+This poshandler function let bottom right corner of posframe
+align to buttom right corner of frame.
+
+The structure of INFO can be found in docstring of
+`posframe-show'."
   (cons -1 (- 0
               (plist-get info :mode-line-height)
               (plist-get info :minibuffer-height))))
 
-(defalias 'posframe-poshandler-frame-bottom-center #'posframe-poshandler-p0.5p1-to-f0.5f1)
-(defun posframe-poshandler-p0.5p1-to-f0.5f1 (info)
+(defun posframe-poshandler-frame-bottom-center (info)
   "Posframe's position handler.
 
-Let posframe(0.5, 1) align to frame(0.5, 1).  The structure of
-INFO can be found in docstring of `posframe-show'."
+This poshandler function let bottom edge center of posframe align
+to buttom edge center of frame.
+
+The structure of INFO can be found in docstring of
+`posframe-show'."
   (cons (/ (- (plist-get info :parent-frame-width)
               (plist-get info :posframe-width))
            2)
@@ -1360,12 +1358,14 @@ INFO can be found in docstring of `posframe-show'."
            (plist-get info :mode-line-height)
            (plist-get info :minibuffer-height))))
 
-(defalias 'posframe-poshandler-window-center #'posframe-poshandler-p0.5p0.5-to-w0.5w0.5)
-(defun posframe-poshandler-p0.5p0.5-to-w0.5w0.5 (info)
+(defun posframe-poshandler-window-center (info)
   "Posframe's position handler.
 
-Let posframe(0.5, 0.5) align to window(0.5, 0.5).  The structure
-of INFO can be found in docstring of `posframe-show'."
+This poshandler function let center of posframe align to center
+of window.
+
+The structure of INFO can be found in docstring of
+`posframe-show'."
   (let* ((window-left (plist-get info :parent-window-left))
          (window-top (plist-get info :parent-window-top))
          (window-width (plist-get info :parent-window-width))
@@ -1375,23 +1375,27 @@ of INFO can be found in docstring of `posframe-show'."
     (cons (max 0 (+ window-left (/ (- window-width posframe-width) 2)))
           (max 0 (+ window-top (/ (- window-height posframe-height) 2))))))
 
-(defalias 'posframe-poshandler-window-top-left-corner #'posframe-poshandler-p0p0-to-w0w0)
-(defun posframe-poshandler-p0p0-to-w0w0 (info)
+(defun posframe-poshandler-window-top-left-corner (info)
   "Posframe's position handler.
 
-Let posframe(0, 0) align to window(0, 0).  The structure of INFO
-can be found in docstring of `posframe-show'."
+This poshandler function let top left corner of posframe align to
+top left corner of window.
+
+The structure of INFO can be found in docstring of
+`posframe-show'."
   (let* ((window-left (plist-get info :parent-window-left))
          (window-top (plist-get info :parent-window-top)))
     (cons window-left
           window-top)))
 
-(defalias 'posframe-poshandler-window-top-right-corner #'posframe-poshandler-p1p0-to-w1w0)
-(defun posframe-poshandler-p1p0-to-w1w0 (info)
+(defun posframe-poshandler-window-top-right-corner (info)
   "Posframe's position handler.
 
-Let posframe(1, 0) align to window(1, 0).  The structure of INFO
-can be found in docstring of `posframe-show'."
+This poshandler function let top right corner of posframe align to
+top left right of window.
+
+The structure of INFO can be found in docstring of
+`posframe-show'."
   (let* ((window-left (plist-get info :parent-window-left))
          (window-top (plist-get info :parent-window-top))
          (window-width (plist-get info :parent-window-width))
@@ -1400,12 +1404,14 @@ can be found in docstring of `posframe-show'."
              (- 0 posframe-width))
           window-top)))
 
-(defalias 'posframe-poshandler-window-top-center #'posframe-poshandler-p0.5p0-to-w0.5w0)
-(defun posframe-poshandler-p0.5p0-to-w0.5w0 (info)
+(defun posframe-poshandler-window-top-center (info)
   "Posframe's position handler.
 
-Let posframe(0.5, 0) align to window(0.5, 0).  The structure of
-INFO can be found in docstring of `posframe-show'."
+This poshandler function let top edge center of posframe align to
+top edge center of window.
+
+The structure of INFO can be found in docstring of
+`posframe-show'."
   (let* ((window-left (plist-get info :parent-window-left))
          (window-top (plist-get info :parent-window-top))
          (window-width (plist-get info :parent-window-width))
@@ -1413,12 +1419,14 @@ INFO can be found in docstring of `posframe-show'."
     (cons (max 0 (+ window-left (/ (- window-width posframe-width) 2)))
           window-top)))
 
-(defalias 'posframe-poshandler-window-bottom-left-corner #'posframe-poshandler-p0p1-to-w0w1)
-(defun posframe-poshandler-p0p1-to-w0w1 (info)
+(defun posframe-poshandler-window-bottom-left-corner (info)
   "Posframe's position handler.
 
-Let posframe(0, 1) align to window(0, 1).  The structure of INFO
-can be found in docstring of `posframe-show'."
+This poshandler function let bottom left corner of posframe align to
+bottom left corner of window.
+
+The structure of INFO can be found in docstring of
+`posframe-show'."
   (let* ((window-left (plist-get info :parent-window-left))
          (window-top (plist-get info :parent-window-top))
          (window-height (plist-get info :parent-window-height))
@@ -1428,12 +1436,14 @@ can be found in docstring of `posframe-show'."
           (+ window-top window-height
              (- 0 mode-line-height posframe-height)))))
 
-(defalias 'posframe-poshandler-window-bottom-right-corner #'posframe-poshandler-p1p1-to-w1w1)
-(defun posframe-poshandler-p1p1-to-w1w1 (info)
+(defun posframe-poshandler-window-bottom-right-corner (info)
   "Posframe's position handler.
 
-Let posframe(1, 1) align to window(1, 1).  The structure of INFO
-can be found in docstring of `posframe-show'."
+This poshandler function let bottom right corner of posframe
+align to bottom right corner of window.
+
+The structure of INFO can be found in docstring of
+`posframe-show'."
   (let* ((window-left (plist-get info :parent-window-left))
          (window-top (plist-get info :parent-window-top))
          (window-width (plist-get info :parent-window-width))
@@ -1446,12 +1456,14 @@ can be found in docstring of `posframe-show'."
           (+ window-top window-height
              (- 0 mode-line-height posframe-height)))))
 
-(defalias 'posframe-poshandler-window-bottom-center #'posframe-poshandler-p0.5p1-to-w0.5w1)
-(defun posframe-poshandler-p0.5p1-to-w0.5w1 (info)
+(defun posframe-poshandler-window-bottom-center (info)
   "Posframe's position handler.
 
-Let posframe(0.5, 1) align to window(0.5, 1).  The structure of
-INFO can be found in docstring of `posframe-show'."
+This poshandler function let bottom edge center of posframe align
+to bottom edge center of window.
+
+The structure of INFO can be found in docstring of
+`posframe-show'."
   (let* ((window-left (plist-get info :parent-window-left))
          (window-top (plist-get info :parent-window-top))
          (window-width (plist-get info :parent-window-width))
@@ -1484,6 +1496,26 @@ xwininfo."
                    (search-forward "Y: ")
                    (line-end-position)))))
           (cons x y))))))
+
+(define-obsolete-function-alias 'posframe-poshandler-p0p0-to-p0p1 #'posframe-poshandler-point-bottom-left-corner "1.3.0")
+(define-obsolete-function-alias 'posframe-poshandler-p0.5p0-to-w0.5p1 #'posframe-poshandler-point-window-center "1.3.0")
+(define-obsolete-function-alias 'posframe-poshandler-p0.5p0-to-f0.5p1 #'posframe-poshandler-point-frame-center "1.3.0")
+(define-obsolete-function-alias 'posframe-poshandler-p0p1-to-p0p1 #'posframe-poshandler-point-bottom-left-corner-upward "1.3.0")
+(define-obsolete-function-alias 'posframe-poshandler-p0p0-to-p0p0 #'posframe-poshandler-point-top-left-corner "1.3.0")
+(define-obsolete-function-alias 'posframe-poshandler-p0.5p0.5-to-f0.5f0.5 #'posframe-poshandler-frame-center "1.3.0")
+(define-obsolete-function-alias 'posframe-poshandler-p0.5p0-to-f0.5f0 #'posframe-poshandler-frame-top-center "1.3.0")
+(define-obsolete-function-alias 'posframe-poshandler-p0p0-to-f0f0 #'posframe-poshandler-frame-top-left-corner "1.3.0")
+(define-obsolete-function-alias 'posframe-poshandler-p1p0-to-f1f0 #'posframe-poshandler-frame-top-right-corner "1.3.0")
+(define-obsolete-function-alias 'posframe-poshandler-p0p1-to-f0f1 #'posframe-poshandler-frame-bottom-left-corner "1.3.0")
+(define-obsolete-function-alias 'posframe-poshandler-p1p1-to-f1f1 #'posframe-poshandler-frame-bottom-right-corner "1.3.0")
+(define-obsolete-function-alias 'posframe-poshandler-p0.5p1-to-f0.5f1 #'posframe-poshandler-frame-bottom-center "1.3.0")
+(define-obsolete-function-alias 'posframe-poshandler-p0.5p0.5-to-w0.5w0.5 #'posframe-poshandler-window-center "1.3.0")
+(define-obsolete-function-alias 'posframe-poshandler-p0p0-to-w0w0 #'posframe-poshandler-window-top-left-corner "1.3.0")
+(define-obsolete-function-alias 'posframe-poshandler-p1p0-to-w1w0 #'posframe-poshandler-window-top-right-corner "1.3.0")
+(define-obsolete-function-alias 'posframe-poshandler-p0.5p0-to-w0.5w0 #'posframe-poshandler-window-top-center "1.3.0")
+(define-obsolete-function-alias 'posframe-poshandler-p0p1-to-w0w1 #'posframe-poshandler-window-bottom-left-corner "1.3.0")
+(define-obsolete-function-alias 'posframe-poshandler-p1p1-to-w1w1 #'posframe-poshandler-window-bottom-right-corner "1.3.0")
+(define-obsolete-function-alias 'posframe-poshandler-p0.5p1-to-w0.5w1 #'posframe-poshandler-window-bottom-center "1.3.0")
 
 
 (provide 'posframe)
