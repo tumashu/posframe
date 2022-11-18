@@ -1229,8 +1229,9 @@ The structure of INFO can be found in docstring of
 (defun posframe-poshandler-point-window-center (info)
   "Posframe's position handler.
 
-This poshandler function let top edge center of posframe align to
-center of window line at point.
+This poshandler function let center of posframe vertical align to
+center of window and top edge of posframe horizontal align to
+buttom edge of current point.
 
 The structure of INFO can be found in docstring of
 `posframe-show'."
