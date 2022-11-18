@@ -404,6 +404,7 @@ The builtin poshandler functions are listed below:
 16. `posframe-poshandler-point-bottom-left-corner'
 17. `posframe-poshandler-point-bottom-left-corner-upward'
 18. `posframe-poshandler-point-window-center'
+19. `posframe-poshandler-point-frame-center'
 
 by the way, poshandler can be used by other packages easily with
 the help of function `posframe-poshandler-argbuilder'.  like:
