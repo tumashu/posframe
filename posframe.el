@@ -229,8 +229,6 @@ ACCEPT-FOCUS."
                           (cons 'foreground-color foreground-color))
                        ,(when background-color
                           (cons 'background-color background-color))
-                       ,(when font
-                          (cons 'font font))
                        (title . "posframe")
                        (parent-frame . ,parent-frame)
                        (keep-ratio ,keep-ratio)
@@ -265,6 +263,9 @@ ACCEPT-FOCUS."
                        ;; Do not save child-frame when use desktop.el
                        (desktop-dont-save . t))))
         (set-frame-parameter posframe--frame 'last-args args)
+        (set-frame-parameter
+         posframe--frame 'font
+         (or font (face-attribute 'default :font parent-frame)))
         (when border-color
 	  (set-face-background
            (if (facep 'child-frame-border)
