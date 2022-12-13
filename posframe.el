@@ -887,9 +887,9 @@ This need PARENT-FRAME-WIDTH and PARENT-FRAME-HEIGHT"
     (setq-local posframe--last-posframe-displayed-size
                 (cons (frame-pixel-width posframe)
                       (frame-pixel-height posframe))))
-  (posframe--make-posframe-visible posframe))
+  (posframe--make-frame-visible posframe))
 
-(defun posframe--make-posframe-visible (posframe)
+(defun posframe--make-frame-visible (posframe)
   "Let POSFRAME visible and redraw it when needed."
   (unless (frame-visible-p posframe)
     (make-frame-visible posframe)
