@@ -229,15 +229,6 @@ The builtin poshandler functions are listed below:
 18. `posframe-poshandler-point-window-center'
 19. `posframe-poshandler-point-frame-center'
 
-by the way, poshandler can be used by other packages easily with
-the help of function `posframe-poshandler-argbuilder'.  like:
-
-   (let* ((info (posframe-poshandler-argbuilder *MY-CHILD-FRAME*))
-          (posn (posframe-poshandler-window-center
-                 `(:posframe-width 800 :posframe-height 400 ,@info))))
-     `((left . ,(car posn))
-       (top . ,(cdr posn))))
-
  (3) POSHANDLER-EXTRA-INFO
 
 POSHANDLER-EXTRA-INFO is a plist, which will prepend to the
@@ -1087,77 +1078,6 @@ BUFFER-OR-NAME can be a buffer or a buffer name."
         (when (framep posframe--frame)
           (with-selected-frame posframe--frame
             (apply function arguments)))))))
-
-(cl-defun posframe-poshandler-argbuilder (&optional
-                                          child-frame
-                                          &key
-                                          position
-                                          poshandler
-                                          refposhandler
-                                          x-pixel-offset
-                                          y-pixel-offset)
-  "Return a info list of CHILD-FRAME, used as poshandler's info argument.
-
-if CHILD-FRAME is nil, parent frame will use selected frame.  The
-documents of POSITION, POSHANDLER, X-PIXEL-OFFSET and
-Y-PIXEL-OFFSET can be found in dostring of `posframe-show'.
-
-NOTE: this function is not used by posframe itself, it just let
-poshandler easily used for other purposes.
-
-WARN: In some situation, this function will return wrong info,
-user should manual adjust returned info before use in poshandler
-function.
-
-Optional argument: REFPOSHANDLER."
-  (let* ((position (or position (point)))
-         (frame-width (or (and child-frame (frame-pixel-width child-frame)) 0))
-         (frame-height (or (and child-frame (frame-pixel-height child-frame)) 0))
-         (frame-buffer (and child-frame (window-buffer (frame-root-window child-frame))))
-         (parent-frame (selected-frame))
-         (parent-frame-width (frame-pixel-width parent-frame))
-         (parent-frame-height (frame-pixel-height parent-frame))
-         (parent-window (selected-window))
-         (parent-window-top (window-pixel-top parent-window))
-         (parent-window-left (window-pixel-left parent-window))
-         (parent-window-width (window-pixel-width parent-window))
-         (parent-window-height (window-pixel-height parent-window))
-         (font-width (default-font-width))
-         (font-height (with-current-buffer (window-buffer parent-window)
-                        (posframe--get-font-height position)))
-         (mode-line-height (window-mode-line-height parent-window))
-         (minibuffer-height (window-pixel-height (minibuffer-window)))
-         (header-line-height (window-header-line-height parent-window))
-         (tab-line-height (if (functionp 'window-tab-line-height)
-                              (window-tab-line-height parent-window)
-                            0))
-         (ref-position
-          (when (functionp refposhandler)
-            (ignore-errors
-              (funcall refposhandler parent-frame)))))
-    (list :position position
-          :poshandler poshandler
-          :font-height font-height
-          :font-width font-width
-          :posframe child-frame
-          :posframe-width frame-width
-          :posframe-height frame-height
-          :posframe-buffer frame-buffer
-          :parent-frame parent-frame
-          :parent-frame-width parent-frame-width
-          :parent-frame-height parent-frame-height
-          :ref-position ref-position
-          :parent-window parent-window
-          :parent-window-top parent-window-top
-          :parent-window-left parent-window-left
-          :parent-window-width parent-window-width
-          :parent-window-height parent-window-height
-          :mode-line-height mode-line-height
-          :minibuffer-height minibuffer-height
-          :header-line-height header-line-height
-          :tab-line-height tab-line-height
-          :x-pixel-offset (or x-pixel-offset 0)
-          :y-pixel-offset (or y-pixel-offset 0))))
 
 (defun posframe-poshandler-absolute-x-y (info)
   "Posframe's position handler.
