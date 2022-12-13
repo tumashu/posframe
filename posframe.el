@@ -628,7 +628,6 @@ ACCEPT-FOCUS."
       (unless (or posframe--frame posframe--last-args)
         (setq-local posframe--frame
                     (posframe--find-existing-posframe buffer args))
-        (set-frame-parameter posframe--frame 'reuse-existing-posframe t)
         (setq-local posframe--last-args args))
 
       ;; Create child-frame
@@ -728,17 +727,21 @@ ACCEPT-FOCUS."
 
 (defun posframe--find-existing-posframe (buffer &optional last-args)
   "Find existing posframe with BUFFER and LAST-ARGS."
-  (cl-find-if
-   (lambda (frame)
-     (let* ((buffer-info (frame-parameter frame 'posframe-buffer))
-            (buffer-equal-p
-             (or (equal (buffer-name buffer) (car buffer-info))
-                 (equal buffer (cdr buffer-info)))))
-       (if last-args
-           (and buffer-equal-p
-                (equal last-args (frame-parameter frame 'last-args)))
-         buffer-equal-p)))
-   (frame-list)))
+  (let ((posframe
+         (cl-find-if
+          (lambda (frame)
+            (let* ((buffer-info (frame-parameter frame 'posframe-buffer))
+                   (buffer-equal-p
+                    (or (equal (buffer-name buffer) (car buffer-info))
+                        (equal buffer (cdr buffer-info)))))
+              (if last-args
+                  (and buffer-equal-p
+                       (equal last-args (frame-parameter frame 'last-args)))
+                buffer-equal-p)))
+          (frame-list))))
+    (when posframe
+      (set-frame-parameter posframe 'existing-posframe t))
+    posframe))
 
 (defun posframe-delete-frame (buffer-or-name)
   "Delete posframe pertaining to BUFFER-OR-NAME.
@@ -883,12 +886,22 @@ This need PARENT-FRAME-WIDTH and PARENT-FRAME-HEIGHT"
     (setq-local posframe--last-posframe-displayed-size
                 (cons (frame-pixel-width posframe)
                       (frame-pixel-height posframe))))
-  ;; Make posframe's posframe--frame visible
+  (posframe--make-posframe-visible posframe))
+
+(defun posframe--make-posframe-visible (posframe)
+  "Let POSFRAME visible and redraw it when needed."
   (unless (frame-visible-p posframe)
     (make-frame-visible posframe)
-    ;; Fix issue: https://github.com/tumashu/ivy-posframe/pull/30
-    (when (frame-parameter posframe 'reuse-existing-posframe)
+    (when (posframe--posframe-need-redraw-p posframe)
       (redraw-frame posframe))))
+
+(defun posframe--posframe-need-redraw-p (posframe)
+  "Test POSFRAME need to redraw or not."
+  ;; When posframe is found by `posframe--find-existing-posframe',
+  ;; it need to redraw, more info:
+  ;; 1. https://github.com/tumashu/ivy-posframe/pull/30
+  ;; 2. https://github.com/tumashu/posframe/pull/118
+  (frame-parameter posframe 'existing-posframe))
 
 (defun posframe--run-timeout-timer (posframe secs)
   "Hide POSFRAME after a delay of SECS seconds."
