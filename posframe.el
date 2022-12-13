@@ -1105,12 +1105,7 @@ Optional arguments: FONT-HEIGHT and UPWARD."
          (window (plist-get info :parent-window))
          (xmax (plist-get info :parent-frame-width))
          (ymax (plist-get info :parent-frame-height))
-         (position-info
-          (or
-           ;; :position-info has been removed, this line
-           ;; is used for compatible.
-           (plist-get info :position-info)
-           (plist-get info :position)))
+         (position-info (plist-get info :position))
          (position-info
           (if (integerp position-info)
               (posn-at-point position-info window)
