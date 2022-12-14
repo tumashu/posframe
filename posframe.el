@@ -829,18 +829,8 @@ of `posframe-show'."
       posframe--last-posframe-pixel-position
     (setq posframe--last-poshandler-info info)
     (let* ((ref-position (plist-get info :ref-position))
-           (position
-            (funcall
-             (or (plist-get info :poshandler)
-                 (let ((position (plist-get info :position)))
-                   (cond ((integerp position)
-                          #'posframe-poshandler-point-bottom-left-corner)
-                         ((and (consp position)
-                               (integerp (car position))
-                               (integerp (cdr position)))
-                          #'posframe-poshandler-absolute-x-y)
-                         (t (error "Posframe: have no valid poshandler")))))
-             info))
+           (poshandler (posframe--get-valid-poshandler info))
+           (position (funcall poshandler info))
            (x (car position))
            (y (cdr position)))
       (if (not ref-position)
@@ -857,6 +847,18 @@ of `posframe-show'."
             (setq y (- (+ y parent-frame-height) posframe-height)))
           (cons (+ ref-x x)
                 (+ ref-y y)))))))
+
+(defun posframe--get-valid-poshandler (info)
+  "Get valid poshandler function with the help of INFO."
+  (or (plist-get info :poshandler)
+      (let ((position (plist-get info :position)))
+        (cond ((integerp position)
+               #'posframe-poshandler-point-bottom-left-corner)
+              ((and (consp position)
+                    (integerp (car position))
+                    (integerp (cdr position)))
+               #'posframe-poshandler-absolute-x-y)
+              (t (error "Posframe: have no valid poshandler"))))))
 
 (defun posframe--set-frame-position (posframe position
                                               parent-frame-width
