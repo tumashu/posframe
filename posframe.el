@@ -830,23 +830,11 @@ of `posframe-show'."
     (setq posframe--last-poshandler-info info)
     (let* ((ref-position (plist-get info :ref-position))
            (poshandler (posframe--get-valid-poshandler info))
-           (position (funcall poshandler info))
-           (x (car position))
-           (y (cdr position)))
+           (position (funcall poshandler info)))
       (if (not ref-position)
           position
-        (let* ((parent-frame-width (plist-get info :parent-frame-width))
-               (parent-frame-height (plist-get info :parent-frame-height))
-               (posframe-width (plist-get info :posframe-width))
-               (posframe-height (plist-get info :posframe-height))
-               (ref-x (or (car ref-position) 0))
-               (ref-y (or (cdr ref-position) 0)))
-          (when (< x 0)
-            (setq x (- (+ x parent-frame-width) posframe-width)))
-          (when (< y 0)
-            (setq y (- (+ y parent-frame-height) posframe-height)))
-          (cons (+ ref-x x)
-                (+ ref-y y)))))))
+        (posframe--calculate-new-position
+         info position ref-position)))))
 
 (defun posframe--get-valid-poshandler (info)
   "Get valid poshandler function with the help of INFO."
@@ -859,6 +847,23 @@ of `posframe-show'."
                     (integerp (cdr position)))
                #'posframe-poshandler-absolute-x-y)
               (t (error "Posframe: have no valid poshandler"))))))
+
+(defun posframe--calculate-new-position (info position ref-position)
+  "Calcuate new position according to INFO, POSITION and REF-POSITION."
+  (let* ((parent-frame-width (plist-get info :parent-frame-width))
+         (parent-frame-height (plist-get info :parent-frame-height))
+         (posframe-width (plist-get info :posframe-width))
+         (posframe-height (plist-get info :posframe-height))
+         (ref-x (or (car ref-position) 0))
+         (ref-y (or (cdr ref-position) 0))
+         (x (car position))
+         (y (cdr position)))
+    (when (< x 0)
+      (setq x (- (+ x parent-frame-width) posframe-width)))
+    (when (< y 0)
+      (setq y (- (+ y parent-frame-height) posframe-height)))
+    (cons (+ ref-x x)
+          (+ ref-y y))))
 
 (defun posframe--set-frame-position (posframe position
                                               parent-frame-width
