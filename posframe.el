@@ -678,11 +678,17 @@ ACCEPT-FOCUS."
          posframe--frame 'font
          (or font (face-attribute 'default :font parent-frame)))
         (when border-color
-	  (set-face-background
-           (if (facep 'child-frame-border)
-               'child-frame-border
-             'internal-border)
-           border-color posframe--frame)
+          (if parent-frame
+	      (set-face-background
+               (if (facep 'child-frame-border)
+                   'child-frame-border
+                 'internal-border)
+               border-color posframe--frame)
+            ;; NOTE: when use refposhander feature, parent-frame will be
+            ;; nil, we should use internal-border instead.
+            (set-face-background
+             'internal-border
+             border-color posframe--frame))
           ;; HACK: Set face background after border color, otherwise the
           ;; border is not updated (BUG!).
           (when (version< emacs-version "28.0")
