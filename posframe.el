@@ -150,6 +150,7 @@ effect.")
                          internal-border-color
                          font
                          cursor
+                         window-point
                          foreground-color
                          background-color
                          respect-header-line
@@ -280,10 +281,14 @@ derived from the current frame by default, but can be overridden
 using the FONT, FOREGROUND-COLOR and BACKGROUND-COLOR arguments,
 respectively.
 
- (10) CURSOR
+ (10) CURSOR and WINDOW-POINT
 
 By default, cursor is not showed in posframe, user can let cursor
 showed with this argument help by set its value to a `cursor-type'.
+
+When cursor need to be showed in posframe, user may need to set
+WINDOW-POINT to the point of BUFFER, which can let cursor showed
+at this point.
 
  (11) RESPECT-HEADER-LINE and RESPECT-MODE-LINE
 
@@ -375,6 +380,7 @@ You can use `posframe-delete-all' to delete all posframes."
                    (min (max height min-height) max-height)))
          (x-pixel-offset (or x-pixel-offset 0))
          (y-pixel-offset (or y-pixel-offset 0))
+         (window-point (or window-point 0))
          ;;-----------------------------------------------------
          (buffer (get-buffer-create buffer-or-name))
          (parent-window (selected-window))
@@ -493,7 +499,7 @@ You can use `posframe-delete-all' to delete all posframes."
       ;; Make sure not hide buffer's content for scroll down.
       (let ((window (frame-root-window posframe--frame)))
         (when (window-live-p window)
-          (set-window-point window 0)))
+          (set-window-point window window-point)))
 
       ;; Hide posframe when switch buffer
       (let* ((parent-buffer (window-buffer parent-window))
