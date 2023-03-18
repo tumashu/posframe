@@ -1037,12 +1037,13 @@ BUFFER-OR-NAME can be a buffer or a buffer name."
   ;; called, otherwise:
   ;;   (add-hook 'buffer-list-update-hook  #'posframe-hide)
   ;; will lead to infinite recursion.
-  (let ((buffer-list-update-hook nil))
-    (dolist (frame (frame-list))
-      (let ((buffer-info (frame-parameter frame 'posframe-buffer)))
-        (when (or (equal buffer-or-name (car buffer-info))
-                  (equal buffer-or-name (cdr buffer-info)))
-          (posframe--make-frame-invisible frame))))))
+  (when buffer-or-name
+    (let ((buffer-list-update-hook nil))
+      (dolist (frame (frame-list))
+        (let ((buffer-info (frame-parameter frame 'posframe-buffer)))
+          (when (or (equal buffer-or-name (car buffer-info))
+                    (equal buffer-or-name (cdr buffer-info)))
+            (posframe--make-frame-invisible frame)))))))
 
 (defun posframe-hidehandler-daemon ()
   "Run posframe hidehandler daemon."
