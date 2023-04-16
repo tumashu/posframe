@@ -480,6 +480,8 @@ You can use `posframe-delete-all' to delete all posframes."
                        :parent-window-left parent-window-left
                        :parent-window-width parent-window-width
                        :parent-window-height parent-window-height
+                       :window-start (window-start)
+                       :window-end (window-end)
                        :mouse-x (car mouse-position)
                        :mouse-y (cdr mouse-position)
                        :mode-line-height mode-line-height
