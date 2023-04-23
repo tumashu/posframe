@@ -190,6 +190,8 @@ position.  Its argument is a plist of the following form:
    :posframe-height xxx
    :posframe-buffer xxx
    :parent-frame xxx
+   :parent-window-start xxx
+   :parent-window-end xxx
    :parent-window-left xxx
    :parent-window-top xxx
    :parent-frame-width xxx
