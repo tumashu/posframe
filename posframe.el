@@ -217,21 +217,22 @@ The builtin poshandler functions are listed below:
 2.  `posframe-poshandler-frame-top-center'
 3.  `posframe-poshandler-frame-top-left-corner'
 4.  `posframe-poshandler-frame-top-right-corner'
-5.  `posframe-poshandler-frame-bottom-center'
-6.  `posframe-poshandler-frame-bottom-left-corner'
-7.  `posframe-poshandler-frame-bottom-right-corner'
-8.  `posframe-poshandler-window-center'
-9.  `posframe-poshandler-window-top-center'
-10. `posframe-poshandler-window-top-left-corner'
-11. `posframe-poshandler-window-top-right-corner'
-12. `posframe-poshandler-window-bottom-center'
-13. `posframe-poshandler-window-bottom-left-corner'
-14. `posframe-poshandler-window-bottom-right-corner'
-15. `posframe-poshandler-point-top-left-corner'
-16. `posframe-poshandler-point-bottom-left-corner'
-17. `posframe-poshandler-point-bottom-left-corner-upward'
-18. `posframe-poshandler-point-window-center'
-19. `posframe-poshandler-point-frame-center'
+5.  `posframe-poshandler-frame-top-left-or-right-other-corner'
+6.  `posframe-poshandler-frame-bottom-center'
+7.  `posframe-poshandler-frame-bottom-left-corner'
+8.  `posframe-poshandler-frame-bottom-right-corner'
+9.  `posframe-poshandler-window-center'
+10.  `posframe-poshandler-window-top-center'
+11. `posframe-poshandler-window-top-left-corner'
+12. `posframe-poshandler-window-top-right-corner'
+13. `posframe-poshandler-window-bottom-center'
+14. `posframe-poshandler-window-bottom-left-corner'
+15. `posframe-poshandler-window-bottom-right-corner'
+16. `posframe-poshandler-point-top-left-corner'
+17. `posframe-poshandler-point-bottom-left-corner'
+18. `posframe-poshandler-point-bottom-left-corner-upward'
+19. `posframe-poshandler-point-window-center'
+20. `posframe-poshandler-point-frame-center'
 
  (3) POSHANDLER-EXTRA-INFO
 
@@ -1280,6 +1281,25 @@ top right corner of frame.
 The structure of INFO can be found in docstring of
 `posframe-show'."
   '(-1 . 0))
+
+(defun posframe-poshandler-frame-top-left-or-right-other-corner (info)
+  "Posframe's position handler.
+
+This poshandler function let posframe align to top left or top right corner of frame,
+based on whether current window is relatively at left or right in the current frame.
+If window is at left, place posframe on right, and vice versa.
+(This is calculated by whether current window center is left or right to frame center)
+
+The structure of INFO can be found in docstring of
+`posframe-show'."
+  (let ((window-left (plist-get info :parent-window-left))
+        (window-width (plist-get info :parent-window-width))
+        (frame-width (plist-get info :parent-frame-width)))
+    ;; when equal, put posframe on right because content in window tend to be on left
+    (if (<= (+ window-left (/ window-width 2))
+            (/ frame-width 2))
+        '(-1 . 0)
+      '(0 . 0))))
 
 (defun posframe-poshandler-frame-bottom-left-corner (info)
   "Posframe's position handler.
