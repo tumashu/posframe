@@ -356,7 +356,7 @@ when it is nil or it return nil, child-frame feature will be used
 and reference position will be deal with in Emacs.
 
 The user case I know at the moment is let ivy-posframe work well
-in EXWM environment (let posframe show on the other appliction
+in EXWM environment (let posframe show on the other application
 window).
 
          DO NOT USE UNLESS NECESSARY!!!
@@ -885,7 +885,7 @@ of `posframe-show'."
               (t (error "Posframe: have no valid poshandler"))))))
 
 (defun posframe--calculate-new-position (info position ref-position)
-  "Calcuate new position according to INFO, POSITION and REF-POSITION."
+  "Calculate new position according to INFO, POSITION and REF-POSITION."
   (let* ((parent-frame-width (plist-get info :parent-frame-width))
          (parent-frame-height (plist-get info :parent-frame-height))
          (posframe-width (plist-get info :posframe-width))
