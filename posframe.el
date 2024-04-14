@@ -693,7 +693,7 @@ ACCEPT-FOCUS."
                        (undecorated . t)
                        (visibility . nil)
                        (cursor-type . nil)
-                       (minibuffer . nil)
+                       (minibuffer . ,(minibuffer-window parent-frame))
                        (left . ,(if (consp position) (car position) 0))
                        (top . ,(if (consp position) (cdr position) 0))
                        (width . 1)
