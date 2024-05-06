@@ -125,7 +125,8 @@ effect.")
   (and (>= emacs-major-version 26)
        (not (or noninteractive
                 emacs-basic-display
-                (not (display-graphic-p))))))
+                (not (display-graphic-p))
+		(eq (frame-parameter (selected-frame) 'minibuffer) 'only)))))
 
 ;;;###autoload
 (cl-defun posframe-show (buffer-or-name
