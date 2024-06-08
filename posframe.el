@@ -1286,13 +1286,13 @@ The structure of INFO can be found in docstring of
 (defun posframe-poshandler-frame-top-left-or-right-other-corner (info)
   "Posframe's position handler.
 
-This poshandler function let posframe align to top left or top right corner of frame,
-based on whether current window is relatively at left or right in the current frame.
-If window is at left, place posframe on right, and vice versa.
-(This is calculated by whether current window center is left or right to frame center)
+This poshandler function let posframe align to top left or top right
+corner of frame, based on whether current window is relatively at left
+or right in the current frame.  If window is at left, place posframe on
+right, and vice versa.  (This is calculated by whether current window
+center is left or right to frame center.)
 
-The structure of INFO can be found in docstring of
-`posframe-show'."
+The structure of INFO can be found in docstring of `posframe-show'."
   (let ((window-left (plist-get info :parent-window-left))
         (window-width (plist-get info :parent-window-width))
         (frame-width (plist-get info :parent-frame-width)))
