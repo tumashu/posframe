@@ -404,7 +404,9 @@ You can use `posframe-delete-all' to delete all posframes."
          (font-width (default-font-width))
          (font-height (with-current-buffer (window-buffer parent-window)
                         (posframe--get-font-height position)))
-         (mode-line-height (window-mode-line-height))
+         (mode-line-height (window-mode-line-height
+                            (and (window-minibuffer-p)
+                                 (ignore-errors (window-in-direction 'above)))))
          (minibuffer-height (window-pixel-height (minibuffer-window)))
          (header-line-height (window-header-line-height parent-window))
          (tab-line-height (if (functionp 'window-tab-line-height)
