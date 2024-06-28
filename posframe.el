@@ -126,7 +126,7 @@ effect.")
        (not (or noninteractive
                 emacs-basic-display
                 (not (display-graphic-p))
-		(eq (frame-parameter (selected-frame) 'minibuffer) 'only)))))
+                (eq (frame-parameter (selected-frame) 'minibuffer) 'only)))))
 
 ;;;###autoload
 (cl-defun posframe-show (buffer-or-name
@@ -712,7 +712,7 @@ ACCEPT-FOCUS."
          (or font (face-attribute 'default :font parent-frame)))
         (when border-color
           (if parent-frame
-	      (set-face-background
+              (set-face-background
                (if (facep 'child-frame-border)
                    'child-frame-border
                  'internal-border)
