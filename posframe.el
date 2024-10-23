@@ -123,10 +123,11 @@ effect.")
 (defun posframe-workable-p ()
   "Test posframe workable status."
   (and (>= emacs-major-version 26)
-       (not (or noninteractive
-                emacs-basic-display
-                (not (display-graphic-p))
-                (eq (frame-parameter (selected-frame) 'minibuffer) 'only)))))
+       (not noninteractive)
+       (not emacs-basic-display)
+       (or (display-graphic-p)
+           (featurep 'tty-child-frames))
+       (eq (frame-parameter (selected-frame) 'minibuffer) 't)))
 
 ;;;###autoload
 (cl-defun posframe-show (buffer-or-name
@@ -151,6 +152,7 @@ effect.")
                          internal-border-color
                          font
                          cursor
+                         tty-non-selected-cursor
                          window-point
                          foreground-color
                          background-color
@@ -285,10 +287,14 @@ derived from the current frame by default, but can be overridden
 using the FONT, FOREGROUND-COLOR and BACKGROUND-COLOR arguments,
 respectively.
 
- (10) CURSOR and WINDOW-POINT
+ (10) CURSOR, TTY-NON-SELECTED-CURSOR and WINDOW-POINT
 
 By default, cursor is not showed in posframe, user can let cursor
 showed with this argument help by set its value to a `cursor-type'.
+
+TTY-NON-SELECTED-CURSOR will let redisplay put the terminal
+cursor in a non-selected frame, which is useful when use
+vertico-posframe like package in tty.
 
 When cursor need to be showed in posframe, user may need to set
 WINDOW-POINT to the point of BUFFER, which can let cursor showed
@@ -432,6 +438,7 @@ You can use `posframe-delete-all' to delete all posframes."
              :position position
              :font font
              :cursor cursor
+             :tty-non-selected-cursor tty-non-selected-cursor
              :parent-frame
              (unless ref-position
                parent-frame)
@@ -577,6 +584,7 @@ You can use `posframe-delete-all' to delete all posframes."
                                      internal-border-color
                                      font
                                      cursor
+                                     tty-non-selected-cursor
                                      keep-ratio
                                      lines-truncate
                                      override-parameters
@@ -693,9 +701,13 @@ ACCEPT-FOCUS."
                        (line-spacing . 0)
                        (unsplittable . t)
                        (no-other-frame . t)
-                       (undecorated . t)
+                       ;; NOTE: TTY child frame use undecorated to control border.
+                       (undecorated . ,(not (and (or (> border-width 0)
+                                                     (> internal-border-width 0))
+                                                 (featurep 'tty-child-frames))))
                        (visibility . nil)
                        (cursor-type . nil)
+                       (tty-non-selected-cursor . ,tty-non-selected-cursor)
                        (minibuffer . ,(minibuffer-window parent-frame))
                        (left . ,(if (consp position) (car position) 0))
                        (top . ,(if (consp position) (cdr position) 0))
