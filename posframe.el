@@ -702,8 +702,7 @@ ACCEPT-FOCUS."
                        (unsplittable . t)
                        (no-other-frame . t)
                        ;; NOTE: TTY child frame use undecorated to control border.
-                       (undecorated . ,(not (and (or (> border-width 0)
-                                                     (> internal-border-width 0))
+                       (undecorated . ,(not (and (or (> border-width 0))
                                                  (featurep 'tty-child-frames))))
                        (visibility . nil)
                        (cursor-type . nil)
