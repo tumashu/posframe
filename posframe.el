@@ -457,6 +457,11 @@ You can use `posframe-delete-all' to delete all posframes."
              :override-parameters override-parameters
              :accept-focus accept-focus))
 
+      ;; Readjust undecorated
+      (set-frame-parameter posframe 'undecorated
+                           (or (display-graphic-p)
+                               (not (featurep 'tty-child-frames))))
+
       ;; Insert string into the posframe buffer
       (posframe--insert-string string no-properties)
 
@@ -702,8 +707,8 @@ ACCEPT-FOCUS."
                        (unsplittable . t)
                        (no-other-frame . t)
                        ;; NOTE: TTY child frame use undecorated to control border.
-                       (undecorated . ,(not (and (> border-width 0)
-                                                 (featurep 'tty-child-frames))))
+                       (undecorated . ,(or (display-graphic-p)
+                                           (not (featurep 'tty-child-frames))))
                        (visibility . nil)
                        (cursor-type . nil)
                        (tty-non-selected-cursor . ,tty-non-selected-cursor)
