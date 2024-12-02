@@ -610,6 +610,7 @@ ACCEPT-FOCUS."
         (after-make-frame-functions nil)
         (x-gtk-resize-child-frames posframe-gtk-resize-child-frames)
         (args (list "args"
+                    (display-graphic-p)
                     foreground-color
                     background-color
                     right-fringe
