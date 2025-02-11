@@ -707,7 +707,7 @@ ACCEPT-FOCUS."
                                            (not (and (> border-width 0)
                                                      (featurep 'tty-child-frames)))))
                        (visibility . nil)
-                       (cursor-type . nil)
+                       (cursor-type . ,cursor)
                        (tty-non-selected-cursor . ,tty-non-selected-cursor)
                        (minibuffer . ,(minibuffer-window parent-frame))
                        (left . ,(if (consp position) (car position) 0))
