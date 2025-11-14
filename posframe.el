@@ -62,12 +62,9 @@ custom function for EXWM users."
   "The function to adjust value of text-scale of posframe buffer.
 
 Accepts single argument which is the value of parent buffer `text-scale-mode-amount'
-or nil if the `text-scale-mode' is disabled in the parent buffer.
-`posframe-text-scale-factor-default' is an alias for `identity' function."
+or nil if the `text-scale-mode' is disabled in the parent buffer."
   :group 'posframe
   :type 'function)
-
-(defalias #'posframe-text-scale-factor-default #'identity)
 
 (defvar-local posframe--frame nil
   "Record posframe's frame.")
@@ -1531,6 +1528,11 @@ window manager selects it."
              ;; See posframe-show's accept-focus argument.
              (not posframe--accept-focus))
     (redirect-frame-focus posframe--frame (frame-parent))))
+
+(defun posframe-text-scale-factor-default (parent-text-scale-mode-amount)
+  "Return PARENT-TEXT-SCALE-MODE-AMOUNT or 0 if it is nil.
+This ensures text scale factor is always a number for posframe display."
+  (or parent-text-scale-mode-amount 0))
 
 (provide 'posframe)
 
