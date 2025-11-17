@@ -61,8 +61,9 @@ custom function for EXWM users."
 (defcustom posframe-text-scale-factor-function #'posframe-text-scale-factor-default
   "The function to adjust value of text-scale of posframe buffer.
 
-Accepts single argument which is the value of parent buffer `text-scale-mode-amount'
-or nil if the `text-scale-mode' is disabled in the parent buffer."
+Accepts single argument which is the value of parent buffer
+`text-scale-mode-amount' or nil if the `text-scale-mode' is disabled in
+the parent buffer."
   :group 'posframe
   :type 'function)
 
