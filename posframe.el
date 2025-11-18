@@ -421,7 +421,7 @@ You can use `posframe-delete-all' to delete all posframes."
          (font-height (with-current-buffer (window-buffer parent-window)
                         (posframe--get-font-height position)))
          (parent-text-scale-mode-amount (with-current-buffer (window-buffer parent-window)
-                                          (and text-scale-mode text-scale-mode-amount)))
+                                          (and (bound-and-true-p text-scale-mode) text-scale-mode-amount)))
          (mode-line-height (window-mode-line-height
                             (and (window-minibuffer-p)
                                  (ignore-errors (window-in-direction 'above)))))
