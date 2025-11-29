@@ -147,6 +147,8 @@ effect.")
                          poshandler-extra-info
                          width
                          height
+                         pixel-width
+                         pixel-height
                          max-width
                          max-height
                          min-width
@@ -386,6 +388,8 @@ An example parent frame poshandler function is:
 
 You can use `posframe-delete-all' to delete all posframes."
   (let* ((position (or position (point)))
+         (pixel-width (if (and pixel-width width) t nil))
+         (pixel-height (if (and pixel-width height) t nil))
          (max-width (if (numberp max-width)
                         (min max-width (frame-width))
                       (frame-width)))
@@ -395,9 +399,11 @@ You can use `posframe-delete-all' to delete all posframes."
          (min-width (min (or min-width 1) max-width))
          (min-height (min (or min-height 1) max-height))
          (width (when width
-                  (min (max width min-width) max-width)))
+                  (if pixel-width width
+                    (min (max width min-width) max-width))))
          (height (when height
-                   (min (max height min-height) max-height)))
+                   (if pixel-height height
+                     (min (max height min-height) max-height))))
          (x-pixel-offset (or x-pixel-offset 0))
          (y-pixel-offset (or y-pixel-offset 0))
          (window-point (or window-point 0))
@@ -480,7 +486,9 @@ You can use `posframe-delete-all' to delete all posframes."
                    :max-width max-width
                    :max-height max-height
                    :min-width min-width
-                   :min-height min-height)))
+                   :min-height min-height
+                   :pixel-width pixel-width
+                   :pixel-height pixel-height)))
         ;; Set posframe's size
         (posframe--set-frame-size size-info)
         ;; Re-adjust posframe's size when buffer's content has changed.
@@ -846,9 +854,11 @@ will be removed."
         (max-width (plist-get size-info :max-width))
         (max-height (plist-get size-info :max-height))
         (min-width (plist-get size-info :min-width))
-        (min-height (plist-get size-info :min-height)))
-    (when height (set-frame-height posframe height))
-    (when width (set-frame-width posframe width))
+        (min-height (plist-get size-info :min-height))
+        (pixel-width (plist-get size-info :pixel-width))
+        (pixel-height (plist-get size-info :pixel-height)))
+    (when height (set-frame-height posframe height nil pixel-height))
+    (when width (set-frame-width posframe width nil pixel-width))
     (unless (and height width)
       (posframe--fit-frame-to-buffer
        posframe max-height min-height max-width min-width
