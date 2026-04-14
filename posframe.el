@@ -114,7 +114,7 @@ frame.")
 
 (defvar posframe-gtk-resize-child-frames
   (when (and
-         (> emacs-major-version 26)
+         (< emacs-major-version 29)
          (string-match-p "GTK3" system-configuration-features)
          (let ((value (or (getenv "XDG_CURRENT_DESKTOP") (getenv "DESKTOP_SESSION"))))
            (and (stringp value)
