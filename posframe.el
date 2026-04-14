@@ -988,11 +988,12 @@ This need PARENT-FRAME-WIDTH and PARENT-FRAME-HEIGHT"
                ;; the posframe.
                (equal posframe--last-parent-frame-size
                       (cons parent-frame-width parent-frame-height))
-               (equal posframe--last-posframe-displayed-size
-                      (cons (frame-pixel-width posframe)
-                            (frame-pixel-height posframe))))
-    (unless (equal (frame-position posframe) position)
-      (set-frame-position posframe (car position) (cdr position)))
+               (or (and (>= (car position) 0)
+                        (>= (cdr position) 0))
+                   (equal posframe--last-posframe-displayed-size
+                          (cons (frame-pixel-width posframe)
+                                (frame-pixel-height posframe)))))
+    (set-frame-position posframe (car position) (cdr position))
     (posframe--save-new-posframe-position posframe position
                                           parent-frame-width
                                           parent-frame-height))
