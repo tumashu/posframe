@@ -641,6 +641,13 @@ ACCEPT-FOCUS."
         ;; http://git.savannah.gnu.org/cgit/emacs.git/commit/?id=ff7b1a133bfa7f2614650f8551824ffaef13fadc
         (border-width (or border-width internal-border-width 0))
         (border-color (or border-color internal-border-color))
+        (border-face
+         ;; NOTE: when use refposhander feature, parent-frame will be
+         ;; nil, we should use internal-border instead.
+         (if (and (facep 'child-frame-border)
+                  parent-frame)
+             'child-frame-border
+           'internal-border))
         (buffer (get-buffer-create buffer-or-name))
         (after-make-frame-functions nil)
         (x-gtk-resize-child-frames posframe-gtk-resize-child-frames)
@@ -759,14 +766,7 @@ ACCEPT-FOCUS."
          posframe--frame 'font
          (or font (face-attribute 'default :font parent-frame)))
         (when border-color
-          (set-face-background
-           ;; NOTE: when use refposhander feature, parent-frame will be
-           ;; nil, we should use internal-border instead.
-           (if (and (facep 'child-frame-border)
-                    parent-frame)
-               'child-frame-border
-             'internal-border)
-           border-color posframe--frame)
+          (set-face-background border-face border-color posframe--frame)
           ;; HACK: Set face background after border color, otherwise the
           ;; border is not updated (BUG!).
           (when (version< emacs-version "28.0")
