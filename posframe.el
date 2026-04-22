@@ -765,14 +765,6 @@ ACCEPT-FOCUS."
         (set-frame-parameter
          posframe--frame 'font
          (or font (face-attribute 'default :font parent-frame)))
-        (when border-color
-          (set-face-background border-face border-color posframe--frame)
-          ;; HACK: Set face background after border color, otherwise the
-          ;; border is not updated (BUG!).
-          (when (version< emacs-version "28.0")
-            (set-frame-parameter
-             posframe--frame 'background-color
-             (or background-color (face-attribute 'default :background)))))
         (let ((posframe-window (frame-root-window posframe--frame)))
           ;; This method is more stable than 'setq mode/header-line-format nil'
           (unless respect-mode-line
@@ -783,6 +775,18 @@ ACCEPT-FOCUS."
           ;; When the buffer of posframe is killed, the child-frame of
           ;; this posframe will be deleted too.
           (set-window-dedicated-p posframe-window t)))
+
+      (when (and border-color
+                 ;; Work around https://debbugs.gnu.org/80871
+                 (not (equal (face-background border-face posframe--frame)
+                             border-color)))
+        (set-face-background border-face border-color posframe--frame)
+        ;; HACK: Set face background after border color, otherwise the
+        ;; border is not updated (BUG!).
+        (when (version< emacs-version "28.0")
+          (set-frame-parameter
+           posframe--frame 'background-color
+           (or background-color (face-attribute 'default :background)))))
 
       ;; Remove tab-bar always.
       ;; NOTE: if we do not test the value of frame parameter
