@@ -641,6 +641,13 @@ ACCEPT-FOCUS."
         ;; http://git.savannah.gnu.org/cgit/emacs.git/commit/?id=ff7b1a133bfa7f2614650f8551824ffaef13fadc
         (border-width (or border-width internal-border-width 0))
         (border-color (or border-color internal-border-color))
+        (border-face
+         ;; NOTE: when use refposhander feature, parent-frame will be
+         ;; nil, we should use internal-border instead.
+         (if (and (facep 'child-frame-border)
+                  parent-frame)
+             'child-frame-border
+           'internal-border))
         (buffer (get-buffer-create buffer-or-name))
         (after-make-frame-functions nil)
         (x-gtk-resize-child-frames posframe-gtk-resize-child-frames)
@@ -758,24 +765,6 @@ ACCEPT-FOCUS."
         (set-frame-parameter
          posframe--frame 'font
          (or font (face-attribute 'default :font parent-frame)))
-        (when border-color
-          (if parent-frame
-              (set-face-background
-               (if (facep 'child-frame-border)
-                   'child-frame-border
-                 'internal-border)
-               border-color posframe--frame)
-            ;; NOTE: when use refposhander feature, parent-frame will be
-            ;; nil, we should use internal-border instead.
-            (set-face-background
-             'internal-border
-             border-color posframe--frame))
-          ;; HACK: Set face background after border color, otherwise the
-          ;; border is not updated (BUG!).
-          (when (version< emacs-version "28.0")
-            (set-frame-parameter
-             posframe--frame 'background-color
-             (or background-color (face-attribute 'default :background)))))
         (let ((posframe-window (frame-root-window posframe--frame)))
           ;; This method is more stable than 'setq mode/header-line-format nil'
           (unless respect-mode-line
@@ -786,6 +775,18 @@ ACCEPT-FOCUS."
           ;; When the buffer of posframe is killed, the child-frame of
           ;; this posframe will be deleted too.
           (set-window-dedicated-p posframe-window t)))
+
+      (when (and border-color
+                 ;; Work around https://debbugs.gnu.org/80871
+                 (not (equal (face-background border-face posframe--frame)
+                             border-color)))
+        (set-face-background border-face border-color posframe--frame)
+        ;; HACK: Set face background after border color, otherwise the
+        ;; border is not updated (BUG!).
+        (when (version< emacs-version "28.0")
+          (set-frame-parameter
+           posframe--frame 'background-color
+           (or background-color (face-attribute 'default :background)))))
 
       ;; Remove tab-bar always.
       ;; NOTE: if we do not test the value of frame parameter
