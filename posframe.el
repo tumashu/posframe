@@ -51,6 +51,20 @@
 (defvar text-scale-mode-amount)
 (defvar tab-line-format)
 
+;; C primitives that the byte-compiler may not see: some are absent on a
+;; non-graphical (nox) build, and `set-frame-size-and-position-pixelwise'
+;; and `window-tab-line-height' were added in Emacs 27 so are missing on
+;; the declared 26.1 minimum.  Callers guard each use with `(fboundp ...)',
+;; `(functionp ...)', or a runtime version check.  Declaring them keeps
+;; the byte-compiler quiet without defining or loading anything, so this
+;; is behaviour-preserving.
+(declare-function set-frame-size-and-position-pixelwise "frame.c"
+                  (frame &optional width height left top))
+(declare-function window-tab-line-height "window.c" (&optional window))
+(declare-function font-info "font.c" (name &optional frame))
+(declare-function font-at "font.c" (position &optional window string))
+(declare-function fontp "font.c" (object &optional extra-type))
+
 (defgroup posframe nil
   "Pop a posframe (just a frame) at point."
   :group 'lisp
