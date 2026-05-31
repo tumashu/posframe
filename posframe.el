@@ -40,6 +40,17 @@
 ;; * posframe's code                         :CODE:
 (require 'cl-lib)
 
+;; `text-scale-mode-amount' is defined in face-remap.el and bound only
+;; while `text-scale-mode' is enabled; the value is read lazily and
+;; guarded by `bound-and-true-p' at the call site.  `tab-line-format' was
+;; introduced in Emacs 27 and is only assigned under a runtime version
+;; check.  Declaring both keeps the byte-compiler from warning about a
+;; reference or assignment to a free variable; a bare `defvar' only marks
+;; the symbol as special and assigns no value, so this is
+;; behaviour-preserving.
+(defvar text-scale-mode-amount)
+(defvar tab-line-format)
+
 (defgroup posframe nil
   "Pop a posframe (just a frame) at point."
   :group 'lisp
