@@ -330,7 +330,7 @@ posframe instead of wrap.
 
  (14) OVERRIDE-PARAMETERS
 
-OVERRIDE-PARAMETERS is very powful, *all* the valid frame parameters
+OVERRIDE-PARAMETERS is very powerful, *all* the valid frame parameters
 used by posframe's frame can be overridden by it.
 
 NOTE: some `posframe-show' arguments are not frame parameters, so they
