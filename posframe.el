@@ -760,7 +760,8 @@ ACCEPT-FOCUS."
                        (width . 1)
                        (height . 1)
                        (no-special-glyphs . t)
-                       (skip-taskbar . t)
+                       ,(unless parent-frame
+                          (cons 'skip-taskbar t))
                        (inhibit-double-buffering . ,posframe-inhibit-double-buffering)
                        ;; Do not save child-frame when use desktop.el
                        (desktop-dont-save . t))))
