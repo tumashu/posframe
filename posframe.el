@@ -807,8 +807,11 @@ ACCEPT-FOCUS."
       (set-frame-parameter posframe--frame 'parent-frame parent-frame)
 
       ;; Set text scale based on the parent frame text scale.
-      (text-scale-set
-       (funcall posframe-text-scale-factor-function parent-text-scale-mode-amount))
+      (require 'face-remap)
+      (let ((target-scale (funcall posframe-text-scale-factor-function
+                                   parent-text-scale-mode-amount)))
+        (unless (equal target-scale text-scale-mode-amount)
+          (text-scale-set target-scale)))
 
       posframe--frame)))
 
