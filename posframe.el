@@ -520,7 +520,6 @@ You can use `posframe-delete-all' to delete all posframes."
                                  :posframe-height ,(* (default-line-height) height)))))
         (if (and width height
                  (fboundp 'set-frame-size-and-position-pixelwise)
-                 (frame-visible-p posframe)
                  (not (equal
                        pixel-position
                        posframe--last-posframe-pixel-position)))
