@@ -604,6 +604,12 @@ You can use `posframe-delete-all' to delete all posframes."
             (cons position height))
       height)))
 
+;; Avoid compilation warnings on Emacs < 30.
+(defvar text-scale-mode-amount)
+
+;; Avoid compilation warnings on Emacs < 31.
+(declare-function set-frame-size-and-position-pixelwise "frame.c")
+
 (cl-defun posframe--create-posframe (buffer-or-name
                                      &key
                                      position
